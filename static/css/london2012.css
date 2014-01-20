@@ -56,10 +56,9 @@ div.navi {
     margin: 0;
     border-left: thin black solid;
     border-right: thin black solid;
-    border-bottom: thick gray double;
+    border-bottom: thick gray solid;
 }
 ul.navi {
-    height: 1em;
     list-style-type: none;
 }
 li.navi {

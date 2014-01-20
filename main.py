@@ -9,7 +9,6 @@ from bottle import run, Bottle, template
 from bottle import static_file
 import os
 import contenthandler as ct
-import viewsmaker as vm
 
 app = Bottle(autojson=True)
 #==============================================================================
