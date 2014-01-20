@@ -24,6 +24,10 @@ bottle.TEMPLATE_PATH.insert(0,viewpath)
 @app.route("/static/css/<filename>")
 def get_css(filename):
     return static_file(filename, root = root + "/static/css")
+    
+@app.route("/static/images/<filename>")
+def get_image(filename):
+    return static_file(filename, root = root + "/static/images")
 
 
 #==============================================================================
@@ -34,6 +38,9 @@ def homepage():
     result = ct.getHomepage()
     result = vm.makeTabelle(result)
     return template("base", pagetitle = "Homepage", pagecontent = result)
+
+
+
 #==============================================================================
 # app
 #==============================================================================
