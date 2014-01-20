@@ -5,19 +5,37 @@ Created on Tue Jan 14 17:38:53 2014
 @author: yuankunluo
 """
 import bottle
-from bottle import route, run, Bottle, template
-from bottle import SimpleTemplate as Tpl
+from bottle import run, Bottle, template
+from bottle import static_file
 import os
-
-path = os.path.dirname(os.path.abspath(__file__))+"/views/"
-# change template folder
-bottle.TEMPLATE_PATH.insert(0,'path')
+import contenthandler as ct
+import viewsmaker as vm
 
 app = Bottle(autojson=True)
+#==============================================================================
+# path setting
+#==============================================================================
+root = os.path.dirname(os.path.abspath(__file__))
+viewpath = root + "/views"
+bottle.TEMPLATE_PATH.insert(0,viewpath)
+#==============================================================================
+# static files
+#==============================================================================
+@app.route("/static/css/<filename>")
+def get_css(filename):
+    return static_file(filename, root = root + "/static/css")
 
+
+#==============================================================================
+# routers
+#==============================================================================
 @app.route("/") # homepage
 def homepage():
-    return "hello world"
-
+    result = ct.getHomepage()
+    result = vm.makeTabelle(result)
+    return template("base", pagetitle = "Homepage", pagecontent = result)
+#==============================================================================
+# app
+#==============================================================================
 run(app,host="127.0.0.1",port=8080)
 
