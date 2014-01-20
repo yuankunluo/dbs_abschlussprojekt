@@ -6,14 +6,13 @@
                 <input type="text" name="search">
                 <button>Search</button>
             </form>
-            <div class="navi">
                 <ul class="navi">
                     <li class="navi"><a class="navi" href="homepage">Homepage</a></li>
                     <li class="navi"><a class="navi" href="news">News</a></li>
+                    <li class="navi"><a class="navi" href="sports">Sports</a></li>
                     <li class="navi"><a class="navi" href="events">Events</a></li>
                     <li class="navi"><a class="navi" href="athelets">Athelets</a></li>
                     <li class="navi"><a class="navi" href="medalists">Medalists</a></li>
                     <li class="navi"><a class="navi" href="users">Users</a></li>
                 </ul>
-            </div>
         </div>

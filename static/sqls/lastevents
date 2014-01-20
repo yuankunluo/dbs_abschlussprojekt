@@ -1,0 +1,6 @@
+select e.name, e.date, e.time, v.name as vanue,
+s.name as sport
+from events e, vanues  v, sports s 
+where e.vanue = v.id and e.sport = s.id 
+order by e.date , e.time
+limit 3

@@ -1,0 +1,80 @@
+select * 
+from news n
+where n.event in 
+
+select e.name, e.date, e.time, v.name as vanue, s.name as sport
+from events e, vanues  v, sports s
+where e.vanue = v.id and e.sport = s.id
+order by e.date , e.time
+limit 3
+
+select *
+from vanues
+
+select *
+from sports
+
+insert into events values
+("400M FREESTYLE MEN", date("now"), time("now"),1, (select id from sports where name like "Swimming"))
+
+select * from events
+
+update events set sport=2 where oid = 5
+
+insert into news (title, date, time, content, event, user) values 
+(select title, date("now"), time("now"), content, event, user from news)
+
+
+select id, event from news
+
+update news set event = (select name from events where oid = 2) where id = 1
+
+select e.name, s.name
+from events e, sports s
+where e.sport = s.id
+
+select n.title as title,n.id as  news_link,  e.name as event, e.name as  events_link, s.name as sport,  s.id as  sports_link, n.datetime as datetime
+from news n, events e, sports s
+where n.event = e.name and e.sport = s.id
+
+select n.title as title,n.id as  news_link, 
+n.datetime as date, n.user as reporter, n.content as content,
+p.link as pic
+from news n, news_pics np, pictures p
+where np.news = n.id and np.pic = (select id from pictures limit 1)
+
+select s.name as sport, s.id as sports_link
+from sports s
+
+select * from news
+create table pictures (
+	id integer primary key autoincrement not null,
+	link varchar(500) not null,
+	des varchar(500) not null
+)
+select * from pictures
+select * from news_pics
+
+insert into news_pics (news, pic, user) values
+(5, 5,"yuankunluo")
+
+insert into pictures(link, des) values
+("001.jpg","test"),
+("002.jpg", "LOve"),
+("003.jpg","love"),
+("004.jpg","love"),
+("005.jpg","love")
+
+select n.title as title,n.id as  news_link,  c.count as comment
+n.datetime as date, n.user as reporter, n.content as content,
+p.link as pic
+from news n, news_pics np, pictures p, 
+(select news ,count(oid) as count
+from comments
+group by news
+order by  count) c
+where np.news = n.id and np.pic = (select id from pictures limit 1) and c.
+
+
+insert into comments (news, user, content,datetime) values
+(5,"yuankunluo","i",datetime("now"))

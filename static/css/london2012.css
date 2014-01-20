@@ -15,27 +15,24 @@ h2, h3, h4, h5, h6 {
     font-weight: bold;
     text-transform: capitalize;
     display: block;
-    border-bottom: thin solid lightgray;
+    border-bottom: thin solid lightgrey;
 }
 a,a:link,a:visited{
+    font-family: serif ,sans-serif;
     display:inline;
-    font-weight:bold;
     color: black;
     text-decoration: underline;
 }
 a:hover,a:active {
-    background-color: lightgray;
+    background-color: lightgrey;
 }
 
 #header {
     background: gray;
     padding-left: 10%;
     padding-right: 10%;
-    margin:0;
 }
 a.logo:active,a.logo:visited,a.logo:hover,a.logo:link, a.logo  {
-    width: 60%;
-    height: 80%;
     font-size: 2.5em;
     font-weight: bold;
     text-decoration: none;
@@ -51,35 +48,34 @@ input.top_search {
     border: 1px solid white;
 }
 
-div.navi {
+ul.navi {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+    padding: 0.3em;
     background: white;
-    margin: 0;
     border-left: thin black solid;
     border-right: thin black solid;
     border-bottom: thick gray solid;
 }
-ul.navi {
-    list-style-type: none;
-}
 li.navi {
     display: inline;
+    margin-left: 1em;
     border-bottom: thick solid white;
-    padding: 0;
-    margin: 1em;
 }
 li.navi:hover{
+  
     border-bottom: thick solid gray;
 }
 a.navi, a.navi:link, a.navi:visited {
+    font-weight: bold;
     text-transform: uppercase;
     color: black;
-    font-size: 1.5em;
+    font-size: larger;
     text-decoration: none;
 }
 a.navi:hover, a.navi:active {
     color: gray;
     background: none;
-    font-weight: bolder;
 }
 
 #content {
@@ -95,20 +91,36 @@ a.navi:hover, a.navi:active {
 
 div.news_short {
     display: block;
+    border-bottom: thin lightgrey dashed;
 }
 
 img.news_short{
-    width: 250px;
+    width: 80px;
+    height: 60px;
     margin: 0.5em;
     float: left;
+    border: thin lightgrey solid;
+    padding: 0.5em;
 }
-span.news_short {
+span.time {
     color: gray;
     position: relative;
-    float: right;
-    border: thin solid lightgray;
+    border: thin solid lightgrey;
 }
-
+span.count{
+    position: relative;
+    float: right;
+    display: block;
+    border: thin solid lightgrey;
+}
+span.reporter {
+    
+}
+span.sport {
+    font-weight: bold;
+    position: relative;
+    float: right;
+}
 .news {
     display: block;
 }
@@ -125,7 +137,7 @@ img.news {
 
 #images {
     margin: 1em;
-    background: lightgray;
+    background: lightgrey;
     alignment-adjust: central;
     text-align: center;
 }
@@ -133,12 +145,9 @@ div.comment {
     padding: 1em;
     margin: 1em;
     background: #efefef;
-    border-bottom: thin lightgray dashed;
+    border-bottom: thin lightgrey dashed;
 }
-span.comment {
-    position:relative;
-    float: right;
-}
+
 em.comment {
     display: block;
     border-bottom: thin black dotted;
@@ -161,5 +170,5 @@ table.result {
 }
 th.result {
     text-transform: uppercase;
-    background: lightgray;
+    background: lightgrey;
 }

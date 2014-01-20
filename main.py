@@ -38,6 +38,9 @@ def homepage():
     result = ct.getHomepage()
     return template("base", pagetitle = "Homepage", pagecontent = result)
 
+@app.route("/events")
+def events():
+    return "events"
 
 
 #==============================================================================

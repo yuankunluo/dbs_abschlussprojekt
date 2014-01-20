@@ -5,7 +5,7 @@ Created on Mon Jan 20 00:35:29 2014
 @author: yuankunluo
 """
 import dbconnector as db
-import sql
+import sqlstaments as sqls
 import viewsmaker as vm
 from bottle import template
 
@@ -20,36 +20,16 @@ def getHomepage():
     :returns: rederned String
     """
     pagecontent = None
-    conn = db.openConnect()
-    cousor = conn.cursor()
-    lastEvents = cousor.execute(sql.lastthreeevents).fetchall()
-    lastEvent = tupleToList(lastEvents)
     # get table for last 3 events
-    t = vm.makeTabelle(lastEvent)
-    pagecontent = template("index", table = t , news = "")
-    db.closeConnct(conn)
+    lastEvents = db.execute(sqls.lastthreeevents)
+    t = vm.makeTabele(lastEvents)
+    # get news
+    n = db.execute(sqls.hotnews, True)
+    n = vm.makeShortNews(n)
+    pagecontent = template("index", table = t , news = n)
     return pagecontent
 
-#==============================================================================
-# helper function
-#==============================================================================
-def tupleToList(sqlTuple):
-    """Convert a sql executed result into a list of tuple,
-    the first element is the key, the other element is the tuple.
-    
-    :param sqlTuple: A fetch result
-    :type sqlTupee: A list of sqlite3.Row
-    :returns: A list of tuple like [(v1,v2,v3..)]
-    """
-    result = []
-    ks = tuple(sqlTuple[0].keys())
-    result.append(ks)
-    for r in sqlTuple:
-        tem = []
-        for k in ks:
-            tem.append(r[k])
-        result.append(tuple(tem))
-    return result
+
         
     
     

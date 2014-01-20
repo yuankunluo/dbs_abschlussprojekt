@@ -7,9 +7,11 @@ Created on Mon Jan 20 01:37:36 2014
 #==============================================================================
 # home page
 #==============================================================================
-lastthreeevents = "select e.name, e.date, e.time, v.name as vanue, \
-s.name as sport \
-from events e, vanues  v, sports s \
-where e.vanue = v.id and e.sport = s.id \
-order by e.date , e.time \
-limit 3"
+with open("static/sqls/lastevents", "rb") as f:
+    lastthreeevents = f.read()
+
+with open("static/sqls/hotnews", "rb") as f:
+    hotnews = f.read()
+
+sportsselect = "select s.name as sport, s.id as sports_link \
+from sports s"
