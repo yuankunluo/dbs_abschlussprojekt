@@ -12,7 +12,7 @@
         % include header
 
         <div id="content">
-            {{ pagecontent }}
+            {{!pagecontent}}
         </div>
         
         % include footter.tpl

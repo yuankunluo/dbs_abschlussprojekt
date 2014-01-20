@@ -1,14 +1,14 @@
 <table class="result">
             % header = content[0]
-            <tr>
+            <tr class="result">
             % for h in header:
-            <th>{{ h }}</th>
+            <th class="result">{{!h}}</th>
             %end
-            </tr>
+            </tr class="result">
             % for r in content[1:]:
             <tr>
                 % for v in r:
-                <td>{{v}}</td>
+                <td class="result">{{!v}}</td>
                 % end
             </tr>
             % end

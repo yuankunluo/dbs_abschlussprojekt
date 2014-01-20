@@ -6,23 +6,29 @@ Created on Mon Jan 20 00:35:29 2014
 """
 import dbconnector as db
 import sql
+import viewsmaker as vm
+from bottle import template
 
 def getHomepage():
     """Get the content for homepage.
     
-    – Anzeigen der letzten drei stattgefundenen Wettk ̈ampfe.
+    – Anzeigen der letzten drei stattgefundenen Wettkampfe.
     – Anzeigen aller Wettkampfberichte einer Disziplin.
-    – Anzeigen von Wettk ̈ampfen, 
+    – Anzeigen von Wettkampfen, 
     bei denen von bestimmten Nationen Medaillen erzielt wurden.
     
     :returns: rederned String
     """
+    pagecontent = None
     conn = db.openConnect()
     cousor = conn.cursor()
     lastEvents = cousor.execute(sql.lastthreeevents).fetchall()
-    lastEvents = tupleToList(lastEvents)
+    lastEvent = tupleToList(lastEvents)
+    # get table for last 3 events
+    t = vm.makeTabelle(lastEvent)
+    pagecontent = template("index", table = t , news = "")
     db.closeConnct(conn)
-    return lastEvents
+    return pagecontent
 
 #==============================================================================
 # helper function

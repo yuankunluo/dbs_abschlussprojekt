@@ -33,10 +33,10 @@ def get_image(filename):
 #==============================================================================
 # routers
 #==============================================================================
+@app.route("/homepage")
 @app.route("/") # homepage
 def homepage():
     result = ct.getHomepage()
-    result = vm.makeTabelle(result)
     return template("base", pagetitle = "Homepage", pagecontent = result)
 
 

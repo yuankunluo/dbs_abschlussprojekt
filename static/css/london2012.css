@@ -5,9 +5,17 @@
 */
 body {
     font-family: serif,sans-serif;
+    font-weight: normal;
     color: black;
     background: white;
     margin: 0;
+}
+h2, h3, h4, h5, h6 {
+    font-family: serif ,sans-serif;
+    font-weight: bold;
+    text-transform: capitalize;
+    display: block;
+    border-bottom: thin solid lightgray;
 }
 a,a:link,a:visited{
     display:inline;
@@ -89,10 +97,7 @@ a.navi:hover, a.navi:active {
 div.news_short {
     display: block;
 }
-h2.news_short {
-    display: block;
-    border-bottom: thick solid lightgray;
-}
+
 img.news_short{
     width: 250px;
     margin: 0.5em;
@@ -147,5 +152,15 @@ em.comment {
     color: white;
 }
 
-
-
+table.result {
+    font-weight: normal;
+    font-family: serif;
+    font-size: medium;
+    width: 100%;
+    alignment-adjust: central;
+    border: thin gray solid;
+}
+th.result {
+    text-transform: uppercase;
+    background: lightgray;
+}
