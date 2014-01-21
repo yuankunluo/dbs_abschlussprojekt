@@ -1,4 +1,3 @@
-
 <div id="fotter">
             <ul class="fotter">
                 <li>Yuankun LUO</li>
@@ -6,5 +5,3 @@
                 <li>DBS Abschlussprojekt WS 2013/14 Uni Duessldorf</li>
             </ul>
 </div>
-    
-

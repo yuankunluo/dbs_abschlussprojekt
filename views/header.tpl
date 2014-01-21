@@ -1,6 +1,4 @@
-
-
-        <div id="header">
+       <div id="header">
             <a class="logo" href="homepage">Olympic 2012 London</a>
             <form class="top_search" action="search">
                 <input type="text" name="search">
