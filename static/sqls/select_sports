@@ -1,0 +1,2 @@
+select s.name as sport, s.id as  sport_link
+from sports s

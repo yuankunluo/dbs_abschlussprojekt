@@ -1,0 +1,2 @@
+select v.name as vanue, v.id as  vanue_link
+from vanues v

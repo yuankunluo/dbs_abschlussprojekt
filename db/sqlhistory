@@ -78,3 +78,8 @@ where np.news = n.id and np.pic = (select id from pictures limit 1) and c.
 
 insert into comments (news, user, content,datetime) values
 (5,"yuankunluo","i",datetime("now"))
+
+select * from news
+select * from vanues
+select * from addresses
+insert into addresses (post_code, line_1)

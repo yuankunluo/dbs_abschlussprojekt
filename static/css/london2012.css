@@ -41,13 +41,6 @@ a.logo:active,a.logo:visited,a.logo:hover,a.logo:link, a.logo  {
     background: none;
     text-shadow: 2px 2px black;
 }
-form.top_search {
-    display: inline;
-}
-input.top_search {
-    border: 1px solid white;
-}
-
 ul.navi {
     margin-top: 0.5em;
     margin-bottom: 0;
@@ -121,10 +114,8 @@ span.sport {
     position: relative;
     float: right;
 }
-.news {
-    display: block;
-}
 p.news{
+    display: block;
     margin:1em;
 }
 img.news {
@@ -171,4 +162,58 @@ table.result {
 th.result {
     text-transform: uppercase;
     background: lightgrey;
+}
+input {
+    font-size: large;
+    clear: left;
+}
+select {
+    font-size: large;
+}
+input.title {
+    display: block;
+    font-size: x-large;
+    width: 100%;
+}
+div.athelet_number {
+    background: lightgray;
+    position: relative;
+    border: thin lightgray solid;
+    float: right;
+    margin: 0.5em;
+    width: 10%;
+    font-size: xx-large;
+}
+div.inputtable {
+    border-bottom: thin dashed lightgray;
+    margin: 1em;
+}
+.inputtable label  {
+    display: block;
+}
+.form_date label {
+    display: inline;
+}
+.form_date select {
+    display: inline;
+}
+form span {
+    display: block;
+    font-weight: bold;
+}
+textarea {
+    width: 100%;
+    font-size: large;
+    height: 8em;
+}
+fieldset {
+    margin: 1em;
+}
+form.top_search {
+    display: inline;
+    margin-left: 2em;
+}
+input.top_search {
+    display: inline;
+    border: 1px solid white;
 }

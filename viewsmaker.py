@@ -37,6 +37,17 @@ def makeShortNews(r):
     :returns: A rended tepmlet string
     """
     return template("news_short", content = r)
+    
+def makeSelector(r, options_only=False):
+    """Make a html form select.
+    
+    :param r: A list of tuple, resulted by contenthandler.tupletolist()
+    :type r: A list
+    :returns: A rended tepmlet string
+    """
+    if options_only:
+        return template("select_option", content=r)
+    return template("select", content = r)
                 
             
         

@@ -13,5 +13,18 @@ with open("static/sqls/lastevents", "rb") as f:
 with open("static/sqls/hotnews", "rb") as f:
     hotnews = f.read()
 
+with open("static/sqls/select_vanues", "rb") as f:
+    select_vanues = f.read()
+
+with open("static/sqls/select_events", "rb") as f:
+    select_events = f.read()
+    
+with open("static/sqls/select_sports", "rb") as f:
+    select_sports = f.read()
+    
+with open("static/sqls/select_countries", "rb") as f:
+    select_countries = f.read()
+
+
 sportsselect = "select s.name as sport, s.id as sports_link \
 from sports s"
