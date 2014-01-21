@@ -29,11 +29,45 @@ def do_add_news(req):
     :tyeoe req: bottle.request
     :returns: none
     """
+    wrong = []
     news = []
     event = []
     athelets = []
+    for k in sorted(req.forms.keys()):
+        ks = k.split("_")
+        v = req.forms[k]
+        ks.append(v)
+        ks = [x.strip(" ") for x in ks]
+        ks = [x.lower() for x in ks]
+        if k.startswith("athelet_"):
+            athelets.append(tuple(ks))
+            continue
+        if k.startswith("event_"):
+            event.append(ks)
+            continue
+        if k.startswith("news_"):
+            news.append(ks)
+            continue
+    # extract information of athelets
+    ath_result = {}
+    for a in athelets:
+        k = a[0]+[1]
+        if k not in ath_result.keys():
+            ath_result[k] = {}
+    for a in athelets:
+        ak = a[0]+[1]
+        k = a[2]
+        v = a[3]
+        ath_result[ak][k] = v
+    for a in ath_result.keys():
+        at = ath_result[a]
+        r = db.execute()
     
-#    for k in sorted(req.forms.keys()):
-#        s += "{k} => {v}<br>".format(k=k,v=req.forms[k])
-#        print(s)
-    return s
+        
+        
+        
+    
+#    s = ""
+#    for a in athelets:
+#        s += "_".join(a)+"<br>"
+#    return s

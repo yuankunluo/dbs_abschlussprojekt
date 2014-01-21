@@ -60,7 +60,7 @@ def add_event():
 
 @app.route("/add_news")
 def add_news_form():
-    result = ct.get_news_form(3)
+    result = ct.get_news_form(1)
     return template("base",pagetitle = "Add News",
                     pagecontent = result)
                     

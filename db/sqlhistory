@@ -82,4 +82,92 @@ insert into comments (news, user, content,datetime) values
 select * from news
 select * from vanues
 select * from addresses
-insert into addresses (post_code, line_1)
+
+insert into addresses (post_code, line_1) values
+("E161XL","Royal Victoria Dock")
+
+insert into vanues (name, city, address) values
+("Aquatics Centre",2,1),
+("Basketball Arena",2,1),
+("BMX Track",2,1),
+("Eton Manor",2,1),
+("Copper Box",2,1),
+("Velodrome",2,1),
+("Riverbank Arena",2,1),
+("Olympic Stadium",2,1),
+("Water Polo Arena",2,1)
+
+select v.name as vanue, v.id as  vanue_link
+from vanues v
+
+select s.name as vanue, s.id as  vanue_link
+from sports s
+
+select e.name as event, e.name as event_link
+from events e
+
+select * from athelets
+
+select name as name, a2_code as name_link
+from countries;
+
+select * from athelets;
+
+select * from events
+update events set name = lower(name)
+
+insert into events values
+("I LOVE YOU", date("now"), time("now"), 1, 15)
+
+select * from addresses
+update addresses set post_code = lower(post_code), line_2 = lower(line_2)
+
+select * from athelets
+
+update athelets set first_name = lower(first_name), last_name=lower(last_name),
+gender= lower(gender), country = lower(country)
+
+update cities set postcode = lower(postcode),
+country = lower(country), state = lower(state), name = lower(name)
+
+update countries 
+ set name =  lower(name)
+
+update news 
+set title =  lower(title),event =  lower(event)
+
+update paticipants set event = lower(event)
+
+update sports set name = lower(name)
+
+select * from users
+
+update users set
+last_name = lower(last_name)
+
+update vanues set name = lower(n
+
+create table athelets (
+first_Name varchar(255) not null, 
+last_Name varchar(255) not null, 
+gender char(1) not null, 
+birth_date varchar(255) not null, 
+country varchar(5) not null,  
+pic integer,
+primary key(first_name, last_name, gender, birth_date, country),
+foreign key (country) references countries(a2_code),
+foreign key (pic) references pictrues(id)
+)
+
+select * from athelets
+
+insert into athelets (first_name, last_name, gender, birth_date, country)
+values
+(lower("Michael") ,lower("Phelps"), lower("m"),date("1988-11-06"),"us" )
+
+select a.*, c.name
+from athelets a, countries c
+where a.country = c.a2_code
+
+select * from countries
+where a2_code = "bd"

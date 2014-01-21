@@ -24,6 +24,11 @@ with open("static/sqls/select_sports", "rb") as f:
     
 with open("static/sqls/select_countries", "rb") as f:
     select_countries = f.read()
+#==============================================================================
+# add news   
+#==============================================================================
+with open("static/sqls/insert_athelet", "rb") as f:
+    insert_athelet = f.read()
 
 
 sportsselect = "select s.name as sport, s.id as sports_link \

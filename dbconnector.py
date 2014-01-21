@@ -6,6 +6,7 @@ Created on Mon Jan 20 00:24:44 2014
 """
 
 import sqlite3
+import sqlstaments as sqls
 
 def execute(query, withLink = False):
     """Get the cousor object for a sqlite3 db
@@ -27,6 +28,20 @@ def execute(query, withLink = False):
 #    except:
 #        print("Database connect failure.")
 #        return None
+
+def insert_athelets(athelet):
+    """Insert multi value into athelets.
+    
+    :param athelet: A dict reprasent a athelet
+    :type athelet: dict
+    :returns: a list[] of error
+    """
+    fn = athelet["first_name"]
+    ln = athelet["last_name"]
+    g = athelet["gender"]
+    
+    
+
 
 #==============================================================================
 # helper function
