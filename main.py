@@ -10,8 +10,7 @@ from bottle import static_file
 from bottle import request
 #from bottle import BaseRequest as request
 import os
-import contenthandler as ct
-import formhandler as fh
+import web_cgi.contenthandler as ct
 
 
 app = Bottle(autojson=True)
@@ -42,51 +41,35 @@ def homepage():
     result = ct.get_Homepage()
     return template("base", pagetitle = "Homepage", pagecontent = result)
 
-#==============================================================================
-# edit functions 
-#==============================================================================
-@app.route("/add_event")
-def add_event_form():
-    result = ct.get_AddEvent()
-    return template("base",pagetitle = "Add Event",
-                    pagecontent = result)
-                    
-@app.route("/add_event",method="POST")
-def add_event():
-    f = request.forms
-    url = request.url
-    fh.do_add_event(f, url, "/homepage")
+@app.route("/events")
+def events():
+    result = "events"
+    return template("base", pagetitle= "Admin", pagecontent = result)
 
+@app.route("/news")
+def news():
+    result = "news"
+    return template("base", pagetitle= "Admin", pagecontent = result)
 
-@app.route("/add_news")
-def add_news_form():
-    result = ct.get_news_form(1)
-    return template("base",pagetitle = "Add News",
-                    pagecontent = result)
-                    
-@app.route("/add_news",method="POST")
-def add_news():
-    r = fh.do_add_news(request)
-    return template("base",pagetitle = "Add News",
-                    pagecontent = r)
+@app.route("/sports")
+def sports():
+    result = "sports"
+    return template("base", pagetitle= "Admin", pagecontent = result)
 
-@app.route("/wrong")
-def wrong():
-    """Return a html, the content is problem tips,
-    and a button to go back.
-    
-    :param content: the html content
-    :type content: String
-    :param url: the url to go back
-    :type url: String
-    :returns: a html
-    """
-    url = request.url
-    content = "love me"
-    return template("wrong",
-                    pagetitle = "Something Wrong",
-                    pagecontent = content, url = url)
-                    
+@app.route("/athelets")
+def athelets():
+    result = "athelets"
+    return template("base", pagetitle= "Admin", pagecontent = result)
+
+@app.route("/medalists")
+def medalists():
+    result = "medalists"
+    return template("base", pagetitle= "Admin", pagecontent = result)
+
+@app.route("/admin")
+def admin():
+    result = "Admin"
+    return template("base", pagetitle= "Admin", pagecontent = result)
 
 #==============================================================================
 # app

@@ -26,7 +26,9 @@ a,a:link,a:visited{
 a:hover,a:active {
     background-color: lightgrey;
 }
-
+/* 
+    header
+*/
 #header {
     background: gray;
     padding-left: 10%;
@@ -70,7 +72,9 @@ a.navi:hover, a.navi:active {
     color: gray;
     background: none;
 }
-
+/* 
+    content
+*/
 #content {
     padding: 1em;
     margin-left: 10%;
@@ -113,6 +117,7 @@ span.sport {
     font-weight: bold;
     position: relative;
     float: right;
+    text-transform: capitalize;
 }
 p.news{
     display: block;
@@ -125,13 +130,18 @@ img.news {
     margin-top: 1em;
     margin-bottom: 1em;
 }
-
+/* 
+    news
+*/
 #images {
     margin: 1em;
     background: lightgrey;
     alignment-adjust: central;
     text-align: center;
 }
+/* 
+    comment
+*/
 div.comment {
     padding: 1em;
     margin: 1em;
@@ -143,14 +153,18 @@ em.comment {
     display: block;
     border-bottom: thin black dotted;
 }
-
+/* 
+    fotter
+*/
 #fotter {
     margin-left: 10%;
     margin-right: 10%;
     background: black;
     color: white;
 }
-
+/* 
+    table
+*/
 table.result {
     font-weight: normal;
     font-family: serif;
@@ -163,57 +177,6 @@ th.result {
     text-transform: uppercase;
     background: lightgrey;
 }
-input {
-    font-size: large;
-    clear: left;
-}
-select {
-    font-size: large;
-}
-input.title {
-    display: block;
-    font-size: x-large;
-    width: 100%;
-}
-div.athelet_number {
-    background: lightgray;
-    position: relative;
-    border: thin lightgray solid;
-    float: right;
-    margin: 0.5em;
-    width: 10%;
-    font-size: xx-large;
-}
-div.inputtable {
-    border-bottom: thin dashed lightgray;
-    margin: 1em;
-}
-.inputtable label  {
-    display: block;
-}
-.form_date label {
-    display: inline;
-}
-.form_date select {
-    display: inline;
-}
-form span {
-    display: block;
-    font-weight: bold;
-}
-textarea {
-    width: 100%;
-    font-size: large;
-    height: 8em;
-}
-fieldset {
-    margin: 1em;
-}
-form.top_search {
-    display: inline;
-    margin-left: 2em;
-}
-input.top_search {
-    display: inline;
-    border: 1px solid white;
-}
+/* 
+    form
+*/

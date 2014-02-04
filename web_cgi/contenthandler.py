@@ -8,7 +8,9 @@ import dbconnector as db
 import sqlstaments as sqls
 import viewsmaker as vm
 from bottle import template
-
+#==============================================================================
+# homepage
+#==============================================================================
 def get_Homepage():
     """Get the content for homepage.
     
@@ -28,7 +30,9 @@ def get_Homepage():
     n = vm.makeShortNews(n)
     pagecontent = template("index", table = t , news = n)
     return pagecontent
-
+#==============================================================================
+# add event
+#==============================================================================
 def get_AddEvent():
     """Return a html page for adding new event
     
@@ -48,7 +52,9 @@ def get_AddEvent():
                         select_vanues = v)
     return add_form
     
-
+#==============================================================================
+# news form
+#==============================================================================
 def get_news_form(n):
     """Return a html form for adding news.
     
@@ -75,8 +81,14 @@ def get_news_form(n):
                         select_countries = c,
                         numberofathelets = n)
     return news_form
-
+#==============================================================================
+# admin_page
+#==============================================================================
+def admin():
+    """Return admin page.
     
+    
+    """
         
     
     
