@@ -1,4 +1,5 @@
             % t = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
+            % m = {1:("g","Gold"),2:("s","Silver"),3:("b","Bronze")}
             <h1>Add Solo Event -- {{!t[et]}}</h1>
             <form class="add_event" action="/add_solo" method="post">
                 <label>Event Name: </label>
@@ -45,7 +46,13 @@
                     <legend>Results</legend>
                     % for ath_nr in ath_number:
                     <!-- athelet formular -->
-                        <span class="ranking">Rank: {{!ath_nr}}</span>
+                        % if et == "f" and ath_nr <4:
+                            <span class="ranking_{{!m[ath_nr][0]}}">{{!m[ath_nr][1]}}</span>
+                            <input name="ath{{!ath_nr}}_medal" value="{{!m[ath_nr][0]}}" hidden="hidden">
+                        % else:
+                            <span class="ranking">{{!ath_nr}}</span>
+                            <input name="ath{{!ath_nr}}_medal" value="" hidden="hidden">
+                        % end
                         <input type="text" name="ath{{!ath_nr}}_rank" hidden="hidden" value="{{ath_nr}}" required>
                         <label>First Name:</label>
                         <input type="text" name="ath{{!ath_nr}}_firstname" placeholder="First Name" required>
@@ -54,17 +61,6 @@
                         <br/>
                         <label>Result</label>
                         <input name="ath{{!ath_nr}}_result" placeholder="Enter result">
-                        % if et == "f":
-                        <label>Medal</label>
-                        <select name="ath{{!ath_nr}}_medal" required>
-                            <option value=""> </option>
-                            <option value="g">Gold</option>
-                            <option value="s">Silver</option>
-                            <option value="b">Bronze</option>
-                        </select>
-                        % else:
-                            <input name="ath{{!ath_nr}}_medal" value="" hidden="hidden">
-                        % end
                         <br/>
                         <label>Select Country</label>
                         <select name="ath{{!ath_nr}}_country" required>

@@ -9,6 +9,7 @@ import dbconnector as db
 from bottle import redirect
 import sqlite3
 import re
+from bottle import template
 
 def do_add_solo_event(req):
     """"Do sql insert based on the html form
@@ -19,15 +20,47 @@ def do_add_solo_event(req):
     """
     form = req.forms
     infos = request_to_dict(form)
-    # collect event infomation
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
+    # collect event infomation
+    e_condition = infos["event"]
+    e_condition["name"] = e_condition["name"] + " ("+ ts[e_condition["type"]] + ")"
+    test = db.select_something("events",("id","name"),{"name":e_condition["name"]})
+    e_name = e_condition["name"]
+    if len(test) > 1:
+        e_rowid = test[1][0]
+        e_name = test[1][1]
+        e = """
+        <a class="wrong" href="/events/{oid}">{event}</a> was already reported!
+        please go to <a class="wrong" href="/edit_event/{oid}">edit event</a>to edit this event.
+        """
+        e = e.format(oid = e_rowid, event = e_name)
+        return template("error", error = e)
+    # collect ath infos
     ath_keys = [ath for ath in infos.keys() if ath.startswith("ath")]
-    result = {}
+    p_infos = {}
+    ath_rowids = []
     for ak in ath_keys:
         a_info = infos[ak]
-        a_condition = {}
-    return infos
-    
+        a_condition = {"firstname":a_info["firstname"],
+        "lastname":a_info["lastname"],
+        "gender":a_info["gender"],
+        "country":a_info["country"],
+        "birthday":a_info["date"],}
+        ath_rowid = db.insert_into_tables("athletes",a_condition, ("rowid",))[1][0]
+        ath_rowids.append(ath_rowid)
+        p_condition = {"athlete":ath_rowid,"rank":a_info["rank"],
+                       "result":a_info["result"],"medal":a_info["medal"]}
+        p_infos[ath_rowid] = p_condition
+    ath_rowids_rm = remove_duplicates(ath_rowids)
+    # test if duplicated athe in one event
+    if len(ath_rowids) != len(ath_rowids_rm):
+        e = "You have inputed duplicated althetes in one event!"
+        return template("error",error = e)
+    e_id =  db.insert_into_tables("events",e_condition,("id",))[1][0]
+    for k,v in p_infos.items():
+        v["event"] = e_id
+        db.insert_into_tables("participants",v,("rowid",))
+    redirect("/events/"+str(e_id))
 
 def do_add_solo_event_2(req):
     """"Do sql insert based on the html form
@@ -179,3 +212,12 @@ def cleanRequest(sqltupe):
         i = i.strip(" ")
         result.append(i)
     return result
+    
+def remove_duplicates(l):
+    """Remove duplicate element in a list
+    
+    :param l: A list object
+    :type l: List
+    :returns: a list without duplicate
+    """
+    return list(set(l))

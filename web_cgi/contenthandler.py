@@ -69,7 +69,16 @@ def get_add_solo_form(et,number):
                     minute_options = mo,
                     country_options = co,
                     year_options = yo)
+#==============================================================================
+# event page   
+#==============================================================================
+def get_event(nr):
+    """Get the html content of for a given event
     
+    :prama nr: A event id
+    :type nr: integer
+    :returns: a html content
+    """
     
     
     

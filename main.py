@@ -44,6 +44,16 @@ def events():
     result = "events"
     return template("base", pagetitle= "Admin", pagecontent = result)
 
+@app.route("/events/<nr:int>")
+def view_event(nr):
+    """A page for an event
+    
+    :param nr: An event id
+    :type nr: integer
+    :returns: A html page for a event
+    """
+    
+
 @app.route("/news")
 def news():
     result = "news"

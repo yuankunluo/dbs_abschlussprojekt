@@ -283,3 +283,12 @@ a.wrong {
     display: box;
     margin: 0.5em;
 }
+/*
+    div helper
+*/
+div.error {
+    padding: 1em;
+    background: lightcoral;
+    display: block;
+    border: dashed red thin;
+}

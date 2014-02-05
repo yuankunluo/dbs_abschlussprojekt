@@ -217,14 +217,27 @@ values
 select * from events
 
 delete from events where rowid >6
+delete from participants where rowid >0
+delete from athletes where rowid >0
 
 create table participants (
 	event varchar(255) not null,
 	athlete integer not null,
 	rank integer not null,
-	team integer,
+	team varchar(255),
 	result varchar(255),
 	medal char(1),
 	foreign key (event) references events(name),
-	foreign key (athlete) references athletes(oid)
+	foreign key (athlete) references athletes(oid),
+	primary key (event, athlete)
+)
+
+CREATE TABLE events (
+	id integer not null primary key autoincrement,
+    "name" VARCHAR(255) NOT NULL,
+    "date" VARCHAR(255) NOT NULL,
+    "time" VARCHAR(255) NOT NULL,
+    "vanue" INTEGER NOT NULL,
+    "sport" V NOT NULL,
+    "type" CHAR(1) NOT NULL
 )

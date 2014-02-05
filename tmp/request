@@ -29,3 +29,25 @@
 
 'event': 
 {'vanue': 'london aquatics centre', 'name': 'iof', 'hour': '19', 'time': '19:10', 'month': '01', 'year': '2012', 'date': '2012-01-18', 'sport': 'archery', 'type': 'f', 'day': '18', 'minute': '10'}}
+
+
+--------------
+
+
+{'ath1': 
+{'firstname': 'luo', 
+'country': 'bh', 
+'rank': '1', 
+'result': 'df', 
+'lastname': 'yuankun', 
+'gender': 'f', 
+'date': '1932-12-19', 
+'medal': 'b'}, 
+
+'event': {
+'vanue': '1', 
+'name': 'i love you', 
+'time': '19:05', 
+'date': '2012-01-19', 
+'sport': '1', 
+'type': 'f'}}

@@ -97,6 +97,9 @@ def insert_into_tables(table, condition, re_item):
     :param re_item: A tuple
     :returns: A primary key
     """
+    test = select_something(table, re_item, condition)
+    if len(test) > 1:
+        return test
     conn = get_conn()
     cousor = get_cousor(conn)
     insertsql = """insert into {t}({c}) values ({q})"""
