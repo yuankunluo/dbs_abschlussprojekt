@@ -10,11 +10,12 @@ import sqlstaments as sqls
 import os
 
 
-def execute(query, withLink = False):
+def execute(query, condition= None, withLink = False):
     """Get the cousor object for a sqlite3 db
     
     :param query: A sql stament
     :type query: String
+    :param condition: A condition for select query
     :param withLink: Return a tuple with links
     :tyoe withLink: Boolean
     :returns: a cousor object or None if connection 
@@ -145,7 +146,7 @@ def tupleToList(sqlTuple, withLink= False):
         for r in sqlTuple:
             tem = []
             for k in ks:
-                tem.append(r[k])
+                tem.append(str(r[k]))
             result.append(tuple(tem))
         return result
     if withLink:
@@ -163,11 +164,11 @@ def tupleToList(sqlTuple, withLink= False):
             j = 0
             while i < len(row):
                 if i in index:
-                    tem.append((row[i],linkindex[j][1],row[i+1]))
+                    tem.append(str((row[i],linkindex[j][1],row[i+1])))
                     i += 2
                     j +=1
                 else:
-                    tem.append(row[i])
+                    tem.append(str(row[i]))
                     i += 1
             result.append(tuple(tem))
         return result

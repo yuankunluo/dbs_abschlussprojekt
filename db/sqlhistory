@@ -241,3 +241,118 @@ CREATE TABLE events (
     "sport" V NOT NULL,
     "type" CHAR(1) NOT NULL
 )
+insert into events (name, date, time, vanue, sport, type)
+values 
+("400m swimmfffdfsfffdfs","1988-11-06","12:30","1","1","p")
+
+CREATE TABLE participants (
+	event integer not null,
+	athlete integer not null,
+	rank integer not null,
+	team varchar(255),
+	result varchar(255),
+	medal char(1),
+	foreign key (event) references events(id),
+	foreign key (athlete) references athletes(oid),
+	primary key (event, athlete)
+)
+
+select e.name as event, e.date as date, e.time as time, v.name as v.vanue
+
+
+CREATE TABLE users (
+id integer not null primary key autoincrement,
+username varchar(255) not null,
+email varchar(255) not null,
+pass varchar(255) not null,
+first_name varchar(255) not null,
+last_name varchar(255) not null,
+gender char(1) not null,
+birth_date varchar(255) not null,
+city integer not null,
+address integer not null,
+register_time varchar(255) not null,
+face_pic varchar(255),
+reporter boolean not null,
+foreign key (city) references cities(id) on update no action on delete no action,
+foreign key (address) references addresses(id) on update cascade on delete cascade,
+foreign key (face_pic) references pictures(id) on update cascade on delete cascade
+)
+
+create table news (
+	id integer not null primary key autoincrement,
+	datetime varchar(255) not null,
+	user integer not null,
+	content text not null,
+	title varchar(255) not null,
+	event integer not null,
+	foreign key(user) references users(id),
+	foreign key(event) references events(id)
+)
+
+insert into news (datetime, user, content, title, event)
+values 
+(datetime("now"), 1,"I love you love you","i love you love you",1)
+
+insert into users(username, email, pass, firstname, lastname, gender, birthday,city,address, registertime,reporter)
+values 
+("yuankun","y@q.com","123","Yuankun","Luo","m","1988-11-06",1,1,datetime("now"), 0)
+
+CREATE TABLE users (
+    "id" INTEGER NOT NULL primary key,
+    "username" VARCHAR(255) NOT NULL,
+    "email" VARCHAR(255) NOT NULL,
+    "pass" VARCHAR(255) NOT NULL,
+    "firstname" VARCHAR(255) NOT NULL,
+    "lastname" VARCHAR(255) NOT NULL,
+    "gender" CHAR(1) NOT NULL,
+    "birthday" VARCHAR(255) NOT NULL,
+    "city" INTEGER NOT NULL,
+    "address" INTEGER NOT NULL,
+    "registertime" VARCHAR(255) NOT NULL,
+    "facepic" VARCHAR(255),
+    "reporter" BOOLEAN NOT NULL,
+    foreign key (city) references cities(id),
+    foreign key(address) references addresses(id),
+    foreign key(facepic) references pictures(id)
+)
+
+select e.name as event, e.date, e.time, v.name as vanue,
+s.name as sport
+from events e, vanues  v, sports s 
+where e.vanue = v.id and e.sport = s.id and e.id =1
+
+
+
+select n.title as title,n.id as news_link, n.datetime as date, 
+n.user as reporter, n.content as content,p.link as pic, s.name as sport, s.id as sports_link, c.count as comment
+from news n, pictures p, events as e, sports as s,
+(select news as cid,count(oid) as count
+from comments
+group by cid
+order by  count) c, 
+(select news as nid , pic as pid
+from news_pics
+group by news) np
+where np.nid = n.id and n.id = np.nid and np.pid = p.id and c.cid= n.id and n.event = e.name and e.sport = s.id
+order by comment desc
+limit 10
+
+
+
+select n.title as title,n.id as news_link, n.datetime as date, 
+u.name as reporter, n.content as content,p.link as pic, s.name as sport, 
+s.id as sports_link, c.count as comment
+from news n, pictures p, events e, sports  s, users u,
+(select news as cid,count(oid) as count
+from comments
+group by cid
+order by  count) c, 
+(select news as nid , pic as pid
+from news_pics
+group by news) np
+where np.nid = n.id and n.id = np.nid and np.pid = p.id and c.cid= n.id and n.event = e.name and e.sport = s.id
+order by comment desc
+limit 10
+
+

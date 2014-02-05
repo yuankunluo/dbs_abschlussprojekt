@@ -1,5 +1,5 @@
 select n.title as title,n.id as news_link, n.datetime as date, 
-n.user as reporter, n.content as content,p.link as pic, s.name as sport, s.id as sports_link, c.count as comment
+u.name as reporter, n.content as content,p.link as pic, s.name as sport, s.id as sports_link, c.count as comment
 from news n, pictures p, events as e, sports as s,
 (select news as cid,count(oid) as count
 from comments
