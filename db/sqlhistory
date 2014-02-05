@@ -212,5 +212,19 @@ select * from athletes
 
 insert into athletes(firstname, lastname,gender, birthday,country)
 values
-("yuankun","luo","m","1988-11-06","cn")
+("yuankun","luo","f","1988-11-06","cn")
 
+select * from events
+
+delete from events where rowid >6
+
+create table participants (
+	event varchar(255) not null,
+	athlete integer not null,
+	rank integer not null,
+	team integer,
+	result varchar(255),
+	medal char(1),
+	foreign key (event) references events(name),
+	foreign key (athlete) references athletes(oid)
+)

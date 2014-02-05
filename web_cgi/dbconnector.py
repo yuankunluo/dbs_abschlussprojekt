@@ -33,10 +33,10 @@ def execute(query, withLink = False):
 #==============================================================================
 # get conn or get cousor
 #==============================================================================
-def get_conn():
+def get_conn(dbs="db/london2012.db"):
     """Return the connection object
     """
-    conn = sqlite3.connect("db/london2012.db")
+    conn = sqlite3.connect(dbs)
     conn.row_factory = sqlite3.Row
     return conn
 def get_cousor(conn):
@@ -46,23 +46,6 @@ def get_cousor(conn):
     cousor = conn.cursor()
     return cousor
 #==============================================================================
-# test functions to test if a tuple already in db
-#==============================================================================
-def test_already(table,condition):
-    """Test if a given tuple already in a given table
-    
-    :param sqlquery: A table name
-    :type sqlquery: string
-    :param condition: a dist
-    :type conditon: a dist
-    :returns: Boolean, True of False
-    """
-    r = select_something(table, "*", condition)
-    if len(r) == 0:
-        return False
-    else:
-        return True
-#==============================================================================
 # select primary key of a table
 #==============================================================================
 def select_something(table, something, condition):
@@ -70,24 +53,71 @@ def select_something(table, something, condition):
     
     :param sqlquery: A table name
     :type sqlquery: string
-    :param something: a column
-    :type something: a string
+    :param something: a tuple of column
+    :type something: a tuple
     :param condition: a dict
     :type conditon: a dist
     :returns: A primary key
     """
     conn = get_conn()
     cousor = get_cousor(conn)
-    condkeys = condition.keys()
-    sqlq = "select {item} from {table} where ".format(item = something,table= table)
-    for k in condkeys:
-        sqlq += k + "=:" + k + " "
+    if len(something) >1:
+        items = ",".join(something)
+    else:
+        items = "".join(something)
+    sqlq = "select {items} from {table} where".format(items = items,
+                                                table= table)
+    keys = condition.keys()
+    for i in range(len(keys)):
+        k = keys[i]
+        if i == 0:
+            sqlq += " "+k + "=:" + k + " "
+        if i in range(1, len(keys)):
+            sqlq += " and "+k + "=:" + k + " "
+#    print(condition)
+#    print(sqlq)
     r = cousor.execute(sqlq, condition)
     r = r.fetchall()
-    return r
+    conn.close()
+    # return item
+    result = tupleToList(r)
+    #print(result)
+    return result
 #==============================================================================
 # insert
 #==============================================================================
+def insert_into_tables(table, condition, re_item):
+    """Insert into 
+    
+    :param sqlquery: A table name
+    :type sqlquery: string
+    :param condition: a dict
+    :type conditon: a dist
+    :param re_item: A specfiy returned item after inserting
+    :param re_item: A tuple
+    :returns: A primary key
+    """
+    conn = get_conn()
+    cousor = get_cousor(conn)
+    insertsql = """insert into {t}({c}) values ({q})"""
+    columns = []
+    values = []
+    for k,v in condition.items():
+        columns.append(k)
+        values.append(v)
+    questions = "? "*len(values)
+    questions = questions.strip(" ")
+    questions = questions.split(" ")
+    questions = ",".join(questions)
+    insertsql = insertsql.format(t = table, c = ",".join(columns),
+                                 q = questions)
+    cousor.execute(insertsql,values)
+    conn.commit()
+    conn.close()
+    result = select_something(table, re_item, condition)
+    return result
+    
+    
 
 
 #==============================================================================
@@ -103,6 +133,8 @@ def tupleToList(sqlTuple, withLink= False):
     :type withLink: Boolean
     :returns: A list of tuple like [(v1,v2,v3..)]
     """
+    if len(sqlTuple) == 0:
+        return []
     if not withLink:
         result = []
         ks = tuple(sqlTuple[0].keys())

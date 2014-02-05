@@ -75,7 +75,7 @@ def search():
 #==============================================================================
 # edit functions
 #==============================================================================
-@app.route("/add_event_solo/<t:re:(p|f|s)>/<nr:int>")
+@app.route("/add_event/solo/<t:re:(p|f|s)>/<nr:int>")
 def add_event_solo(t,nr):
     """Get html form for add solo event
     

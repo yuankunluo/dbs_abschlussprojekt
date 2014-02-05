@@ -77,9 +77,9 @@ def rangeSelector(t="year", options_only=False, name="year", label="year"):
     if t == "month":
         options = range(1,13)
     if t == "day":
-        options = range(0,32)
+        options = range(1,32)
     if t == "hour":
-        options = range(0,25)
+        options = range(1,25)
     if t == "minute":
         options = range(0,56,5)
     return template(temp,name=name,label=label,options=options)                

@@ -266,9 +266,6 @@ fieldset {
 button {
     font-size: large;
 }
-option {
-    text-transform: capitalize;
-}
 /*  
     search box
 */

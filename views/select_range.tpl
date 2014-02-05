@@ -1,8 +1,9 @@
 <labelfor="{{!label}}">{{!label}}: </label>
 <select name="{{!name}}">
-	<option value=""></option>
+<option value="" selected> </option>
+
 	% for i in options:
-		<option valune={{!i}}>{{!i}}</option>
+		<option value="{{!i}}">{{!i}}</option>
 	% end
 </select>
 

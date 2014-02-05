@@ -1,15 +1,11 @@
             % t = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
             <h1>Add Solo Event -- {{!t[et]}}</h1>
-            <form class="add_event" action="/add_solo" method="post">
-
-                <input name="news_title" id="news_title" placeholder="Enter a Title for this news" required>
-
+            <form class="add_event" action="../add_solo" method="post">
+                <label>Event Name: </label>
+                <input id="news_title" name="event_name" placeholder="Enter new Event Name" required>
                 <fieldset name="event">
-                    <legend>Event</legend>
-                    <label>Event Name: </label>
-                    <input name="event_name" placeholder="Enter new Event Name" required>
+                    <legend>Event Information</legend>
                     <input name="event_type" value="{{!et}}" hidden="hidden">
-                    <hr/>
                     <label>Select Vanue</label>
                     <select name="event_vanue" required>
                         {{!vanue_options}}
@@ -97,13 +93,6 @@
                     </div>
                     % end
                 </fieldset>
-
-                <fieldset name="content">
-                    <!-- News -->
-                    <legend>News Content</legend>
-                    <textarea name="news_content" placeholder="Enter Content" required></textarea>
-                </fieldset>
                 <button type="submit" value="Submit">Submit</button>
                 <button type="reset" value="Reset">Reset</button>
             </form>
-
