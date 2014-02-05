@@ -82,14 +82,42 @@ def get_news_form(n):
                         numberofathelets = n)
     return news_form
 #==============================================================================
-# admin_page
+# add solo event
 #==============================================================================
-def admin():
-    """Return admin page.
+def get_add_solo_form(et,number):
+    """Return a from for adding solo event.
     
-    
+    :param et: Event type
+    :type et: String
+    :param number: The number of athelets 
+    :type number: Integer
+    :returns: a html form for add event
     """
-        
+    # get selector options
+    countries = db.execute(sqls.select_countries)
+    co = vm.makeSelector(countries, True)
+    vanues = db.execute(sqls.select_vanues)
+    vo = vm.makeSelector(vanues, True)
+    sports = db.execute(sqls.select_sports)
+    so = vm.makeSelector(sports, True)
+    events = db.execute(sqls.select_events)
+    eo = vm.makeSelector(events, True)
+    # get datetime options
+    yo = vm.rangeSelector("year",True)
+    mo = vm.rangeSelector("month",True)
+    do = vm.rangeSelector("day", True)
+    ho = vm.rangeSelector("hour",True)
+    mo = vm.rangeSelector("minute", True)
+    return template("add_solo", et = et, ath_number = range(1,number+1),
+                    event_options = eo,
+                    vanue_options = vo,
+                    sports_options = so,
+                    month_options = mo,
+                    day_options = do,
+                    hour_options = ho,
+                    minute_options = mo,
+                    country_options = co,
+                    year_options = yo)
     
     
     

@@ -159,7 +159,7 @@ foreign key (country) references countries(a2_code),
 foreign key (pic) references pictrues(id)
 )
 
-select * from athelets
+select * from athletes
 
 insert into athelets (first_name, last_name, gender, birth_date, country)
 values
@@ -172,4 +172,45 @@ where a.country = c.a2_code
 select * from countries
 where a2_code = "bd"
 
+
+create table teams
+( name varchar(255) not null,
+country varchar(255) not null,
+primary key(name, country),
+foreign key(country) references  countries(a2_code)
+)
+
+select * from sports
+
+select oid from events
+where name = "i love you"
+
+update events set date ="2000-01-01" where oid = 6
+
+insert into events(name, date, time, vanue, sport, type)
+values 
+("i love you too i love love", date("1988-08-22"), time("16:44"),1,3,"p")
+
+select * from events 
+where name = "i love you"
+
+update events set type = "f" where vanue = 1
+
+create table athletes (
+	firstname varchar(255) not null,
+	lastname varchar(255) not null,
+	gender char(1) not null,
+	birthday varchar(255) not null,
+	country char(2) not null,
+	pic integer,
+	primary key(firstname, lastname, gender, birthday,country),
+	foreign key (country) references countries(a2_code),
+	foreign key (pic) references pictures(id)
+)
+
+select * from athletes
+
+insert into athletes(firstname, lastname,gender, birthday,country)
+values
+("yuankun","luo","m","1988-11-06","cn")
 

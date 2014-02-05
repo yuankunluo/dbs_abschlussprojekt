@@ -9,65 +9,53 @@ import dbconnector as db
 from bottle import redirect
 import sqlite3
 
-def do_add_event(form, url,  goto):
-    """Do sql insertion based on the html form.
-    
-    :param form: A html form posted information.
-    :type form: A bottle.request.forms object
-    :param url: the request url
-    :type url: string
-    :param goto: Specify the next step after db update
-    :type goto: A string
-    :returns: none
-    """
-    redirect(goto)
 
-def do_add_news(req):
+def do_add_solo_event(req):
     """"Do sql insert based on the html form
     
     :prame req: The request object
     :tyeoe req: bottle.request
     :returns: none
     """
-    wrong = []
-    news = []
-    event = []
-    athelets = []
-    for k in sorted(req.forms.keys()):
-        ks = k.split("_")
-        v = req.forms[k]
-        ks.append(v)
-        ks = [x.strip(" ") for x in ks]
-        ks = [x.lower() for x in ks]
-        if k.startswith("athelet_"):
-            athelets.append(tuple(ks))
-            continue
-        if k.startswith("event_"):
-            event.append(ks)
-            continue
-        if k.startswith("news_"):
-            news.append(ks)
-            continue
-    # extract information of athelets
-    ath_result = {}
-    for a in athelets:
-        k = a[0]+[1]
-        if k not in ath_result.keys():
-            ath_result[k] = {}
-    for a in athelets:
-        ak = a[0]+[1]
-        k = a[2]
-        v = a[3]
-        ath_result[ak][k] = v
-    for a in ath_result.keys():
-        at = ath_result[a]
-        r = db.execute()
+    form = req.forms
+    infos = []
+    for k,v in form.items():
+        k = k.split("_")
+        k.append(v.strip(" "))
+        infos.append(tuple(k))
+    infos = sorted(infos, key=lambda info:info[0])
+    infos = manage_tuples(infos)
+    # test if the event was already in db
+    if db.test_already("events",{"name":infos["event"]["name"],}):
+        oid = db.select_something("events","oid",{"name":infos["event"]["name"],})
+        oid = oid[0][0]
+        error = '<h1>Error:</h1>Event was already reported, please go to <a class="wrong" href="../edit_event/{oid}">edit event</a>'
+        error += " to edit this event."        
+        return error.format(oid= oid)
+    else:
+        return infos
+
+#==============================================================================
+# help functions
+#==============================================================================
+def manage_tuples(tuples):
+    """Helper to make the request tuples into wellformated tuple,
+    inorder to match tablls in dbs
     
+    :param tuples: a list of tuples
+    :type tuples: a list
+    :returns: a list of tuples that match tables in dbs
+    """
+    tables = {}
+    for t in tuples:
+        s = t[2]
+        if t[1] in ["month","year","day","hour","minute"] and len(s) ==1:
+            s = "0" + s
+        if t[0] not in tables.keys():
+            tables[t[0]] = {}
+            tables[t[0]][t[1]]=s
+        else:
+            tables[t[0]][t[1]]=s   
+    return tables
         
         
-        
-    
-#    s = ""
-#    for a in athelets:
-#        s += "_".join(a)+"<br>"
-#    return s

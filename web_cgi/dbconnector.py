@@ -7,6 +7,8 @@ Created on Mon Jan 20 00:24:44 2014
 
 import sqlite3
 import sqlstaments as sqls
+import os
+
 
 def execute(query, withLink = False):
     """Get the cousor object for a sqlite3 db
@@ -18,7 +20,7 @@ def execute(query, withLink = False):
     :returns: a cousor object or None if connection 
     """
 #    try:
-    conn = sqlite3.connect("db/london2012.db")
+    conn = get_conn()
     # use row factory
     conn.row_factory = sqlite3.Row
     cousor = conn.cursor()
@@ -28,19 +30,64 @@ def execute(query, withLink = False):
 #    except:
 #        print("Database connect failure.")
 #        return None
-
-def insert_athelets(athelet):
-    """Insert multi value into athelets.
-    
-    :param athelet: A dict reprasent a athelet
-    :type athelet: dict
-    :returns: a list[] of error
+#==============================================================================
+# get conn or get cousor
+#==============================================================================
+def get_conn():
+    """Return the connection object
     """
-    fn = athelet["first_name"]
-    ln = athelet["last_name"]
-    g = athelet["gender"]
+    conn = sqlite3.connect("db/london2012.db")
+    conn.row_factory = sqlite3.Row
+    return conn
+def get_cousor(conn):
+    """Return the cousor object
+    """
+    # use row factory   
+    cousor = conn.cursor()
+    return cousor
+#==============================================================================
+# test functions to test if a tuple already in db
+#==============================================================================
+def test_already(table,condition):
+    """Test if a given tuple already in a given table
     
+    :param sqlquery: A table name
+    :type sqlquery: string
+    :param condition: a dist
+    :type conditon: a dist
+    :returns: Boolean, True of False
+    """
+    r = select_something(table, "*", condition)
+    if len(r) == 0:
+        return False
+    else:
+        return True
+#==============================================================================
+# select primary key of a table
+#==============================================================================
+def select_something(table, something, condition):
+    """Test if a given tuple already in a given table
     
+    :param sqlquery: A table name
+    :type sqlquery: string
+    :param something: a column
+    :type something: a string
+    :param condition: a dict
+    :type conditon: a dist
+    :returns: A primary key
+    """
+    conn = get_conn()
+    cousor = get_cousor(conn)
+    condkeys = condition.keys()
+    sqlq = "select {item} from {table} where ".format(item = something,table= table)
+    for k in condkeys:
+        sqlq += k + "=:" + k + " "
+    r = cousor.execute(sqlq, condition)
+    r = r.fetchall()
+    return r
+#==============================================================================
+# insert
+#==============================================================================
 
 
 #==============================================================================

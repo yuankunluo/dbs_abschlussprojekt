@@ -7,11 +7,11 @@ Created on Tue Jan 14 17:38:53 2014
 import bottle
 from bottle import run, Bottle, template
 from bottle import static_file
-from bottle import request
+from bottle import request as req
 #from bottle import BaseRequest as request
 import os
 import web_cgi.contenthandler as ct
-
+import web_cgi.formhandler as fh
 
 app = Bottle(autojson=True)
 #==============================================================================
@@ -30,8 +30,6 @@ def get_css(filename):
 @app.route("/static/images/<filename>")
 def get_image(filename):
     return static_file(filename, root = root + "/static/images")
-
-
 #==============================================================================
 # routers
 #==============================================================================
@@ -56,9 +54,9 @@ def sports():
     result = "sports"
     return template("base", pagetitle= "Admin", pagecontent = result)
 
-@app.route("/athelets")
-def athelets():
-    result = "athelets"
+@app.route("/athletes")
+def athletes():
+    result = "athletes"
     return template("base", pagetitle= "Admin", pagecontent = result)
 
 @app.route("/medalists")
@@ -70,6 +68,30 @@ def medalists():
 def admin():
     result = "Admin"
     return template("base", pagetitle= "Admin", pagecontent = result)
+    
+@app.route("/search")
+def search():
+    return template("base",pagetitle="Search", pagecontent="search")
+#==============================================================================
+# edit functions
+#==============================================================================
+@app.route("/add_event_solo/<t:re:(p|f|s)>/<nr:int>")
+def add_event_solo(t,nr):
+    """Get html form for add solo event
+    
+    :param t: Event type 
+    :type t: string
+    :param nr: Number of athlets
+    :type nr: Integer
+    :returns: Html
+    """
+    result = ct.get_add_solo_form(t,nr)
+    return template("base", pagetitle="add solo", pagecontent = result)
+
+@app.route("/add_solo",method="post")
+def add_event_solo_post():
+    result = fh.do_add_solo_event(req)
+    return template("base", pagetitle="add solo", pagecontent = result)
 
 #==============================================================================
 # app
