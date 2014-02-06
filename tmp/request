@@ -1,73 +1,51 @@
-{'ath1': {
-'firstname': 'fsd', 
+{'team1': 
+
+{'ath1/lastname': 'fdsa', 
+'ath1/firstname': 'ds', 
+'ath2/day': '19', 
+'ath1/day': '17', 
+'ath2/year': '1932', 
+'ath1/month': '1', 
+
 'country': 'bh', 
-'year': '1932', 
-'rank': '1', 
-'month': '55', 
-'result': 'fsda', 
-'lastname': 'fds', 
-'gender': 'f', 
-'day': '17'}, 
+'medal': 'g', 
+'result': 'dsf', 
+
+'ath1/year': '1928', 
+'ath2/month': '12', 
+'ath2/firstname': 'dsf', 
+'ath2/gender': 'm', 
+'ath1/gender': 'f', 
+'ath2/lastname': 'dfs'}, 
 
 
-'event': {'vanue': '1', 
-'name': 'fds', 
-'hour': '02', 
-'month': '05', 
-'sport': '1', 
-'type': 'p', 
-'day': '01', 
-'minute': '20'}}
+'event': {'vanue': '1', 'name': 'dsfa', 'time': '02:00', 'date': '2012-01-01', 'sport': '1', 'type': 'f'}} 
 
 
-
--------------------------
-
-
-{'ath1': 
-{'firstname': 'fds', 'country': 'bahrain', 'year': '1932', 'rank': '1', 'month': '12', 'result': '', 'lastname': 'fds', 'gender': 'f', 'date': '1932-12-18', 'medal': 'g', 'day': '18'}, 
-
-'event': 
-{'vanue': 'london aquatics centre', 'name': 'iof', 'hour': '19', 'time': '19:10', 'month': '01', 'year': '2012', 'date': '2012-01-18', 'sport': 'archery', 'type': 'f', 'day': '18', 'minute': '10'}}
-
-
---------------
-
-
-{'ath1': 
-{'firstname': 'luo', 
-'country': 'bh', 
-'rank': '1', 
-'result': 'df', 
-'lastname': 'yuankun', 
-'gender': 'f', 
-'date': '1932-12-19', 
-'medal': 'b'}, 
-
-'event': {
-'vanue': '1', 
-'name': 'i love you', 
-'time': '19:05', 
-'date': '2012-01-19', 
-'sport': '1', 
-'type': 'f'}}
-
-[('title', 'news_link', 'date', 'reporter', 'content', 'pic', 'sport', 'sports_link', 'comment'), 
-(u'i love you love you', 5, u'2014-02-05 22:28:42', u'yuankunluo', u'I love you love you', u'005.jpg', u'archery', 1, 30), 
-(u'i love you love you', 3, u'2014-02-05 22:28:41', u'yuankunluo', u'I love you love you', u'002.jpg', u'archery', 1, 15), 
-(u'i love you love you', 1, u'2014-02-05 22:13:00', u'yuankunluo', u'I love you love you', u'001.jpg', u'archery', 1, 7), 
-(u'i love you love you', 4, u'2014-02-05 22:28:41', u'yuankunluo', u'I love you love you', u'004.jpg', u'archery', 1, 2)] 
+{'team1': {'ath1/lastname': 'fdsa', 'ath1/firstname': 'ds', 'ath2/day': '19', 'ath1/day': '17', 'country': 'bh', 'ath2/year': '1932', 'ath1/month': '1', 'medal': 'g', 'ath1/year': '1928', 'ath2/month': '12', 'ath2/firstname': 'dsf', 'ath2/gender': 'm', 'result': 'dsf', 'ath1/gender': 'f', 'ath2/lastname': 'dfs'}, 'event': {'vanue': '1', 'name': 'dsfa', 'time': '02:00', 'date': '2012-01-01', 'sport': '1', 'type': 'f'}} 
 
 
 
-[('title', 'news_link', 'date', 'reporter', 'content', 'pic', 'sport', 'sports_link', 'comment'), 
-('i love you love you', '5', '2014-02-05 22:28:42', 'yuankunluo', 'I love you love you', '005.jpg', 'archery', '1', '30'), 
-('i love you love you', '3', '2014-02-05 22:28:41', 'yuankunluo', 'I love you love you', '002.jpg', 'archery', '1', '15'), 
-('i love you love you', '1', '2014-02-05 22:13:00', 'yuankunluo', 'I love you love you', '001.jpg', 'archery', '1', '7'), 
-('i love you love you', '4', '2014-02-05 22:28:41', 'yuankunluo', 'I love you love you', '004.jpg', 'archery', '1', '2')] 
+     
+
+(
+{'vanue': '1', 'name': 'dsfa', 'time': '02:00', 'date': '2012-01-01', 'sport': '1', 'type': 'f'}, 
+
+{'team1': 
+{'ath2': {'firstname': 'dsf', 'gender': 'm', 'year': '1932', 'month': '12', 'lastname': 'dfs', 'day': '19'}, 
+'ath1': {'firstname': 'ds', 'lastname': 'fdsa', 'year': '1928', 'month': '1', 'gender': 'f', 'day': '17'}, 
+'medal': 'g', 'result': 'dsf', 'country': 'bh'}}) 
 
 
+-------------
 
- [("('event', 'events', 'events_link')", 'date', 'time', 'vanue', 'sport'), 
- ("('400m swimm', 'events', '1')", '1988-11-06', '12:30', 'london aquatics centre', 'archery')] 
- 
+
+({'vanue': '1', 'name': 'fdsafdsa', 'time': '01:05', 'date': '2012-02-01', 'sport': '1', 'type': 'f'}, 
+{'team1': 
+	{'ath2': {'firstname': 'fdsa', 'gender': 'f', 'year': '1933', 'month': '12', 'lastname': 'fsda', 'day': '19'}, 
+	'ath1': {'firstname': 'fasd', 'gender': 'f', 'month': '11', 'lastname': 'fasd', 'year': '1933', 'day': '20'}, 
+	'medal': 'g', 'result': 'fdsa', 'country': 'bd'}, 
+'team2': 
+	{'ath2': {'firstname': 'fsda', 'gender': 'f', 'year': '1932', 'month': '12', 'lastname': 'fsad', 'day': '20'}, 
+	'ath1': {'firstname': 'dfsa', 'gender': 'f', 'month': '1', 'lastname': 'fdsa', 'year': '1930', 'day': '17'}, 
+	'medal': 's', 'result': 'fasd', 'country': 'bs'}}) 

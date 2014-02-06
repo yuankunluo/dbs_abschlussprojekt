@@ -99,12 +99,35 @@ def add_event_solo(t,nr):
     :returns: Html
     """
     result = ct.get_add_solo_form(t,nr)
-    return template("base", pagetitle="add solo", pagecontent = result)
+    return template("base", pagetitle="Add Solo Event", pagecontent = result)
 
 @app.route("/add_solo",method="post")
 def add_event_solo_post():
     result = fh.do_add_solo_event(req)
     return template("base", pagetitle="add solo", pagecontent = result)
+
+@app.route("/add_event/team/<et:re:(p|f|s)>/<tnr:int>/<pnr:int>")
+def add_event_team(et,tnr, pnr):
+    """Get html form for adding team event
+    
+    :param t: Event type 
+    :type t: string
+    :param tnr: Number of teams
+    :type tnr: Integer
+    :param pnr: Namber of athletes of every team
+    :type pnr: Integer
+    :returns: Html
+    """
+    result = ct.get_add_team_form(et, tnr, pnr)
+    return template("base",pagetitle="Add Team Event", pagecontent = result)
+
+@app.route("/add_team", method="post")
+def add_event_team_post():
+    """Process form
+    
+    """
+    result = fh.do_add_team_event(req)
+    return template("base",pagetitle="Add Team Event", pagecontent=result)
 
 #==============================================================================
 # app

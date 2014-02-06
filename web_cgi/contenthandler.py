@@ -69,6 +69,46 @@ def get_add_solo_form(et,number):
                     minute_options = mo,
                     country_options = co,
                     year_options = yo)
+
+def get_add_team_form(et,tnr,pnr):
+    """Get a html form for adding team event.
+    
+    :param et: the type of a event [p,s,f]
+    :type et: a sting
+    :param tnr: the number of teams
+    :type tnr: a integer
+    :param pnr: the number of every team
+    :type pnr: a integer
+    :returns: a html form
+    """
+     # get selector options
+    countries = db.fetch_tuple(sqls.select_countries)
+    co = vm.makeSelector(countries, True)
+    vanues = db.fetch_tuple(sqls.select_vanues)
+    vo = vm.makeSelector(vanues, True)
+    sports = db.fetch_tuple(sqls.select_sports)
+    so = vm.makeSelector(sports, True)
+    events = db.fetch_tuple(sqls.select_events)
+    eo = vm.makeSelector(events, True)
+    # get datetime options
+    yo = vm.rangeSelector("year",True)
+    mto = vm.rangeSelector("month",True)
+    do = vm.rangeSelector("day", True)
+    ho = vm.rangeSelector("hour",True)
+    mo = vm.rangeSelector("minute", True)
+    # return html form
+    return template("add_event_team", et = et,
+                    event_options = eo,
+                    vanue_options = vo,
+                    sports_options = so,
+                    month_options = mto,
+                    day_options = do,
+                    hour_options = ho,
+                    minute_options = mo,
+                    country_options = co,
+                    year_options = yo,
+                    tnr = tnr,
+                    pnr = pnr)
 #==============================================================================
 # event page   
 #==============================================================================

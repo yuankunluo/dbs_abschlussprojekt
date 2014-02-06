@@ -65,9 +65,9 @@ where e.vanue = v.id and e.sport = s.id and e.id =?
 
 event_results_table = """
 select (a.firstname || " "||a.lastname) as athlete, a.rowid as athletes_link,
-p.rank as rank, p.medal as medal
-from events e, participants p, athletes a
-where e.id = p.event and p.athlete = a.rowid and e.id=?
+p.rank as rank, p.medal as medal, c.name as country, p.team as team
+from events e, participants p, athletes a, countries c
+where e.id = p.event and p.athlete = a.rowid and a.country = c.a2_code and e.id=?
 order by rank
 """
 

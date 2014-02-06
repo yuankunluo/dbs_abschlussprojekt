@@ -25,18 +25,11 @@ def do_add_solo_event(req):
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
     # collect event infomation
     e_condition = infos["event"]
-    e_condition["name"] = e_condition["name"] + " ("+ ts[e_condition["type"]] + ")"
+    e_condition["name"] = e_condition["name"] + " -- "+ ts[e_condition["type"]]
     test = db.select_something("events",("id","name"),{"name":e_condition["name"]})
     e_name = e_condition["name"]
     if len(test) > 1:
-        e_rowid = test[1][0]
-        e_name = test[1][1]
-        e = """
-        <a class="wrong" href="/events/{oid}">{event}</a> was already reported!
-        please go to <a class="wrong" href="/edit_event/{oid}">edit event</a>to edit this event.
-        """
-        e = e.format(oid = e_rowid, event = e_name)
-        return template("error", error = e)
+        return error_duplicate(test,e_name,"events")
     # collect ath infos
     ath_keys = [ath for ath in infos.keys() if ath.startswith("ath")]
     p_infos = {}
@@ -63,8 +56,33 @@ def do_add_solo_event(req):
         v["event"] = e_id
         db.insert_into_tables("participants",v,("rowid",))
     redirect("/events/"+str(e_id))
-
-
+#==============================================================================
+# add team event
+#==============================================================================
+def do_add_team_event(req):
+    """Process the form for adding team event
+    
+    :param req: a html post request
+    :type req: a bottle.request
+    :returns: none
+    """
+    # clean form request
+    form = request_to_dict(req.forms)
+    event = form.pop("event")
+    ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
+    # test if this event in db
+    e_name = event.pop("name")
+    e_name = e_name + " (team) -- " + ts[event["type"]]
+    event["name"] = e_name
+    e_test = db.select_something("events",("rowid",),{"name":e_name})
+    if len(e_test) > 1:
+        return error_duplicate(e_test,e_name,"events")
+    # add athletes
+    teams = extract_from_interdict(form)
+    
+    # add event
+    e_id = db.insert_into_tables("events", event,("id",))
+    return event, teams
 #==============================================================================
 # help functions
 #==============================================================================
@@ -146,3 +164,54 @@ def remove_duplicates(l):
     :returns: a list without duplicate
     """
     return list(set(l))
+
+def extract_from_interdict(interdict, delimeter="/"):
+    """Extract ath for every team. It can handel inter delimeter "/".
+    The add team event form results a dict like:
+    {"t1":{"a1/firstname":"love", "a2/gender":"f"}}.
+    This helper make the inter infomations into a inter dict:
+    Result:
+    {"t1":{"r":"100", "medal":"g","a1":{"firstname":"love"},"a2":{"gender":"f"}}}
+    
+    :param teams: A dict of teams like {teams:{athx/xx:xxx, athx/xx:xxx}
+    :type teams: A dict
+    :returns: A dict 
+    """
+    result = {}
+    for k,v in interdict.items():
+        result[k] = {}
+        for ik, iv in v.items():
+            # split ik,iv into one list [k, k2, v]
+            ks = ik.split(delimeter)
+#            print(type(ks))
+            ks.append(iv)
+            temp = ks
+#            print(temp)
+            if len(temp) == 2:
+                result[k][temp[0]] = temp[1]
+                continue
+            if temp[0] in result[k].keys() and len(temp)>2:
+                result[k][temp[0]][temp[1]] =  temp[2]
+            else:
+                result[k][temp[0]] = {}
+                result[k][temp[0]][temp[1]] = temp[2]
+    return result
+
+def error_duplicate(e_test,item="event_1", link="events"):
+    """Return a error page for duplicate event 
+    
+    :param event_test: a result of test by db.select_something()
+    :type event_test: a list of tuple
+    :param itemname: a name for given item
+    :type itemname: a string
+    :param link: a link goal to the duplicate 
+    :type link: string
+    :returns: String
+    """
+    e_rowid = e_test[1][0]
+    e = """
+    <a class="wrong" href="/{link}/{oid}">{itemname}</a> was already reported!
+    please go to <a class="wrong" href="/edit_event/{oid}">edit event</a>to edit this event.
+    """
+    e = e.format(oid = e_rowid, itemname = item, link = link)
+    return template("error", error = e)
