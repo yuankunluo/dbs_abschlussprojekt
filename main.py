@@ -44,18 +44,6 @@ def events():
     result = ct.get_all_events()
     return template("base", pagetitle= "All Events", pagecontent = result)
 
-@app.route("/events/<nr:int>")
-def view_event(nr):
-    """A page for an event
-    
-    :param nr: An event id
-    :type nr: integer
-    :returns: A html page for a event
-    """
-    result, eventname = ct.get_event(nr)
-    return template("base", pagetitle = eventname,pagecontent = result)
-    
-
 @app.route("/news")
 def news():
     result = ct.get_all_news()
@@ -63,13 +51,13 @@ def news():
 
 @app.route("/sports")
 def sports():
-    result = "sports"
-    return template("base", pagetitle= "Admin", pagecontent = result)
+    result = ct.get_all_sports()
+    return template("base", pagetitle= "All Sports", pagecontent = result)
 
 @app.route("/athletes")
 def athletes():
-    result = "athletes"
-    return template("base", pagetitle= "Admin", pagecontent = result)
+    result = ct.get_all_athletes()
+    return template("base", pagetitle= "All Athletes", pagecontent = result)
 
 @app.route("/medalists")
 def medalists():
@@ -84,6 +72,19 @@ def admin():
 @app.route("/search")
 def search():
     return template("base",pagetitle="Search", pagecontent="search")
+#==============================================================================
+# sigle item page
+#==============================================================================
+@app.route("/events/<nr:int>")
+def view_event(nr):
+    """A page for an event
+    
+    :param nr: An event id
+    :type nr: integer
+    :returns: A html page for a event
+    """
+    result, eventname = ct.get_event(nr)
+    return template("base", pagetitle = eventname,pagecontent = result)
 #==============================================================================
 # edit functions
 #==============================================================================

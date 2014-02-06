@@ -119,4 +119,25 @@ def get_all_news():
     news = vm.makeTableWithLink(news)
     result = template("content_with_h1", h1="All News", content = news)
     return result
+#==============================================================================
+# sports pages
+#==============================================================================
+def get_all_sports():
+    """Make a table for all sports
     
+    """
+    sports = db.fetch_tuple(sqls.select_all_sports, None, True)
+    sports = vm.makeTableWithLink(sports)
+    result = template("content_with_h1",h1="All Sports", content = sports)
+    return result
+#==============================================================================
+# athletes pages
+#==============================================================================
+def get_all_athletes():
+    """Make a table for all ahletes
+    
+    """
+    athletes = db.fetch_tuple(sqls.select_all_athletes, None, True)
+    athletes = vm.makeTableWithLink(athletes)
+    result = template("content_with_h1",h1="All Athletes", content = athletes)
+    return result

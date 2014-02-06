@@ -94,3 +94,24 @@ from news n, events e, users u
 where n.event = e.id and n.user = u.id
 order by datetime, event
 """
+
+#==============================================================================
+# sports page
+#==============================================================================
+select_all_sports = """
+select s.name as sport, s.id as sports_link, c.event_count as events, s.id as sports_link
+from sports s,
+	(select count(e.id) as event_count, e.sport as sport
+	from events e
+	group by sport) c
+where s.id = c.sport
+"""
+#==============================================================================
+# athletes page
+#==============================================================================
+select_all_athletes = """
+select (a.firstname || " " || a.lastname) as name, a.rowid as athletes_link, a.birthday as birthday, c.name as country
+from athletes a, countries c
+where a.country = c.a2_code
+group by country, name
+"""
