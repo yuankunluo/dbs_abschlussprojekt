@@ -41,8 +41,8 @@ def homepage():
 
 @app.route("/events")
 def events():
-    result = "events"
-    return template("base", pagetitle= "Admin", pagecontent = result)
+    result = ct.get_all_events()
+    return template("base", pagetitle= "All Events", pagecontent = result)
 
 @app.route("/events/<nr:int>")
 def view_event(nr):
@@ -52,12 +52,14 @@ def view_event(nr):
     :type nr: integer
     :returns: A html page for a event
     """
+    result, eventname = ct.get_event(nr)
+    return template("base", pagetitle = eventname,pagecontent = result)
     
 
 @app.route("/news")
 def news():
-    result = "news"
-    return template("base", pagetitle= "Admin", pagecontent = result)
+    result = ct.get_all_news()
+    return template("base", pagetitle= "All News", pagecontent = result)
 
 @app.route("/sports")
 def sports():

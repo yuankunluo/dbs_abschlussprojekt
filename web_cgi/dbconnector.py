@@ -10,7 +10,7 @@ import sqlstaments as sqls
 import os
 
 
-def execute(query, condition= None, withLink = False):
+def fetch_tuple(query, condition = None, withLink = False):
     """Get the cousor object for a sqlite3 db
     
     :param query: A sql stament
@@ -20,17 +20,18 @@ def execute(query, condition= None, withLink = False):
     :tyoe withLink: Boolean
     :returns: a cousor object or None if connection 
     """
-#    try:
     conn = get_conn()
     # use row factory
     conn.row_factory = sqlite3.Row
     cousor = conn.cursor()
-    result = cousor.execute(query).fetchall()
-    conn.close()
-    return tupleToList(result, withLink)
-#    except:
-#        print("Database connect failure.")
-#        return None
+    if condition:
+        result = cousor.execute(query,condition).fetchall()
+        return tupleToList(result,withLink)
+    else:
+        result = cousor.execute(query).fetchall()
+        conn.close()
+        return tupleToList(result, withLink)
+
 #==============================================================================
 # get conn or get cousor
 #==============================================================================
@@ -131,23 +132,31 @@ def tupleToList(sqlTuple, withLink= False):
     """Convert a sql executed result into a list of tuple,
     the first element is the key, the other element is the tuple.
     
+    ..note::
+    How to use, 
+    select a, a_link from x,
+    this result a list of tuple, first element of this list is a header.
+    
+    
     :param sqlTuple: A fetch result
     :type sqlTupee: A list of sqlite3.Row
     :param withLink: if return with link
     :type withLink: Boolean
     :returns: A list of tuple like [(v1,v2,v3..)]
     """
+    # if no fetched
     if len(sqlTuple) == 0:
         return []
+    # if not link attached
     if not withLink:
         result = []
-        ks = tuple(sqlTuple[0].keys())
+        ks = sqlTuple[0].keys()
         result.append(ks)
         for r in sqlTuple:
             tem = []
             for k in ks:
-                tem.append(str(r[k]))
-            result.append(tuple(tem))
+                tem.append(r[k])
+            result.append(tem)
         return result
     if withLink:
         result = []
@@ -164,11 +173,11 @@ def tupleToList(sqlTuple, withLink= False):
             j = 0
             while i < len(row):
                 if i in index:
-                    tem.append(str((row[i],linkindex[j][1],row[i+1])))
+                    tem.append((row[i],linkindex[j][1],row[i+1]))
                     i += 2
                     j +=1
                 else:
-                    tem.append(str(row[i]))
+                    tem.append(row[i])
                     i += 1
-            result.append(tuple(tem))
+            result.append(tem)
         return result

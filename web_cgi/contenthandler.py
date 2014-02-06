@@ -23,10 +23,10 @@ def get_Homepage():
     """
     pagecontent = None
     # get table for last 3 events
-    lastEvents = db.execute(sqls.lastthreeevents)
-    t = vm.makeTabele(lastEvents)
+    lastEvents = db.fetch_tuple(sqls.lastthreeevents,None,True)
+    t = vm.makeTableWithLink(lastEvents)
     # get news
-    n = db.execute(sqls.hotnews, True)
+    n = db.fetch_tuple(sqls.hotnews)
     n = vm.makeShortNews(n)
     pagecontent = template("index", table = t , news = n)
     return pagecontent
@@ -44,13 +44,13 @@ def get_add_solo_form(et,number):
     :returns: a html form for add event
     """
     # get selector options
-    countries = db.execute(sqls.select_countries)
+    countries = db.fetch_tuple(sqls.select_countries)
     co = vm.makeSelector(countries, True)
-    vanues = db.execute(sqls.select_vanues)
+    vanues = db.fetch_tuple(sqls.select_vanues)
     vo = vm.makeSelector(vanues, True)
-    sports = db.execute(sqls.select_sports)
+    sports = db.fetch_tuple(sqls.select_sports)
     so = vm.makeSelector(sports, True)
-    events = db.execute(sqls.select_events)
+    events = db.fetch_tuple(sqls.select_events)
     eo = vm.makeSelector(events, True)
     # get datetime options
     yo = vm.rangeSelector("year",True)
@@ -77,9 +77,46 @@ def get_event(nr):
     
     :prama nr: A event id
     :type nr: integer
-    :returns: a html content
+    :returns: a html content , a event name for display as title
     """
+    # template variable
+    event_table = db.fetch_tuple(sqls.event_page_eventinfo, (nr,), True)
+    if len(event_table) < 1:
+        error = template("error", error = "Event was not in db.")
+        return error, "Event"
+    event_name = event_table[1][0]
+    event_table = vm.makeTableWithLink(event_table)
+    result = event_table
+    results_table = db.fetch_tuple(sqls.event_results_table, (nr,),True)
+    results_table = vm.makeTableWithLink(results_table)
+    news_table = db.fetch_tuple(sqls.event_news_table, (nr,),True)
+    news_table = vm.makeTableWithLink(news_table)
+    result = template("eventpage", 
+                      event_name = event_name,
+                      news_table = news_table,
+                      event_table= event_table, 
+                      results_table=results_table)
+    return result, event_name
+    
+def get_all_events():
+    """Make a tables for events page
+    
+    """
+    result = db.fetch_tuple(sqls.select_all_events,None,True)
+    result = vm.makeTableWithLink(result)
+    result = template("content_with_h1",h1="All Events",content = result)
+    return result
     
     
+#==============================================================================
+# news pages
+#==============================================================================
+def get_all_news():
+    """Make a table for all news
     
+    """
+    news = db.fetch_tuple(sqls.select_all_news,None, True)
+    news = vm.makeTableWithLink(news)
+    result = template("content_with_h1", h1="All News", content = news)
+    return result
     

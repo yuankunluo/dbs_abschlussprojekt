@@ -57,3 +57,17 @@
 (u'i love you love you', 3, u'2014-02-05 22:28:41', u'yuankunluo', u'I love you love you', u'002.jpg', u'archery', 1, 15), 
 (u'i love you love you', 1, u'2014-02-05 22:13:00', u'yuankunluo', u'I love you love you', u'001.jpg', u'archery', 1, 7), 
 (u'i love you love you', 4, u'2014-02-05 22:28:41', u'yuankunluo', u'I love you love you', u'004.jpg', u'archery', 1, 2)] 
+
+
+
+[('title', 'news_link', 'date', 'reporter', 'content', 'pic', 'sport', 'sports_link', 'comment'), 
+('i love you love you', '5', '2014-02-05 22:28:42', 'yuankunluo', 'I love you love you', '005.jpg', 'archery', '1', '30'), 
+('i love you love you', '3', '2014-02-05 22:28:41', 'yuankunluo', 'I love you love you', '002.jpg', 'archery', '1', '15'), 
+('i love you love you', '1', '2014-02-05 22:13:00', 'yuankunluo', 'I love you love you', '001.jpg', 'archery', '1', '7'), 
+('i love you love you', '4', '2014-02-05 22:28:41', 'yuankunluo', 'I love you love you', '004.jpg', 'archery', '1', '2')] 
+
+
+
+ [("('event', 'events', 'events_link')", 'date', 'time', 'vanue', 'sport'), 
+ ("('400m swimm', 'events', '1')", '1988-11-06', '12:30', 'london aquatics centre', 'archery')] 
+ 
