@@ -55,6 +55,7 @@
             <input name="team{{!i}}_medal" value="" hidden="hidden">
         % end
         <!-- Ranking over -->
+        <input name="team{{!i}}_rank" value="{{!i}}" hidden="hidden">
         <label>Select Country</label>
         <select name="team{{i}}_country" required>
             {{!country_options}}

@@ -57,15 +57,15 @@ from countries;
 # event page
 #==============================================================================
 event_page_eventinfo = """
-select e.name as event, e.date, e.time, v.name as vanue,
+select e.name as event, e.date, e.time, v.name as vanue, e.type as type,
 s.name as sport, s.id as sports_link
 from events e, vanues  v, sports s 
 where e.vanue = v.id and e.sport = s.id and e.id =?
 """
 
 event_results_table = """
-select (a.firstname || " "||a.lastname) as athlete, a.rowid as athletes_link,
-p.rank as rank, p.medal as medal, c.name as country, p.team as team
+select (a.firstname || " "||a.lastname) as athlete, a.id as athletes_link,
+p.rank as rank, p.medal as medal, c.name as country
 from events e, participants p, athletes a, countries c
 where e.id = p.event and p.athlete = a.rowid and a.country = c.a2_code and e.id=?
 order by rank
@@ -110,7 +110,7 @@ where s.id = c.sport
 # athletes page
 #==============================================================================
 select_all_athletes = """
-select (a.firstname || " " || a.lastname) as name, a.rowid as athletes_link, a.birthday as birthday, c.name as country
+select (a.firstname || " " || a.lastname) as name, a.id as athletes_link, a.birthday as birthday, c.name as country
 from athletes a, countries c
 where a.country = c.a2_code
 group by country, name

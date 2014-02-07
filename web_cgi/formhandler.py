@@ -25,8 +25,9 @@ def do_add_solo_event(req):
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
     # collect event infomation
     e_condition = infos["event"]
-    e_condition["name"] = e_condition["name"] + " -- "+ ts[e_condition["type"]]
-    test = db.select_something("events",("id","name"),{"name":e_condition["name"]})
+    e_type = e_condition.pop("type")
+    e_condition["type"] = "Solo "+ ts[e_type]
+    test = db.select_something("events",("id","name"),e_condition)
     e_name = e_condition["name"]
     if len(test) > 1:
         return error_duplicate(test,e_name,"events")
@@ -41,9 +42,10 @@ def do_add_solo_event(req):
         "gender":a_info["gender"],
         "country":a_info["country"],
         "birthday":a_info["date"],}
-        ath_rowid = db.insert_into_tables("athletes",a_condition, ("rowid",))[1][0]
+        ath_rowid = db.insert_into_tables("athletes",a_condition, ("id",))[1][0]
         ath_rowids.append(ath_rowid)
-        p_condition = {"athlete":ath_rowid,"rank":a_info["rank"],
+        t_name = a_info["country"] + "-"+ e_name + "-" + e_condition["type"]
+        p_condition = {"athlete":ath_rowid,"rank":a_info["rank"],"team":t_name,
                        "result":a_info["result"],"medal":a_info["medal"]}
         p_infos[ath_rowid] = p_condition
     ath_rowids_rm = remove_duplicates(ath_rowids)
@@ -71,18 +73,49 @@ def do_add_team_event(req):
     event = form.pop("event")
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
     # test if this event in db
-    e_name = event.pop("name")
-    e_name = e_name + " (team) -- " + ts[event["type"]]
-    event["name"] = e_name
-    e_test = db.select_something("events",("rowid",),{"name":e_name})
+    e_type = event.pop("type")
+    event["type"] = "Team "+ ts[e_type]
+    e_test = db.select_something("events",("rowid",),event)
     if len(e_test) > 1:
-        return error_duplicate(e_test,e_name,"events")
+        return error_duplicate(e_test,event["name"],"events")
     # add athletes
     teams = extract_from_interdict(form)
-    
+    # store ath_rowids 
+    a_ids = []
+    p_cons = []
+    for team,aths in teams.items():
+        country = aths.pop("country")
+        t_name = country + "-" + event["name"] + "-" +event["type"]
+        medal = aths.pop("medal")
+        result = aths.pop("result")
+        rank = aths.pop("rank")
+        for k,ath in aths.items():
+            # the year,month, day was not proceed by manage_tuple()            year = ath.pop("year")
+            day = ath.pop("day")
+            month = ath.pop("month")
+            year = ath.pop("year")
+            birthday = "-".join([year,month,day])
+            ath["birthday"] = birthday
+            ath["country"] = country
+            # insert into athletes
+            a_id = db.insert_into_tables("athletes",ath,("id",))[1][0]
+            a_ids.append(a_id)
+            p_con = {"athlete":a_id,"team":t_name,"result":result,
+                     "rank":rank,"medal":medal}
+            p_cons.append(p_con)
+    # check if there are duplikates in one team
+    a_ids = remove_duplicates(a_ids)
+    if len(p_cons) != len(a_ids):
+        e = "You have inputed duplicated althetes in one event!"
+        return template("error",error = e)
     # add event
-    e_id = db.insert_into_tables("events", event,("id",))
-    return event, teams
+    e_id = db.insert_into_tables("events", event,("id",))[1][0]
+    for p in p_cons:
+        p["event"] = e_id
+        print(p)
+        db.insert_into_tables("participants",p,("rowid",))
+    redirect("/events/"+str(e_id))
+#    return p_cons
 #==============================================================================
 # help functions
 #==============================================================================

@@ -89,7 +89,7 @@ def select_something(table, something, condition):
 # insert
 #==============================================================================
 def insert_into_tables(table, condition, re_item):
-    """Insert into 
+    """Insert into table, if it was in table, then return the re_item
     
     :param sqlquery: A table name
     :type sqlquery: string
