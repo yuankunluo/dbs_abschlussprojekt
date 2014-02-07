@@ -3,6 +3,8 @@
 Created on Tue Jan 14 17:38:53 2014
 
 @author: yuankunluo
+
+All Route was in this module.
 """
 import bottle
 from bottle import run, Bottle, template, response
@@ -141,11 +143,13 @@ def add_event_team_post():
 #==============================================================================
 @app.route("/add_news")
 def add_news():
-    """Return add news form
+    """Return add news form.
     
+    Fist check login selebt.    
     """
     check_login(True)
-    result = ct.get_add_news_form()
+    uid = req.get_cookie("uid")
+    result = ct.get_add_news_form(uid)
     return template("base",login = check_login(),pagetitle="Add News",pagecontent=result)
 
 @app.route("/add_news",method="post")
@@ -161,18 +165,28 @@ def get_user():
     """
     pass
 #==============================================================================
-# login or singup
+#==============================================================================
+#==============================================================================
+# # # login or singup
+#==============================================================================
+#==============================================================================
 #==============================================================================
 @app.route("/singup")
 def singup():
     """Return a single up form
     
+    :returns: A html form for singup
     """
     result = ct.get_singup()
     return template("base",login = check_login(),pagetitle="Sing Up", pagecontent=result)
     
 @app.route("/singup",method="post")
 def sinup_post():
+    """Process the singup,
+    if ok then redirect to /admin page
+    
+    :returns: none
+    """
     uid = fh.do_singup(req)
     response.set_cookie("uid",str(uid))
     redirect("/admin")
@@ -181,6 +195,7 @@ def sinup_post():
 def login():
     """Get the login form
     
+    :returns: A html form
     """
     result = template("login")
     return template("base",login = check_login(),pagetitle="Login", pagecontent=result)
@@ -189,13 +204,16 @@ def login():
 def login_post():
     """Do the login
     
+    :
     """
-    result = fh.do_login(req)
-    return template("base",login = check_login(),pagetitle="Login", pagecontent=result)
+    fh.do_login(req)
 
 def check_login(auto=False):
-    """use cookie to check if login
+    """use cookie to check if login.
     
+    :param auto: Toggle if this a self check
+    :type auto: Boolean
+    :returns: if was login return True, esle return False    
     """
     if auto:
         login = check_login()
@@ -214,9 +232,35 @@ def login_out():
     """
     response.set_cookie("uid","")
     redirect("/homepage")
-
+#==============================================================================
+# load all template into views folder
+#==============================================================================
+def load_template(htmldir):
+    """Load all html file in this given foler.
+    I design all template as html with netbeans for convinient,
+    so this autocopy function saves time.
+    then change the ext to .tpl.
+    copy this file into views folder.
+    
+    :param htmldir: A folder to store all html while desining
+    :param type: string
+    :returns: none
+    """
+    import shutil
+    # fist delete views folder
+    shutil.rmtree("views/")
+    # copy html into views
+    shutil.copytree(htmldir,"views/")
+    # change extention from html into tpl
+    htmls = os.listdir("views/")
+    for h in htmls:
+        hf = "views/" + h
+        base = os.path.splitext(h)[0]
+        os.rename(hf, base + ".tpl")
+    
 #==============================================================================
 # app
 #==============================================================================
+load_template("static/html/")
 run(app,host="127.0.0.1",port=8080)
 

@@ -1,6 +1,32 @@
 <h1>Sing Up</h1>
+<div class="tipp">
+    <h2>About User Type</h2>
+    <p>You can here choose which type your account should have.</p>
+    <h3>Normal User can do:</h3>
+    <ul>
+        <li>Add pictures to news.</li>
+        <li>Add pictures to athlete.</li>
+        <li>Add pictures as account facepic.</li>
+        <li>Update personal information.</li>
+    </ul>
+    <h3>Reporter User can do:</h3>
+    <ul>
+        <li>What normal user can.</li>
+        <li>Add event and athletes.</li>
+        <li>Add news</li>
+    </ul>
+    <p>The user type can only choose once.</p>
+    <p>:)</p>
+</div>
 <form name="singup" action="singup" method="post">
     <fieldset>
+        <label>Select User Type</label>
+        <select name="user_reporter" required>
+            <option></option>
+            <option value="0">Normal User</option>
+            <option value="1">Reporter User</option>
+        </select>
+        <br/>
         <legend>Base Information</legend>
         <label>Username</label>
         <input name="user_name" placeholder="Username" required>

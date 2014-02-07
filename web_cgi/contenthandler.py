@@ -33,15 +33,17 @@ def get_Homepage():
 #==============================================================================
 # add news
 #==============================================================================
-def get_add_news_form():
+def get_add_news_form(uid):
     """Return a form for add news
     
+    :param uid: The user id stored in cookies
+    :tyoe uid: String
     :returns: a html form for adding news
     """
     # make selector for events
     eo = db.fetch_tuple(sqls.events_option) 
     eo = vm.makeSelector(eo,True)
-    return template("add_news",event_options=eo)
+    return template("add_news",uid= uid, event_options=eo)
 #==============================================================================
 # add solo event
 #==============================================================================

@@ -10,9 +10,7 @@
     <p>:)</p>
 </div>
 <form name="add_news" action="/add_news" method="post">
-    % if defined(user):
-    <input name="news_user" value="{{!user}}" hidden="hidden">
-    % end
+    <input name="news_user" value="{{!uid}}" hidden="hidden">
     <fieldset>
         <legend>New Title</legend>
     <input class="news_title" name="news_title" placeholder="Enter title hier" required>

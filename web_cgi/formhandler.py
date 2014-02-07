@@ -21,6 +21,7 @@ def do_add_solo_event(req):
     :returns: none
     """
     check_login(True)
+    check_reporter()
     form = req.forms
     infos = request_to_dict(form)
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
@@ -70,6 +71,7 @@ def do_add_team_event(req):
     :returns: none
     """
     check_login(True)
+    check_reporter()
     # clean form request
     form = request_to_dict(req.forms)
     event = form.pop("event")
@@ -126,12 +128,18 @@ def do_add_news(req):
     
     :param req: A request object
     :type req: bottle.baserequest
+    :param uid: A user id in cookies
+    :type req: string
     :returns: none
     """
     check_login(True)
+    check_reporter()
     # clean form request
     form = request_to_dict(req.forms)
-    return form
+    news = form.pop("news")
+    news["datetime"] = get_now()
+    n_id = db.insert_into_tables("news",news, ("id",))[1][0]
+    redirect("/news")
 #==============================================================================
 # sigup and login
 #==============================================================================
@@ -153,7 +161,7 @@ def do_singup(req):
     user["birthday"] = date
     ps1 = user.pop("password1")
     ps2 = user.pop("password2")
-    user["registertime"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    user["registertime"] = get_now()
     if ps1 != ps2:
         return template("error",error="Passowrd must be the same!")
     user["password"]  = ps1
@@ -341,6 +349,33 @@ def check_login(auto=False):
         return True
     else:
         return False
+
+def check_reporter():
+    """Check if user is reporter.
+    If is user, return true, else redirect to error page
+    
+    :returns: True or none
+    """
+    uid = request.get_cookie("uid")
+    u_reporter = db.select_something("users",("reporter",),{"id":uid})[1][0]
+    if str(u_reporter) != "1":
+        return template("error", error="You are not reporter, you can't do this. :(")
+    else:
+        return True
         
     
+def get_now(onlydate=False, onlytime=False):
+    """Return the datetime for now
     
+    :param onlydate: If only return date
+    :type onlydate: Boolean, default False
+    :param onlytime: If only return time
+    :type onlytime: Boolean default False
+    :returns: A time string    
+    """
+    if onlydate:
+        return datetime.datetime.now().strftime("%Y-%m-%d")
+    if onlytime:
+        return datetime.datetime.now().strftime("%H:%M:%S")
+    else:
+        return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
