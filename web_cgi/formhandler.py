@@ -21,7 +21,7 @@ def do_add_solo_event(req):
     :returns: none
     """
     check_login(True)
-    check_reporter()
+    reporter = check_reporter()
     form = req.forms
     infos = request_to_dict(form)
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
@@ -29,10 +29,13 @@ def do_add_solo_event(req):
     e_condition = infos["event"]
     e_type = e_condition.pop("type")
     e_condition["type"] = "Solo "+ ts[e_type]
+    e_condition["user"] = reporter
     test = db.select_something("events",("id","name"),e_condition)
     e_name = e_condition["name"]
     if len(test) > 1:
-        return error_duplicate(test,e_name,"events")
+        oe_id = test[1][0]
+        oe_name = test[1][1]
+        return error_duplicate(oe_name, "events", oe_id)
     # collect ath infos
     ath_keys = [ath for ath in infos.keys() if ath.startswith("ath")]
     p_infos = {}
@@ -71,17 +74,20 @@ def do_add_team_event(req):
     :returns: none
     """
     check_login(True)
-    check_reporter()
+    user = check_reporter()
     # clean form request
     form = request_to_dict(req.forms)
     event = form.pop("event")
+    event["user"] = user
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
     # test if this event in db
     e_type = event.pop("type")
     event["type"] = "Team "+ ts[e_type]
-    e_test = db.select_something("events",("rowid",),event)
-    if len(e_test) > 1:
-        return error_duplicate(e_test,event["name"],"events")
+    e_test = db.select_something("events",("rowid","name",),event)
+    if len(e_test) >1 :
+        e_name = e_test[1][1]
+        e_id = e_test[1][0]
+        return error_duplicate(e_name, "events",e_id)
     # add athletes
     teams = extract_from_interdict(form)
     # store ath_rowids 
@@ -133,13 +139,19 @@ def do_add_news(req):
     :returns: none
     """
     check_login(True)
-    check_reporter()
     # clean form request
     form = request_to_dict(req.forms)
     news = form.pop("news")
+    # test if duplikated
+    test = db.select_something("news",("title",),{"title":news["title"]})
+    if len(test) != 0 :
+        n = db.select_something("news",("title","id",),news)
+        nid = n[1][1]
+        nname = n[1][0]
+        return error_duplicate(nname, "news", nid, True)
     news["datetime"] = get_now()
     n_id = db.insert_into_tables("news",news, ("id",))[1][0]
-    redirect("/news")
+    redirect("/news/"+str(n_id))
 #==============================================================================
 # sigup and login
 #==============================================================================
@@ -217,6 +229,7 @@ def request_to_dict(reqForms):
         k = k.split("_")
         k.append(v)
         k = cleanRequest(k)
+        k = [unicode(x,encoding="utf-8") for x in k]
         infos.append(tuple(k))
     infos = manage_tuples(infos)
     return infos
@@ -316,23 +329,23 @@ def extract_from_interdict(interdict, delimeter="/"):
                 result[k][temp[0]][temp[1]] = temp[2]
     return result
 
-def error_duplicate(e_test,item="event_1", link="events"):
+def error_duplicate(itemname, link, itemid, edit=False):
     """Return a error page for duplicate event 
     
-    :param event_test: a result of test by db.select_something()
-    :type event_test: a list of tuple
     :param itemname: a name for given item
     :type itemname: a string
     :param link: a link goal to the duplicate 
     :type link: string
+    :param itemid: the id for link
+    :type itemid: integer
     :returns: String
     """
-    e_rowid = e_test[1][0]
     e = """
-    <a class="wrong" href="/{link}/{oid}">{itemname}</a> was already reported!
-    please go to <a class="wrong" href="/edit_event/{oid}">edit event</a>to edit this event.
+    <p><a href="/{link}/{itemid}">{itemname}</a> was already reported!</p>
     """
-    e = e.format(oid = e_rowid, itemname = item, link = link)
+    if edit:
+        e += """<p>You can <a href ="/edit/{link}/{itemid}">edit it</a></p>"""
+    e = e.format(itemid = itemid, itemname = itemname, link = link)
     return template("error", error = e)
 
 
@@ -354,15 +367,16 @@ def check_reporter():
     """Check if user is reporter.
     If is user, return true, else redirect to error page
     
-    :returns: True or none
+    :returns: True or False
     """
     uid = request.get_cookie("uid")
     u_reporter = db.select_something("users",("reporter",),{"id":uid})[1][0]
     if str(u_reporter) != "1":
-        return template("error", error="You are not reporter, you can't do this. :(")
+        return False
     else:
         return True
-        
+
+
     
 def get_now(onlydate=False, onlytime=False):
     """Return the datetime for now

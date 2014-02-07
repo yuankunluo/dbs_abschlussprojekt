@@ -40,45 +40,45 @@ def get_image(filename):
 @app.route("/") # homepage
 def homepage():
     result = ct.get_Homepage()
-    return template("base",login = check_login(), pagetitle = "Homepage", pagecontent = result)
+    return template("base",login = fh.check_login(), pagetitle = "Homepage", pagecontent = result)
 
 @app.route("/events")
 def events():
     result = ct.get_all_events()
-    return template("base",login = check_login(), pagetitle= "All Events", pagecontent = result)
+    return template("base",login = fh.check_login(), pagetitle= "All Events", pagecontent = result)
 
 @app.route("/news")
 def news():
     result = ct.get_all_news()
-    return template("base",login = check_login(), pagetitle= "All News", pagecontent = result)
+    return template("base",login = fh.check_login(), pagetitle= "All News", pagecontent = result)
 
 @app.route("/sports")
 def sports():
     result = ct.get_all_sports()
-    return template("base",login = check_login(), pagetitle= "All Sports", pagecontent = result)
+    return template("base",login = fh.check_login(), pagetitle= "All Sports", pagecontent = result)
 
 @app.route("/athletes")
 def athletes():
     result = ct.get_all_athletes()
-    return template("base",login = check_login(), pagetitle= "All Athletes", pagecontent = result)
+    return template("base",login = fh.check_login(), pagetitle= "All Athletes", pagecontent = result)
 
 @app.route("/medalists")
 def medalists():
     result = "medalists"
-    return template("base",login = check_login(), pagetitle= "Admin", pagecontent = result)
+    return template("base",login = fh.check_login(), pagetitle= "Admin", pagecontent = result)
 
 @app.route("/admin")
 def admin():
     uid = req.get_cookie("uid")
     if uid:
         result = uid
-        return template("base",login = check_login(), pagetitle= "Admin", pagecontent = result)
+        return template("base",login = fh.check_login(), pagetitle= "Admin", pagecontent = result)
     else:
         redirect("/login")
     
 @app.route("/search")
 def search():
-    return template("base",login = check_login(),pagetitle="Search", pagecontent="search")
+    return template("base",login = fh.check_login(),pagetitle="Search", pagecontent="search")
 #==============================================================================
 # sigle item page
 #==============================================================================
@@ -91,7 +91,7 @@ def view_event(nr):
     :returns: A html page for a event
     """
     result, eventname = ct.get_event(nr)
-    return template("base",login = check_login(), pagetitle = eventname,pagecontent = result)
+    return template("base",login = fh.check_login(), pagetitle = eventname,pagecontent = result)
 
 #==============================================================================
 # add events
@@ -106,14 +106,18 @@ def add_event_solo(t,nr):
     :type nr: Integer
     :returns: Html
     """
-    check_login(True)
-    result = ct.get_add_solo_form(t,nr)
-    return template("base",login = check_login(), pagetitle="Add Solo Event", pagecontent = result)
+    fh.check_login(True)
+    if not fh.check_reporter():
+        result = template("error",error="You have no priviliges to do this! Reporter User ONLY!")
+    else:
+        uid = req.get_cookie("uid")
+        result = ct.get_add_solo_form(t,nr,uid=uid)
+    return template("base",login = fh.check_login(), pagetitle="Add Solo Event", pagecontent = result)
 
 @app.route("/add_solo",method="post")
 def add_event_solo_post():
     result = fh.do_add_solo_event(req)
-    return template("base",login = check_login(), pagetitle="add solo", pagecontent = result)
+    return template("base",login = fh.check_login(), pagetitle="add solo", pagecontent = result)
 
 @app.route("/add_event/team/<et:re:(p|f|s)>/<tnr:int>/<pnr:int>")
 def add_event_team(et,tnr, pnr):
@@ -127,9 +131,13 @@ def add_event_team(et,tnr, pnr):
     :type pnr: Integer
     :returns: Html
     """
-    check_login(True)
-    result = ct.get_add_team_form(et, tnr, pnr)
-    return template("base",login = check_login(),pagetitle="Add Team Event", pagecontent = result)
+    fh.check_login(True)
+    if not fh.check_reporter():
+        result = template("error",error="You have no priviliges to do this! Reporter User ONLY!")
+    else:
+        uid = req.get_cookie("uid")
+        result = ct.get_add_team_form(et, tnr, pnr,uid = uid)
+    return template("base",login = fh.check_login(),pagetitle="Add Team Event", pagecontent = result)
 
 @app.route("/add_team", method="post")
 def add_event_team_post():
@@ -137,7 +145,7 @@ def add_event_team_post():
     
     """
     result = fh.do_add_team_event(req)
-    return template("base",login = check_login(),pagetitle="Add Team Event", pagecontent=result)
+    return template("base",login = fh.check_login(),pagetitle="Add Team Event", pagecontent=result)
 #==============================================================================
 # add news
 #==============================================================================
@@ -147,10 +155,10 @@ def add_news():
     
     Fist check login selebt.    
     """
-    check_login(True)
+    fh.check_login(True)
     uid = req.get_cookie("uid")
     result = ct.get_add_news_form(uid)
-    return template("base",login = check_login(),pagetitle="Add News",pagecontent=result)
+    return template("base",login = fh.check_login(),pagetitle="Add News",pagecontent=result)
 
 @app.route("/add_news",method="post")
 def add_news_post():
@@ -158,7 +166,7 @@ def add_news_post():
     
     """
     result = fh.do_add_news(req)
-    return template("base",login = check_login(),pagetitle="Add News", pagecontent=result)
+    return template("base",login = fh.check_login(),pagetitle="Add News", pagecontent=result)
 
 def get_user():
     """
@@ -178,7 +186,7 @@ def singup():
     :returns: A html form for singup
     """
     result = ct.get_singup()
-    return template("base",login = check_login(),pagetitle="Sing Up", pagecontent=result)
+    return template("base",login = fh.check_login(),pagetitle="Sing Up", pagecontent=result)
     
 @app.route("/singup",method="post")
 def sinup_post():
@@ -198,7 +206,7 @@ def login():
     :returns: A html form
     """
     result = template("login")
-    return template("base",login = check_login(),pagetitle="Login", pagecontent=result)
+    return template("base",login = fh.check_login(),pagetitle="Login", pagecontent=result)
 
 @app.route("/login", method="post")
 def login_post():
@@ -208,22 +216,6 @@ def login_post():
     """
     fh.do_login(req)
 
-def check_login(auto=False):
-    """use cookie to check if login.
-    
-    :param auto: Toggle if this a self check
-    :type auto: Boolean
-    :returns: if was login return True, esle return False    
-    """
-    if auto:
-        login = check_login()
-        if not login:
-            redirect("/login")
-    uid = req.get_cookie("uid")
-    if uid:
-        return True
-    else:
-        return False
         
 @app.route("/logout")
 def login_out():
@@ -247,20 +239,27 @@ def load_template(htmldir):
     :returns: none
     """
     import shutil
-    # fist delete views folder
-    shutil.rmtree("views/")
-    # copy html into views
-    shutil.copytree(htmldir,"views/")
-    # change extention from html into tpl
-    htmls = os.listdir("views/")
+    try:
+        shutil.rmtree("views")
+    except:
+        pass
+    shutil.copytree(htmldir,"views")
+#     change extention from html into tpl
+    f_path = os.path.abspath(__file__)
+    f_path = f_path.replace("/main.py","")
+    views =  f_path+ "/views"
+    htmls = os.listdir(views)
+    # change chdir into views
+    os.chdir(views)
     for h in htmls:
-        hf = "views/" + h
+        hf = views +"/" + h
         base = os.path.splitext(h)[0]
         os.rename(hf, base + ".tpl")
-    
+    # change chdir out views
+    os.chdir(f_path)
 #==============================================================================
 # app
 #==============================================================================
-load_template("static/html/")
+load_template("static/html")
 run(app,host="127.0.0.1",port=8080)
 

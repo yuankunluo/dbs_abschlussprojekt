@@ -2,6 +2,7 @@
             % m = {1:("g","Gold"),2:("s","Silver"),3:("b","Bronze")}
             <h1>Add Solo Event -- {{!t[et]}}</h1>
             <form class="add_event" action="/add_solo" method="post">
+                <input name="event_user" value="{{!uid}}" hidden="hidden">
                 <label>Event Name: </label>
                 <input class="news_title" name="event_name" placeholder="Enter new Event Name" required>
                 <fieldset name="event">

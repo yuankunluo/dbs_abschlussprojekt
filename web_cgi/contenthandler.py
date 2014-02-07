@@ -47,13 +47,15 @@ def get_add_news_form(uid):
 #==============================================================================
 # add solo event
 #==============================================================================
-def get_add_solo_form(et,number):
+def get_add_solo_form(et,number,uid):
     """Return a from for adding solo event.
     
     :param et: Event type
     :type et: String
     :param number: The number of athelets 
     :type number: Integer
+    :param uid: The user id stored in cookies
+    :tyoe uid: String
     :returns: a html form for add event
     """
     # get selector options
@@ -81,9 +83,10 @@ def get_add_solo_form(et,number):
                     hour_options = ho,
                     minute_options = mo,
                     country_options = co,
-                    year_options = yo)
+                    year_options = yo,
+                    uid = uid)
 
-def get_add_team_form(et,tnr,pnr):
+def get_add_team_form(et,tnr,pnr, uid):
     """Get a html form for adding team event.
     
     :param et: the type of a event [p,s,f]
@@ -92,6 +95,8 @@ def get_add_team_form(et,tnr,pnr):
     :type tnr: a integer
     :param pnr: the number of every team
     :type pnr: a integer
+    :param uid: The user id stored in cookies
+    :tyoe uid: String
     :returns: a html form
     """
      # get selector options
@@ -121,7 +126,7 @@ def get_add_team_form(et,tnr,pnr):
                     country_options = co,
                     year_options = yo,
                     tnr = tnr,
-                    pnr = pnr)
+                    pnr = pnr, uid = uid)
 #==============================================================================
 # event page   
 #==============================================================================
@@ -172,8 +177,12 @@ def get_all_news():
     """Make a table for all news
     
     """
-    news = db.fetch_tuple(sqls.select_all_news,None, True)
-    news = vm.makeTableWithLink(news)
+    e_news = db.fetch_tuple(sqls.select_all_event_news,None, True)
+    e_news = vm.makeTableWithLink(e_news)
+    ne_news = db.fetch_tuple(sqls.select_all_non_event_news,None, True)
+    ne_news = vm.makeTableWithLink(ne_news)
+    news = """<h2>All Events News</h2>""" + e_news
+    news += """<h2>All other news</h2>""" + ne_news
     result = template("content_with_h1", h1="All News", content = news)
     return result
 #==============================================================================

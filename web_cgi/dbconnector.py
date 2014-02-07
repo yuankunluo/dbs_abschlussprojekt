@@ -20,6 +20,7 @@ def fetch_tuple(query, condition = None, withLink = False):
     conn = get_conn()
     # use row factory
     conn.row_factory = sqlite3.Row
+    conn.text_factory = lambda x: unicode(x, "utf-8", "ignore")
     cousor = conn.cursor()
     if condition:
         result = cousor.execute(query,condition).fetchall()
