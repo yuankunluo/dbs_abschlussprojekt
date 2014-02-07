@@ -6,9 +6,6 @@ Created on Mon Jan 20 00:24:44 2014
 """
 
 import sqlite3
-import sqlstaments as sqls
-import os
-
 
 def fetch_tuple(query, condition = None, withLink = False):
     """Get the cousor object for a sqlite3 db

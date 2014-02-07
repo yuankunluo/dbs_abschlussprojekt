@@ -6,10 +6,10 @@ Created on Mon Jan 20 00:35:43 2014
 """
 
 import dbconnector as db
-from bottle import redirect
-import sqlite3
+from bottle import redirect,response,request
 import re
 from bottle import template
+import datetime
 #==============================================================================
 # add solo event
 #==============================================================================
@@ -20,6 +20,7 @@ def do_add_solo_event(req):
     :tyeoe req: bottle.request
     :returns: none
     """
+    check_login(True)
     form = req.forms
     infos = request_to_dict(form)
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
@@ -68,6 +69,7 @@ def do_add_team_event(req):
     :type req: a bottle.request
     :returns: none
     """
+    check_login(True)
     # clean form request
     form = request_to_dict(req.forms)
     event = form.pop("event")
@@ -126,9 +128,72 @@ def do_add_news(req):
     :type req: bottle.baserequest
     :returns: none
     """
+    check_login(True)
     # clean form request
     form = request_to_dict(req.forms)
     return form
+#==============================================================================
+# sigup and login
+#==============================================================================
+def do_singup(req):
+    """Insert user into dbs.
+    
+    :param req: A request object
+    :type req: bottle.baserequest
+    :returns: none
+    """
+    form = request_to_dict(req.forms)
+    user = form.pop("user")
+    u_name = user["name"]
+    name_test = re.findall(r"\w",u_name)
+    name_test = "".join(name_test)
+    if name_test != u_name:
+        return template("error",error="Username was not allowed. Username can contain only letter and number.")
+    date = user.pop("date")
+    user["birthday"] = date
+    ps1 = user.pop("password1")
+    ps2 = user.pop("password2")
+    user["registertime"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if ps1 != ps2:
+        return template("error",error="Passowrd must be the same!")
+    user["password"]  = ps1
+    # test if this user existed
+    u_test = db.select_something("users",("rowid",),
+                                 {"name":user["name"]})
+    if len(u_test) > 1:
+        return template("error",error=user["name"] + " was existed. Please use a new one!")
+    u_id = db.insert_into_tables("users",user,("id",))[1][0]
+    return u_id
+
+def do_login(req):
+    """Process login 
+    
+    :param req: A request object
+    :type req: bottle.baserequest
+    :returns: none
+    """
+    form = request_to_dict(req.forms)
+    user = form.pop("user")
+    test = db.select_something("users", ("id",),user)
+    if len(test) < 1 :
+        return template("error",error="Username or Password doesnot match! Try again.")
+    response.set_cookie("uid", str(test[1][0]))
+    redirect("/admin")
+    
+    
+#==============================================================================
+#==============================================================================
+#==============================================================================
+#==============================================================================
+#==============================================================================
+#==============================================================================
+# # # # # # dont look down
+#==============================================================================
+#==============================================================================
+#==============================================================================
+#==============================================================================
+#==============================================================================
+#==============================================================================
 #==============================================================================
 # help functions
 #==============================================================================
@@ -261,3 +326,21 @@ def error_duplicate(e_test,item="event_1", link="events"):
     """
     e = e.format(oid = e_rowid, itemname = item, link = link)
     return template("error", error = e)
+
+
+def check_login(auto=False):
+    """use cookie to check if login
+    
+    """
+    if auto:
+        login = check_login()
+        if not login:
+            redirect("/login")
+    uid = request.get_cookie("uid")
+    if uid:
+        return True
+    else:
+        return False
+        
+    
+    

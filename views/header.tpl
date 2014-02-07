@@ -13,5 +13,10 @@
                     <li class="navi"><a class="navi" href="/athletes">Athletes</a></li>
                     <li class="navi"><a class="navi" href="/medalists">Medalists</a></li>
                     <li class="navi"><a class="navi" href="/admin">Admin</a></li>
+                    % if login:
+						<li class="navi"><a class="navi" href="/logout">Logout</a></li>
+					% else:
+						<li class="navi"><a class="navi" href="/login">Login</a></li>
+					% end
                 </ul>
         </div>

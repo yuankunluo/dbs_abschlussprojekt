@@ -196,3 +196,23 @@ def get_all_athletes():
     athletes = vm.makeTableWithLink(athletes)
     result = template("content_with_h1",h1="All Athletes", content = athletes)
     return result
+#==============================================================================
+# singup and login
+#==============================================================================
+def get_singup():
+    """Return a singup form
+    
+    :returns: a html form
+    """
+    yo = vm.rangeSelector("year",True)
+    mto = vm.rangeSelector("month",True)
+    do = vm.rangeSelector("day", True)
+    countries = db.fetch_tuple(sqls.select_countries)
+    co = vm.makeSelector(countries, True)
+    return template("singup", 
+                    month_options = mto,
+                    day_options = do,
+                    country_options = co,
+                    year_options = yo)
+
+    
