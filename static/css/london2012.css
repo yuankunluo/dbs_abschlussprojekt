@@ -188,13 +188,16 @@ td.result {
 /* 
     form
 */
-#news_title {
+.news_title {
     font-size: x-large;
     width: 100%;
 }
 
 form.add_event {
     font-size: large;
+}
+fieldset {
+    margin: 0.5em;
 }
 /*
     datetime selector
@@ -212,7 +215,7 @@ div.add_athletes {
 span.ranking {
     clear: left;
     position: relative;
-    display: box;
+    display: block;
     float: right;
     font-size: x-large;
     border: solid lightgray thin;
@@ -223,7 +226,7 @@ span.ranking {
 span.ranking_g {
     clear: left;
     position: relative;
-    display: box;
+    display: block;
     float: right;
     font-size: x-large;
     border: solid lightgray thin;
@@ -235,7 +238,7 @@ span.ranking_g {
 span.ranking_s {
     clear: left;
     position: relative;
-    display: box;
+    display: block;
     float: right;
     font-size: x-large;
     border: solid lightgray thin;
@@ -247,7 +250,7 @@ span.ranking_s {
 span.ranking_b {
     clear: left;
     position: relative;
-    display: box;
+    display: block;
     float: right;
     font-size: x-large;
     border: solid lightgray thin;
@@ -259,7 +262,7 @@ span.ranking_b {
 span.ath_nr {
     clear: left;
     position: relative;
-    display: box;
+    display: block;
     float: right;
     font-size: large;
     border:dashed lightgray thin;
@@ -278,11 +281,11 @@ button {
     font-size: large;
 }
 /*  
-    search box
+    search block
 */
 form.top_search {
     margin-top: 0.2em;
-    display: box;
+    display: block;
 }
 input.top_search {
     font-size: larger;
@@ -291,7 +294,7 @@ a.wrong {
     background: lightgray;
     font-size: x-large;
     text-transform: capitalize;
-    display: box;
+    display: block;
     margin: 0.5em;
 }
 /*
@@ -302,4 +305,17 @@ div.error {
     background: lightcoral;
     display: block;
     border: dashed red thin;
+}
+div.tipp {
+    padding: 1em;
+    background: lightpink;
+    display: block;
+    border: dotted red thin;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+div#validator {
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: center;
 }

@@ -437,3 +437,147 @@ select (a.firstname || " " || a.lastname) as name, a.rowid as athletes_link, a.b
 from athletes a, countries c
 where a.country = c.a2_code
 group by country, name
+
+
+select (a.firstname || " "||a.lastname) as athlete, a.rowid as athletes_link,
+p.rank as rank, p.medal as medal, c.name as country, p.team as team
+from events e, participants p, athletes a, countries c
+where e.id = p.event and p.athlete = a.rowid and a.country = c.a2_code and e.id=?
+order by rank
+
+CREATE TABLE participants (
+	event integer not null,
+	athlete integer not null,
+	rank integer not null,
+	team varchar(255) default "",
+	result varchar(255) default "",
+	medal char(1) default "",
+	foreign key (event) references events(id),
+	foreign key (athlete) references athletes(oid),
+	primary key (event, athlete)
+)
+
+CREATE TABLE athletes (
+	firstname varchar(255) not null,
+	lastname varchar(255) not null,
+	gender char(1) not null,
+	birthday varchar(255) not null,
+	country char(2) not null,
+	pic integer default "person.jpg",
+	primary key(firstname, lastname, gender, birthday,country),
+	foreign key (country) references countries(a2_code),
+	foreign key (pic) references pictures(id)
+)
+
+CREATE TABLE addresses (
+	id integer primary key autoincrement,
+	post_code char(10) not null,
+	line_1 varchar(255) not null,
+	line_2 varchar(255) default ""
+)
+CREATE TABLE cities (
+	id integer primary key autoincrement, 
+	postcode varchar(20) not null,
+	country char(2) not null,
+	state varchar(255) not null,
+	name varchar(255) not null,
+	foreign key (country) references countries(a2_code) on update no action  on delete no action
+)
+
+CREATE TABLE athletes (
+	id integer not null primary key autoincrement,
+	firstname varchar(255) not null,
+	lastname varchar(255) not null,
+	gender char(1) not null,
+	birthday varchar(255) not null,
+	country char(2) not null,
+	pic integer default "person.jpg",
+	foreign key (country) references countries(a2_code),
+	foreign key (pic) references pictures(id)
+)
+
+-- Describe EVENTS
+CREATE TABLE events (
+    "id" INTEGER NOT NULL primary key,
+    "name" VARCHAR(255) NOT NULL,
+    "date" VARCHAR(255) NOT NULL,
+    "time" VARCHAR(255) NOT NULL,
+    "vanue" INTEGER NOT NULL,
+    "sport" V NOT NULL,
+    "type" VARCHAR(255) NOT NULL
+)
+
+
+select e.name as event, e.date, e.time, v.name as vanue, e.type as type,
+s.name as sport, s.id as sports_link
+from events e, vanues  v, sports s 
+where e.vanue = v.id and e.sport = s.id and e.id =?
+
+delete from participants where rowid >=0
+
+
+select e.name as event, e.id as events_link,e.date, e.time, v.name as vanue,
+s.name as sport, s.id as sports_link
+from events e, vanues  v, sports s 
+where e.vanue = v.id and e.sport = s.id and e.type like "Team%"
+order by sport,date,time
+
+select * from events
+where type like "Solo%"
+
+select (name || " -- " || type) as name, id as events_link
+from events
+
+
+-- Describe NEWS
+CREATE TABLE news (
+	id integer not null primary key autoincrement,
+	datetime varchar(255) not null,
+	user integer not null,
+	content text not null,
+	title varchar(255) not null,
+	event integer default 0,
+	foreign key(user) references users(id),
+	foreign key(event) references events(id)
+)
+
+
+-- Describe USERS
+CREATE TABLE users (
+    "id" INTEGER NOT NULL primary key autoincrement,
+    "name" VARCHAR(255) NOT NULL,
+    "email" VARCHAR(255) NOT NULL,
+    "pass" VARCHAR(255) NOT NULL,
+    "firstname" VARCHAR(255) NOT NULL,
+    "lastname" VARCHAR(255) NOT NULL,
+    "gender" CHAR(1) NOT NULL,
+    "birthday" VARCHAR(255) NOT NULL,
+    "address" INTEGER NOT NULL,
+    "registertime" VARCHAR(255) NOT NULL,
+    "pic" VARCHAR(255) default "person.jpg",
+    "reporter" BOOLEAN NOT NULL,
+    "country" integer not null,
+    foreign key(pic) references pictures(id),
+    foreign key(address) references address(id),
+    foreign key(country) references country(a2_code)
+)
+
+-- Describe USERS
+CREATE TABLE users (
+    "id" INTEGER NOT NULL primary key autoincrement,
+    "name" VARCHAR(255) NOT NULL,
+    "email" VARCHAR(255) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
+    "firstname" VARCHAR(255) NOT NULL,
+    "lastname" VARCHAR(255) NOT NULL,
+    "gender" CHAR(1) NOT NULL,
+    "birthday" VARCHAR(255) NOT NULL,
+    "address" INTEGER NOT NULL,
+    "registertime" VARCHAR(255) NOT NULL,
+    "pic" VARCHAR(255) default "person.jpg",
+    "reporter" BOOLEAN default 0 ,
+    "country" integer not null,
+    foreign key(pic) references pictures(id),
+    foreign key(address) references address(id),
+    foreign key(country) references country(a2_code)
+)

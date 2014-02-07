@@ -115,7 +115,20 @@ def do_add_team_event(req):
         print(p)
         db.insert_into_tables("participants",p,("rowid",))
     redirect("/events/"+str(e_id))
-#    return p_cons
+
+#==============================================================================
+# add news
+#==============================================================================
+def do_add_news(req):
+    """Insert news into dbs.
+    
+    :param req: A request object
+    :type req: bottle.baserequest
+    :returns: none
+    """
+    # clean form request
+    form = request_to_dict(req.forms)
+    return form
 #==============================================================================
 # help functions
 #==============================================================================

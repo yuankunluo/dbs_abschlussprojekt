@@ -30,7 +30,18 @@ def get_Homepage():
     n = vm.makeShortNews(n)
     pagecontent = template("index", table = t , news = n)
     return pagecontent
-
+#==============================================================================
+# add news
+#==============================================================================
+def get_add_news_form():
+    """Return a form for add news
+    
+    :returns: a html form for adding news
+    """
+    # make selector for events
+    eo = db.fetch_tuple(sqls.events_option) 
+    eo = vm.makeSelector(eo,True)
+    return template("add_news",event_options=eo)
 #==============================================================================
 # add solo event
 #==============================================================================

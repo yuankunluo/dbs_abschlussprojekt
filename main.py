@@ -86,7 +86,7 @@ def view_event(nr):
     result, eventname = ct.get_event(nr)
     return template("base", pagetitle = eventname,pagecontent = result)
 #==============================================================================
-# edit functions
+# add events
 #==============================================================================
 @app.route("/add_event/solo/<t:re:(p|f|s)>/<nr:int>")
 def add_event_solo(t,nr):
@@ -128,7 +128,29 @@ def add_event_team_post():
     """
     result = fh.do_add_team_event(req)
     return template("base",pagetitle="Add Team Event", pagecontent=result)
+#==============================================================================
+# add news
+#==============================================================================
+@app.route("/add_news")
+def add_news():
+    """Return add news form
+    
+    """
+    result = ct.get_add_news_form()
+    return template("base",pagetitle="Add News",pagecontent=result)
 
+@app.route("/add_news",method="post")
+def add_news_post():
+    """Process the add new form
+    
+    """
+    result = fh.do_add_news(req)
+    return template("base",pagetitle="Add News", pagecontent=result)
+
+def get_user():
+    """
+    """
+    pass
 #==============================================================================
 # app
 #==============================================================================

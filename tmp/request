@@ -50,3 +50,11 @@
 	{'ath2': {'firstname': 'fsda', 'gender': 'f', 'year': '1932', 'month': '12', 'lastname': 'fsad', 'day': '20'}, 
 	'ath1': {'firstname': 'dfsa', 'gender': 'f', 'month': '1', 'lastname': 'fdsa', 'year': '1930', 'day': '17'}, 
 	'medal': 's', 'result': 'fasd', 'country': 'bs'}}) 
+	
+	
+	
+[{'country': 'bs', 'athlete': 1, 'rank': '1', 'result': 'fsdafdsaf', 'team': 'bs i dont thtnk i you shou (team) -- Finals', 'medal': 'g'}, {'country': 'bs', 'athlete': 2, 'rank': '1', 'result': 'fsdafdsaf', 'team': 'bs i dont thtnk i you shou (team) -- Finals', 'medal': 'g'}, {'country': 'al', 'athlete': 3, 'rank': '2', 'result': 'ffdsafsd', 'team': 'al i dont thtnk i you shou (team) -- Finals', 'medal': 's'}, {'country': 'al', 'athlete': 4, 'rank': '2', 'result': 'ffdsafsd', 'team': 'al i dont thtnk i you shou (team) -- Finals', 'medal': 's'}] 
+
+
+------------
+ {'news': {'content': 'i love you too', 'event': '1', 'title': 'i love you thank'}} 

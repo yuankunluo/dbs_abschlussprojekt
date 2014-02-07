@@ -18,7 +18,7 @@ limit 3
 
 hotnews = """
 select n.title as title,n.id as news_link, n.datetime as date, 
-u.name as reporter, n.content as content,p.link as pic, s.name as sport, 
+(u.firstname ||" "||u.lastname )as reporter, n.content as content,p.link as pic, s.name as sport, 
 s.id as sports_link, c.count as comment
 from news n, pictures p, events e, sports  s, users u,
 	(select news as cid,count(oid) as count
@@ -108,7 +108,13 @@ from news n, events e, users u
 where n.event = e.id and n.user = u.id
 order by datetime, event
 """
-
+#==============================================================================
+# add news page
+#==============================================================================
+events_option = """
+select (name || " -- " || type) as name, id as events_link
+from events
+"""
 #==============================================================================
 # sports page
 #==============================================================================

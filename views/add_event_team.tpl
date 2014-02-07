@@ -3,7 +3,7 @@
 <h1>Add Team Event -- {{!t[et]}}</h1>
 <form class="add_event" action="/add_team" method="post">
     <label>Event Name: </label>
-    <input id="news_title" name="event_name" placeholder="Enter new Event Name" required>
+    <input class="news_title" name="event_name" placeholder="Enter new Event Name" required>
     <fieldset name="event">
         <legend>Event Information</legend>
         <input name="event_type" value="{{!et}}" hidden="hidden">
