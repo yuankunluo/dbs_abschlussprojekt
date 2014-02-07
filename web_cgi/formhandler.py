@@ -163,17 +163,22 @@ def do_upload_pic(req):
     :type req: bottle.baserequest
     :param uid: A user id in cookies
     :type req: string
-    :returns: none
+    :returns: pic id in dbs
     """
     check_login()
     uid = req.get_cookie("uid")
     upload = req.files.get('upload')
-    desc = req.files.get("picture_des")
     name, ext = os.path.splitext(upload.filename)
+    if ext not in ('.png','.jpg','.jpeg'):
+        return 'File extension not allowed. Pleas use .jpg, .png or .jepg'
     form = request_to_dict(req.forms)
-    pic = save_pic(upload,ext,uid)
-    img = """<img src="/static/images/{fn}" alt="{des}"> """.format(fn=pic,des=desc)
-    return img
+    des = form["picture"]["des"]
+    # save pic in static/images/
+    pn = save_pic(upload,ext,uid)
+    # insert this pic into dbs
+    pid = db.insert_into_tables("pictures",{"link":pn,"des":des},("id",))[1][0]
+    return pid
+    
 #==============================================================================
 # sigup and login
 #==============================================================================
