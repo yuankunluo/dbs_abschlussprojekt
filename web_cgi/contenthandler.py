@@ -142,8 +142,12 @@ def get_all_events():
     """Make a tables for events page
     
     """
-    result = db.fetch_tuple(sqls.select_all_events,None,True)
-    result = vm.makeTableWithLink(result)
+    solo = db.fetch_tuple(sqls.select_all_solo_events,None,True)
+    solo = vm.makeTableWithLink(solo)
+    team = db.fetch_tuple(sqls.select_all_team_events,None,True)
+    team = vm.makeTableWithLink(team)
+    result = "<h2>solo events</h2>" + solo
+    result += "<h2>team events</h2>" + team
     result = template("content_with_h1",h1="All Events",content = result)
     return result
     

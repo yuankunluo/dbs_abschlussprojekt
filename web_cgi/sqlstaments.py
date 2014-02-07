@@ -8,7 +8,7 @@ Created on Mon Jan 20 01:37:36 2014
 # home page
 #==============================================================================
 lastthreeevents = """
-select e.name as event, e.id as events_link,e.date, e.time, v.name as vanue,
+select e.name as event, e.id as events_link,type,e.date, e.time, v.name as vanue,
 s.name as sport, s.id as sports_link
 from events e, vanues  v, sports s 
 where e.vanue = v.id and e.sport = s.id 
@@ -85,6 +85,20 @@ where e.vanue = v.id and e.sport = s.id
 order by sport,date,time
 """
 
+select_all_solo_events = """
+select e.name as event, e.id as events_link,e.date, e.time, v.name as vanue,
+s.name as sport, s.id as sports_link
+from events e, vanues  v, sports s 
+where e.vanue = v.id and e.sport = s.id and e.type like "Solo%"
+order by sport,date,time
+"""
+select_all_team_events = """
+select e.name as event, e.id as events_link,e.date, e.time, v.name as vanue,
+s.name as sport, s.id as sports_link
+from events e, vanues  v, sports s 
+where e.vanue = v.id and e.sport = s.id and e.type like "Team%"
+order by sport,date,time
+"""
 #==============================================================================
 # news page
 #==============================================================================
