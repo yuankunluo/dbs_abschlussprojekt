@@ -23,25 +23,25 @@ def do_add_solo_event(req):
     check_login(True)
     reporter = check_reporter()
     form = req.forms
-    infos = request_to_dict(form)
+    form = request_to_dict(form)
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
     # collect event infomation
-    e_condition = infos["event"]
-    e_type = e_condition.pop("type")
-    e_condition["type"] = "Solo "+ ts[e_type]
-    e_condition["user"] = reporter
-    test = db.select_something("events",("id","name"),e_condition)
-    e_name = e_condition["name"]
+    event = form.pop("event")
+    e_type = event.pop("type")
+    event["type"] =  "Solo "+ ts[e_type]
+    event["reporter"] = reporter
+    test = db.select_something("events",("id","name"),{"name":event["name"]})
     if len(test) > 1:
         oe_id = test[1][0]
         oe_name = test[1][1]
         return error_duplicate(oe_name, "events", oe_id)
+#        return test
     # collect ath infos
-    ath_keys = [ath for ath in infos.keys() if ath.startswith("ath")]
+    ath_keys = [ath for ath in form.keys() if ath.startswith("ath")]
     p_infos = {}
     ath_rowids = []
     for ak in ath_keys:
-        a_info = infos[ak]
+        a_info = form[ak]
         a_condition = {"firstname":a_info["firstname"],
         "lastname":a_info["lastname"],
         "gender":a_info["gender"],
@@ -49,7 +49,7 @@ def do_add_solo_event(req):
         "birthday":a_info["date"],}
         ath_rowid = db.insert_into_tables("athletes",a_condition, ("id",))[1][0]
         ath_rowids.append(ath_rowid)
-        t_name = a_info["country"] + "-"+ e_name + "-" + e_condition["type"]
+        t_name = a_info["country"] + "-"+ event["name"] + "-" + event["type"]
         p_condition = {"athlete":ath_rowid,"rank":a_info["rank"],"team":t_name,
                        "result":a_info["result"],"medal":a_info["medal"]}
         p_infos[ath_rowid] = p_condition
@@ -58,7 +58,7 @@ def do_add_solo_event(req):
     if len(ath_rowids) != len(ath_rowids_rm):
         e = "You have inputed duplicated althetes in one event!"
         return template("error",error = e)
-    e_id =  db.insert_into_tables("events",e_condition,("id",))[1][0]
+    e_id =  db.insert_into_tables("events",event,("id",))[1][0]
     for k,v in p_infos.items():
         v["event"] = e_id
         db.insert_into_tables("participants",v,("rowid",))
@@ -148,7 +148,7 @@ def do_add_news(req):
         n = db.select_something("news",("title","id",),news)
         nid = n[1][1]
         nname = n[1][0]
-        return error_duplicate(nname, "news", nid, True)
+        return error_duplicate(nname, "news", nid)
     news["datetime"] = get_now()
     n_id = db.insert_into_tables("news",news, ("id",))[1][0]
     redirect("/news/"+str(n_id))

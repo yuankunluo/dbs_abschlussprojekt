@@ -705,3 +705,33 @@ CREATE TABLE users (
 
 select datetime("now")
 
+
+
+
+-- Describe EVENTS2
+CREATE TABLE "events" (
+    "id" INTEGER NOT NULL primary key,
+    "name" VARCHAR(255) NOT NULL,
+    "date" VARCHAR(255) NOT NULL,
+    "time" VARCHAR(255) NOT NULL,
+    "vanue" INTEGER NOT NULL,
+    "sport" V NOT NULL,
+    "type" VARCHAR(255) NOT NULL,
+    "user" integer not null default 1,
+    foreign key (vanue) references vanues(id),
+    foreign key (sport) references sports(id),
+    foreign key (user) references users(id)
+)
+
+select * from events
+
+insert into events (name, date, time, vanue, sport, type)
+select name, date, time, vanue, sport, type 
+from events2
+
+select n.title as title, n.id as news_link, n.datetime, u.name as reporter,e.name as event, e.id as events_link
+from news n, events e, users u
+where n.event = e.id and n.user = u.id
+order by datetime, event
+
+delete from news where rowid >0
