@@ -1,0 +1,15 @@
+<h1>Picture Upload</h1>
+<p>Welcome to upload pic for {{!goal}}</p>
+<form name="pic_uplpad" action="upload_pic" method="post" enctype="multipart/form-data">
+    <fieldset>
+        <input name="user_id" value="{{!user}}" hidden="hidden">
+        <legend>Choose Picture</legend>
+        <input type="file" name="upload" required>
+        <br/>
+        <label>Enter a description for this pic:</label>
+        <br/>
+        <input type="text" name="picture_des" placeholder="Picture Description" required>
+    </fieldset>
+    <input type="submit" value="Start upload"/>
+</form>
+

@@ -208,6 +208,14 @@ def get_all_athletes():
     result = template("content_with_h1",h1="All Athletes", content = athletes)
     return result
 #==============================================================================
+# uploader
+#==============================================================================
+def get_upload_pic(user, goal):
+    """Make a upload form
+    
+    """
+    return template("upload_pic",goal=goal,user=user)
+#==============================================================================
 # singup and login
 #==============================================================================
 def get_singup():

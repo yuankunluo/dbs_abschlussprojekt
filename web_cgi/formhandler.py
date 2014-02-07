@@ -10,6 +10,7 @@ from bottle import redirect,response,request
 import re
 from bottle import template
 import datetime
+import os
 #==============================================================================
 # add solo event
 #==============================================================================
@@ -152,6 +153,27 @@ def do_add_news(req):
     news["datetime"] = get_now()
     n_id = db.insert_into_tables("news",news, ("id",))[1][0]
     redirect("/news/"+str(n_id))
+#==============================================================================
+# do upload pic
+#==============================================================================
+def do_upload_pic(req):
+    """Insert news into dbs.
+    
+    :param req: A request object
+    :type req: bottle.baserequest
+    :param uid: A user id in cookies
+    :type req: string
+    :returns: none
+    """
+    check_login()
+    uid = req.get_cookie("uid")
+    upload = req.files.get('upload')
+    desc = req.files.get("picture_des")
+    name, ext = os.path.splitext(upload.filename)
+    form = request_to_dict(req.forms)
+    pic = save_pic(upload,ext,uid)
+    img = """<img src="/static/images/{fn}" alt="{des}"> """.format(fn=pic,des=desc)
+    return img
 #==============================================================================
 # sigup and login
 #==============================================================================
@@ -378,7 +400,7 @@ def check_reporter():
 
 
     
-def get_now(onlydate=False, onlytime=False):
+def get_now(onlydate=False, onlytime=False, forfile = False):
     """Return the datetime for now
     
     :param onlydate: If only return date
@@ -391,5 +413,24 @@ def get_now(onlydate=False, onlytime=False):
         return datetime.datetime.now().strftime("%Y-%m-%d")
     if onlytime:
         return datetime.datetime.now().strftime("%H:%M:%S")
+    if forfile:
+        return datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     else:
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+def save_pic(pic, ext, uid, dest = "static/images/"):
+    """Store the uplpaded pic into static/images folder
+    with the ext and user id
+    
+    :param dest: where pic was stored
+    :type dest: a string
+    :param pic: the pic object
+    :type pic: bottle.request.FileUpload.Filefeld
+    :param ext: the file name extention
+    :type ext: 
+    """
+    stamp = get_now(forfile=True)
+    fn = uid+"_"+stamp + ext
+    with open(dest+fn, 'wb') as fp:
+        fp.write(pic.file.read())
+    return fn

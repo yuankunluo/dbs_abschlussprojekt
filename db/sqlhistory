@@ -735,3 +735,19 @@ where n.event = e.id and n.user = u.id
 order by datetime, event
 
 delete from news where rowid >0
+
+select title , user from news
+
+delete from news where user =4
+
+
+-- Describe NEWSPICS
+CREATE TABLE "facepics" (
+	id integer  primary key autoincrement,
+	news integer not null,
+	pic integer not null,
+	user varchar(255) not null,
+	foreign key (news) references news(id) on delete no action on update no action,
+	foreign key (pic) references pictures(id) on delete cascade on update cascade,
+	foreign key (user) references users(id) on delete no action on update no action
+)

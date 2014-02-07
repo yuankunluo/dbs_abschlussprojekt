@@ -173,6 +173,26 @@ def get_user():
     """
     pass
 #==============================================================================
+# picture uploader
+#==============================================================================
+@app.route("/upload_pic")
+def upload_pic():
+    """Get a html form for uploading pictures
+    
+    :returns: A html form
+    """
+    fh.check_login(True)
+    uid = req.get_cookie("uid")
+    result = ct.get_upload_pic(user = uid, goal = "User")
+    return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
+
+@app.route("/upload_pic",method="post")
+def upload_pic_post():
+    """
+    """
+    result = fh.do_upload_pic(req)
+    return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
+#==============================================================================
 #==============================================================================
 #==============================================================================
 # # # login or singup
