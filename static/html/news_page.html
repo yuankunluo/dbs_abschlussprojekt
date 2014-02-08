@@ -1,0 +1,32 @@
+<h1>{{!news["name"]}}</h1>
+<p>Repoted by: {{!news["reporter"]}} at {{!news[2]}}</p>
+<br/>
+% if islogin:
+<form action="/add_newspic_from_news" method="post">
+    <input name="table" value="newspic" hidden="hidden">
+    <input name="nid" value="{{!news[0]}}" hidden="hidden">
+    <input value="Add Pictures to this news" type="submit">
+</form>
+% end
+% if haspics:
+<h3>Pictures for this news</h3>
+    {{!pics}}
+% end
+% if hasevents:
+<h3>Events</h3>
+    {{!events}}
+% end
+<h3>News content</h3>
+<p class="news">{{!news["content"]}}</p>
+%if islogin:
+<h3>Make COmments:</h3>
+<form action="/add_comment" method="post">
+    <textarea class="comment" name="comment" placeholder="Enter comment hier" required=""></textarea>
+    <input type="submit" value="Send">
+    <input name="nid" value="{{!news[0]}}" hidden="hidden">
+</form>
+<hr/>
+% if hascomments:
+<h3>All comments about this news</h3>
+{{!comments}}
+% end

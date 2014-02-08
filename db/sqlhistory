@@ -759,5 +759,56 @@ from athletes a, countries c
 where a.country = c.a2_code
 order by  c.name, a.firstname, a.lastname
 
-select n.title as title, n.id as news_link
-from news 
+select (n.title || " -- " || date(n.datetime) )as title, n.id as news_link
+from news  n
+order by n.datetime
+
+select n.title as title, n.id as news_link, n.datetime, u.name as reporter
+from news n, users u
+where n.user = u.id and event != null
+order by datetime
+
+update athletes set firstname = "yuankunyuan" where id = 50
+
+
+
+select n.name as title,n.id as news_link, n.datetime as date, 
+(u.firstname ||" "||u.lastname )as reporter, n.content as content,p.link as pic, s.name as sport, 
+s.id as sports_link, c.count as comment
+from news n, pictures p, events e, sports  s, users u,
+	(select news as cid,count(oid) as count
+	from comments
+	group by cid
+	order by  count) c, 
+	(select news as nid , pic as pid
+	from newspics
+	group by news) np
+where np.nid = n.id and n.id = np.nid and np.pid = p.id and c.cid= n.id and n.event = e.id and e.sport = s.id
+order by comment desc
+
+select n.name as title, p.link as link, n.id
+from news n, newspics np, pictures p
+where n.id = np.news and np.pic = p.id
+
+insert into comments (news, user, content, datetime)
+values 
+(10,5, "comment i love you", datetime("now"))
+
+select * from news
+where id = 10
+
+select  p.link, p.des
+from news n, newspics np, pictures p
+where n.id = np.news and np.pic = p.id and n.id = 10
+
+
+select n.id as id, u.name as reporter, n.datetime as datetime, n.content as content, n.name as name
+from news n, users u
+where n.user = u.id and n.id = 10
+
+select e.name as event, e.date, e.time, v.name as vanue, e.type as type,
+s.name as sport, s.id as sports_link
+from events e, vanues  v, sports s , news n
+where e.vanue = v.id and e.sport = s.id and e.id = n.event
+
+select u.name as user, c.content as comments

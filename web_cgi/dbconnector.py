@@ -24,12 +24,24 @@ def fetch_tuple(query, condition = None, withLink = False):
     cousor = conn.cursor()
     if condition:
         result = cousor.execute(query,condition).fetchall()
+        conn.close()
         return tupleToList(result,withLink)
     else:
         result = cousor.execute(query).fetchall()
         conn.close()
         return tupleToList(result, withLink)
-
+        
+def fetch_one(query, condition):
+    """Helper for fetch one 
+    
+    """
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row
+    conn.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+    cousor = conn.cursor()
+    result = cousor.execute(query,condition).fetchone()
+    conn.close()
+    return result
 #==============================================================================
 # get conn or get cousor
 #==============================================================================

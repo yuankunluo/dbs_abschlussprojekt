@@ -49,6 +49,15 @@ def makeSelector(r , options_only=False):
     if options_only:
         return template("select_option", content=r)
     return template("select", content = r)
+
+def makePictures(r):
+    """Make a html for pictures
+    
+    :param r: A list of tuple, resulted by contenthandler.tupletolist()
+    :type r: A list
+    :returns: A rended tepmlet string
+    """
+    return template("pics",pics = r)
 #==============================================================================
 # make a Year, Date, Time, Selector    
 #==============================================================================

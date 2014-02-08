@@ -127,6 +127,9 @@ span.sport {
 p.news{
     display: block;
     margin:1em;
+    text-align: justify;
+    font-size: medium;
+    line-height: 150%
 }
 img.news {
     display: block;
@@ -314,4 +317,14 @@ div#validator {
     margin-left: 10%;
     margin-right: 10%;
     text-align: center;
+}
+img.news_image {
+    margin: 2em;
+    display: block;
+    max-width:80%;
+}
+textarea.comment{
+    height: 2em;
+    width: 70%;
+    font-size: large;
 }

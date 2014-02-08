@@ -193,11 +193,14 @@ def do_add_pic(t,iid, req):
     pid = do_upload_pic(req)
     uid = req.get_cookie("uid")
     if t == "newspics":
-        return db.insert_into_tables(t,{"news":iid,"pic":pid,"user":uid},("id",))[1][0]
+        db.insert_into_tables(t,{"news":iid,"pic":pid,"user":uid},("id",))[1][0]
+        redirect("/news/"+str(iid))
     if t == "athletes":
-        return db.update_table(t,{"pic":pid},{"id":iid},("id",))[1][0]
+        db.update_table(t,{"pic":pid},{"id":iid},("id",))[1][0]
+        redirect("/athletes/" + str(iid))
     if t == "users":
-        return db.update_table(t,{"pic":pid},{"id":iid},("id",))[1][0]
+        db.update_table(t,{"pic":pid},{"id":iid},("id",))[1][0]
+        redirect("/users/" +  str(iid))
     
 #==============================================================================
 # sigup and login

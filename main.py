@@ -83,7 +83,16 @@ def view_event(nr):
     """
     result, eventname = ct.get_event(nr)
     return template("base",login = fh.check_login(), pagetitle = eventname,pagecontent = result)
-
+@app.route("/news/<nr:int>")
+def view_news(nr):
+    """A page for a news
+    
+    :param nr: An event id
+    :type nr: integer
+    :returns: A html page for a event
+    """
+    result, newsname = ct.get_news(nr)
+    return template("base",login = fh.check_login(), pagetitle = newsname,pagecontent = result)
 #==============================================================================
 # add events
 #==============================================================================
@@ -159,10 +168,6 @@ def add_news_post():
     result = fh.do_add_news(req)
     return template("base",login = fh.check_login(),pagetitle="Add News", pagecontent=result)
 
-def get_user():
-    """
-    """
-    pass
 #==============================================================================
 # picture uploader
 #==============================================================================
@@ -173,7 +178,6 @@ def upload_pic():
     :returns: A html form
     """
     fh.check_login(True)
-    uid = req.get_cookie("uid")
     result = ct.get_upload_pic()
     return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
 
@@ -272,6 +276,8 @@ def admin_add_team_event():
     n1 = req.forms.get("number1")
     n2 = req.forms.get("number2")
     redirect("/add_event/team/{t}/{n1}/{n2}".format(t=etype,n1=n1, n2=n2))
+
+
 @app.route("/add_pic/<t:re:athletes|newspics|users>",method="post")
 def admin_add_pic(t):
     """Use the speicify table name to make a html form.
@@ -283,6 +289,15 @@ def admin_add_pic(t):
     fh.check_login()
     iid = req.forms.get("id")
     result = ct.get_upload_pic(t,iid)
+    return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
+
+@app.route("/add_newspic_from_news", method="post")
+def admin_add_pic_from_news():
+    """Process the add pic request from news page
+    
+    """
+    nid = req.forms.get("nid")
+    result = ct.get_upload_pic("newspics", nid)
     return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
     
     

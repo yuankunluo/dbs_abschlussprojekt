@@ -20,16 +20,16 @@ hotnews = """
 select n.name as title,n.id as news_link, n.datetime as date, 
 (u.firstname ||" "||u.lastname )as reporter, n.content as content,p.link as pic, s.name as sport, 
 s.id as sports_link, c.count as comment
-from news n, pictures p, events e, sports  s, users u,
+from news n, pictures p, events e, sports s, users u,
 	(select news as cid,count(oid) as count
 	from comments
 	group by cid
 	order by  count) c, 
 	
-	(select news as nid , pic as pid
+	(select news as npnid , pic as pid
 	from newspics
 	group by news) np
-where np.nid = n.id and n.id = np.nid and np.pid = p.id and c.cid= n.id and n.event = e.id and e.sport = s.id
+where np.npnid = n.id and n.id = np.npnid and np.pid = p.id and c.cid= n.id and n.event = e.id and e.sport = s.id
 order by comment desc
 """
 
@@ -113,6 +113,27 @@ select n.name as title, n.id as news_link, n.datetime, u.name as reporter,e.name
 from news n, events e, users u
 where n.event = e.id and n.user = u.id
 order by datetime, event
+"""
+select_one_news = """
+select n.id as id, u.name as reporter, n.datetime as datetime, n.content as content, n.name as name
+from news n, users u
+where n.user = u.id and n.id = ?
+"""
+select_news_pics = """
+select  p.link, p.des, u.name
+from news n, newspics np, pictures p, users u
+where n.id = np.news and np.pic = p.id and np.user = u.id and n.id = ?
+"""
+select_news_event = """
+select e.name as event,e.id as events_link, e.date, e.time, v.name as vanue, e.type as type,
+s.name as sport, s.id as sports_link
+from events e, vanues  v, sports s , news n
+where e.vanue = v.id and e.sport = s.id and e.id = n.event and n.id = ?
+"""
+select_news_comment = """
+select u.name as user, c.content as comments, c.datetime as datetime
+from users u, comments c, news n
+where c.user = u.id and c.news = n.id and n.id = ?
 """
 #==============================================================================
 # add news page

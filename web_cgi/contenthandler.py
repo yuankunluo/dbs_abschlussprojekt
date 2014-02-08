@@ -202,6 +202,47 @@ def get_all_news():
     news += """<h2>All other news</h2>""" + ne_news
     result = template("content_with_h1", h1="All News", content = news)
     return result
+
+def get_news(nr):
+    """Return the news page for the given news id
+    
+    :param nr: news id in dbs
+    :type nr: integer
+    :returns: a news page
+    """
+    news = db.fetch_one(sqls.select_one_news,(nr,))
+    npics = db.fetch_tuple(sqls.select_news_pics,(nr,),None)
+    if len(npics) == 0:
+        haspics = False
+        pics = None
+    else:
+        haspics = True
+        pics = vm.makePictures(npics)
+    events = db.fetch_tuple(sqls.select_news_event,(nr,),True)
+    if len(events) == 0:
+        hasevents = False
+        events = None
+    else:
+        hasevents = True
+        events = vm.makeTableWithLink(events)
+    uid = request.get_cookie("uid")
+    if uid == None or uid=="":
+        islogin = False
+    else:
+        islogin = True
+    comments = db.fetch_tuple(sqls.select_news_comment,(nr,),None)
+    if len(comments) == 0:
+        hascomments = False
+        comments = None
+    else:
+        hascomments = True
+        comments = vm.makeTabele(comments)
+    return template("news_page", news = news,
+                    haspics = haspics, pics = pics,hasevents = hasevents,
+                    events = events,islogin=islogin, hascomments = hascomments,
+                    comments = comments), news["name"]
+    return news
+    
 #==============================================================================
 # sports pages
 #==============================================================================
