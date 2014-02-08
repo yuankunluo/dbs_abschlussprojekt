@@ -1,8 +1,7 @@
 <h1>Picture Upload</h1>
-<p>Welcome to upload pic for {{!goal}}</p>
-<form name="pic_uplpad" action="upload_pic" method="post" enctype="multipart/form-data">
+<form name="pic_uplpad" action="/upload_pic" method="post" enctype="multipart/form-data">
     <fieldset>
-        <input name="user_id" value="{{!user}}" hidden="hidden">
+        <input name="uid" value="uid" hidden="hidden">
         <legend>Choose Picture</legend>
         <input type="file" name="upload" required>
         <br/>
@@ -10,6 +9,8 @@
         <br/>
         <input type="text" name="picture_des" placeholder="Picture Description" required>
     </fieldset>
+    <input name="table" value="{{!table}}" hidden="hidden">
+    <input name="iid" value="{{!iid}}" hidden="hidden">
     <input type="submit" value="Start upload"/>
 </form>
 

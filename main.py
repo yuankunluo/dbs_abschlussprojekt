@@ -66,15 +66,6 @@ def athletes():
 def medalists():
     result = "medalists"
     return template("base",login = fh.check_login(), pagetitle= "Admin", pagecontent = result)
-
-@app.route("/admin")
-def admin():
-    uid = req.get_cookie("uid")
-    if uid:
-        result = uid
-        return template("base",login = fh.check_login(), pagetitle= "Admin", pagecontent = result)
-    else:
-        redirect("/login")
     
 @app.route("/search")
 def search():
@@ -183,15 +174,22 @@ def upload_pic():
     """
     fh.check_login(True)
     uid = req.get_cookie("uid")
-    result = ct.get_upload_pic(user = uid, goal = "User")
+    result = ct.get_upload_pic()
     return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
 
 @app.route("/upload_pic",method="post")
 def upload_pic_post():
     """
     """
-    result = fh.do_upload_pic(req)
+    fh.check_login()
+    t = req.forms.get("table")
+    iid = req.forms.get("iid")
+    result = fh.do_add_pic(t, iid, req)
     return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
+
+
+
+
 #==============================================================================
 #==============================================================================
 #==============================================================================
@@ -244,6 +242,50 @@ def login_out():
     """
     response.set_cookie("uid","")
     redirect("/homepage")
+#==============================================================================
+# Addmin page
+#==============================================================================
+@app.route("/admin")
+def admin():
+    fh.check_login()
+    fh.check_reporter()
+    uid = req.get_cookie("uid")
+    if uid:
+        uid = uid
+        result = ct.get_admin()
+        return template("base",login = fh.check_login(), pagetitle= "Admin", pagecontent = result)
+    else:
+        redirect("/login")
+        
+@app.route("/add_event/solo",method="post")
+def admin_add_solo_event():
+    fh.check_login()
+    fh.check_reporter()
+    etype = req.forms.get("etype")
+    number = req.forms.get("number")
+    redirect("/add_event/solo/{t}/{n}".format(t=etype,n=number))
+@app.route("/add_event/team", method="post")
+def admin_add_team_event():
+    fh.check_login()
+    fh.check_reporter()
+    etype = req.forms.get("etype")
+    n1 = req.forms.get("number1")
+    n2 = req.forms.get("number2")
+    redirect("/add_event/team/{t}/{n1}/{n2}".format(t=etype,n1=n1, n2=n2))
+@app.route("/add_pic/<t:re:athletes|newspics|users>",method="post")
+def admin_add_pic(t):
+    """Use the speicify table name to make a html form.
+    
+    :param t: table name in db
+    :type t: string
+    :returns: a html form
+    """
+    fh.check_login()
+    iid = req.forms.get("id")
+    result = ct.get_upload_pic(t,iid)
+    return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
+    
+    
 #==============================================================================
 # load all template into views folder
 #==============================================================================

@@ -17,7 +17,7 @@ limit 3
 """
 
 hotnews = """
-select n.title as title,n.id as news_link, n.datetime as date, 
+select n.name as title,n.id as news_link, n.datetime as date, 
 (u.firstname ||" "||u.lastname )as reporter, n.content as content,p.link as pic, s.name as sport, 
 s.id as sports_link, c.count as comment
 from news n, pictures p, events e, sports  s, users u,
@@ -27,7 +27,7 @@ from news n, pictures p, events e, sports  s, users u,
 	order by  count) c, 
 	
 	(select news as nid , pic as pid
-	from news_pics
+	from newspics
 	group by news) np
 where np.nid = n.id and n.id = np.nid and np.pid = p.id and c.cid= n.id and n.event = e.id and e.sport = s.id
 order by comment desc
@@ -72,7 +72,7 @@ order by rank
 """
 
 event_news_table = """
-select n.title as title, n.id as news_link, u.name as reporter 
+select n.name as title, n.id as news_link, u.name as reporter 
 from news n,  events e, users u
 where n.event = e.id and e.id = ?
 """
@@ -103,13 +103,13 @@ order by sport,date,time
 # news page
 #==============================================================================
 select_all_non_event_news = """
-select n.title as title, n.id as news_link, n.datetime, u.name as reporter
+select n.name as title, n.id as news_link, n.datetime, u.name as reporter
 from news n, users u
 where n.user = u.id and event = ""
 order by datetime
 """
 select_all_event_news = """
-select n.title as title, n.id as news_link, n.datetime, u.name as reporter,e.name as event, e.id as events_link
+select n.name as title, n.id as news_link, n.datetime, u.name as reporter,e.name as event, e.id as events_link
 from news n, events e, users u
 where n.event = e.id and n.user = u.id
 order by datetime, event
@@ -140,4 +140,19 @@ select (a.firstname || " " || a.lastname) as name, a.id as athletes_link, a.birt
 from athletes a, countries c
 where a.country = c.a2_code
 group by country, name
+"""
+#==============================================================================
+# admin page
+#==============================================================================
+a_options = """
+select (a.firstname || " " || a.lastname || " -- " || c.name) as name, a.id as athletes_link
+from athletes a, countries c
+where a.country = c.a2_code
+order by  c.name, a.firstname, a.lastname
+"""
+
+n_options = """
+select (n.name || " -- " || date(n.datetime) )as title, n.id as news_link
+from news  n
+order by n.datetime
 """

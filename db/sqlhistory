@@ -751,3 +751,13 @@ CREATE TABLE "facepics" (
 	foreign key (pic) references pictures(id) on delete cascade on update cascade,
 	foreign key (user) references users(id) on delete no action on update no action
 )
+
+delete from pictures where rowid >=0
+
+select (a.firstname || " " || a.lastname || " -- " || c.name) as name, a.id as athletes_link
+from athletes a, countries c
+where a.country = c.a2_code
+order by  c.name, a.firstname, a.lastname
+
+select n.title as title, n.id as news_link
+from news 

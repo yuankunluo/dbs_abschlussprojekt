@@ -192,17 +192,18 @@ td.result {
     font-size: x-large;
     width: 100%;
 }
-
+option {
+    text-transform: capitalize;
+}
 form.add_event {
     font-size: large;
 }
 fieldset {
     margin: 0.5em;
 }
-/*
-    datetime selector
-*/
-div.dateselector {
+label {
+    text-transform: capitalize;
+    margin: 0.3em;
 }
 /*
     add_athlets
@@ -277,8 +278,10 @@ textarea {
     height: 20em;
     overflow-y: scroll
 }
-button {
-    font-size: large;
+button, a.button {
+    margin: 0.3em;
+    padding: 0.2em;
+    font-size: x-large;
 }
 /*  
     search block
@@ -289,13 +292,6 @@ form.top_search {
 }
 input.top_search {
     font-size: larger;
-}
-a.wrong {
-    background: lightgray;
-    font-size: x-large;
-    text-transform: capitalize;
-    display: block;
-    margin: 0.5em;
 }
 /*
     div helper

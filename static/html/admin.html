@@ -1,0 +1,61 @@
+% t = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
+<h1>Welcome,{{!u_name}}</h1>
+<div class="functions">
+    <h2>Functions</h2>
+    <h3>Add News</h3>
+    <a class="button" href="/add_news">Add New News</a>
+    <h3>Update my profile</h3>
+    <a class="button" href="/update_profile">Update</a>
+    % if isreporter:
+    <h3>Add Solo Event</h3>
+    <form name="add_solo_event" action="/add_event/solo" method="post">
+        <label>Select the event type</label>
+        <select name="etype">
+            <option value=" "> </option>
+            % for k, v in t.items():
+            <option value="{{!k}}">{{!v}}</option>
+            % end
+        </select>
+        <br/>
+        <label>Give the number of athletes</label>
+        <input type="number" name="number" required>
+        <input type="submit" value="go to add">
+    </form>
+    <h3>Add Team Event</h3>
+    <form name="add_team_event" action="/add_event/team" method="post">
+        <label>Select the event type</label>
+        <select name="etype">
+            <option value=" "> </option>
+            % for k, v in t.items():
+            <option value="{{!k}}">{{!v}}</option>
+            % end
+        </select>
+        <br/>
+        <label>Give the number of Team</label>
+        <input type="number" name="number1" placeholder="Number of teams" required>
+        <br/>
+        <label>And the number of athletes of one team</label>
+        <input type="number" name="number2" placeholder="Number of athletes" required>
+        <input type="submit" value="go to add">
+    </form>
+    <h3>Add Facepic to an athlete</h3>
+    <form name="add_facepic_to_athlete" action="/add_pic/athletes" method="post">
+        <label>Select one athlete</label>
+        <select name="id" required>
+            {{!a_options}}
+        </select>
+        <input type="submit" value="go to add">
+    </form>
+    % end
+    <h3>Add picture to a news</h3>
+    <form name="add_facepic_to_athlete" action="/add_pic/newspics" method="post">
+        <label>Select one athlete</label>
+        <select name="id" required>
+            {{!n_options}}
+        </select>
+        <input type="submit" value="go to add">
+    </form>
+</div>
+
+
+

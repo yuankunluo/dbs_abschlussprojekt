@@ -8,6 +8,8 @@ import dbconnector as db
 import sqlstaments as sqls
 import viewsmaker as vm
 from bottle import template
+from bottle import redirect,response,request
+import formhandler as fh
 #==============================================================================
 # homepage
 #==============================================================================
@@ -168,7 +170,22 @@ def get_all_events():
     result += "<h2>team events</h2>" + team
     result = template("content_with_h1",h1="All Events",content = result)
     return result
+
+#==============================================================================
+# Add page content
+#==============================================================================
+def get_admin():
+    """Make a admin page
     
+    """
+    u_id = request.get_cookie("uid")
+    u_name = db.select_something("users",("name",),{"id":u_id})[1][0]
+    a_op = db.fetch_tuple(sqls.a_options)
+    a_op = vm.makeSelector(a_op,True)
+    n_op = db.fetch_tuple(sqls.n_options)
+    n_op = vm.makeSelector(n_op,True)
+    return template("admin", u_name = u_name, isreporter=fh.check_reporter(),
+                    n_options= n_op, a_options = a_op)
     
 #==============================================================================
 # news pages
@@ -210,11 +227,18 @@ def get_all_athletes():
 #==============================================================================
 # uploader
 #==============================================================================
-def get_upload_pic(user, goal):
+def get_upload_pic(table, iid):
     """Make a upload form
     
+    :param table: the table name in db, must be [athletes, users, news]
+    :type table: string
+    :param iid: the item id primary key in db
+    :type iid: integer
+    :returns: a html form
     """
-    return template("upload_pic",goal=goal,user=user)
+    fh.check_login()
+    uid = request.get_cookie("uid")
+    return template("upload_pic",table=table, iid = iid, uid = uid)
 #==============================================================================
 # singup and login
 #==============================================================================

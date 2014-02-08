@@ -120,7 +120,35 @@ def insert_into_tables(table, condition, re_item):
     result = select_something(table, re_item, condition)
     return result
     
+def update_table(table, newvalue , condition, re_item):
+    """Update table, then return the re_item
     
+    :param sqlquery: A table name
+    :type sqlquery: string
+    :param newvalue: the new values
+    :type newvalue: dict
+    :param condition: a dict
+    :type conditon: a dist
+    :param re_item: A specfiy returned item after inserting
+    :param re_item: A tuple
+    :returns: A primary key
+    """
+    conn = get_conn()
+    cousor = get_cousor(conn)
+    updatesql = """update {t} set {n} where {c}"""
+    new_v = []
+    conds = []
+    for k, v in newvalue.items():
+        new_v.append(str(k) + "=" + str(v))
+    for k,v in condition.items():
+        conds.append(str(k) + "=" + str(v))
+    new_v = " and ".join(new_v)
+    conds = " and ".join(conds)
+    sql = updatesql.format(t = table, n = new_v, c = conds)
+    cousor.execute(sql)
+    conn.commit()
+    conn.close()
+    return select_something(table, re_item, condition)
 
 
 #==============================================================================

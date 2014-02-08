@@ -30,7 +30,7 @@ def do_add_solo_event(req):
     event = form.pop("event")
     e_type = event.pop("type")
     event["type"] =  "Solo "+ ts[e_type]
-    event["reporter"] = reporter
+    event["user"] = reporter
     test = db.select_something("events",("id","name"),{"name":event["name"]})
     if len(test) > 1:
         oe_id = test[1][0]
@@ -171,13 +171,33 @@ def do_upload_pic(req):
     name, ext = os.path.splitext(upload.filename)
     if ext not in ('.png','.jpg','.jpeg'):
         return 'File extension not allowed. Pleas use .jpg, .png or .jepg'
-    form = request_to_dict(req.forms)
-    des = form["picture"]["des"]
+    form = req.forms
+    des = form.get("picture_des")
     # save pic in static/images/
     pn = save_pic(upload,ext,uid)
     # insert this pic into dbs
     pid = db.insert_into_tables("pictures",{"link":pn,"des":des},("id",))[1][0]
     return pid
+    
+def do_add_pic(t,iid, req):
+    """Add pic to a given table.
+    
+    :parma t: The table name.
+    :type t: string
+    :param iid: the id of one item in table
+    :param iid: integer
+    :param req: the request
+    :type req: bottle.baserequest
+    """
+    # first insert thi pic into dbs
+    pid = do_upload_pic(req)
+    uid = req.get_cookie("uid")
+    if t == "newspics":
+        return db.insert_into_tables(t,{"news":iid,"pic":pid,"user":uid},("id",))[1][0]
+    if t == "athletes":
+        return db.update_table(t,{"pic":pid},{"id":iid},("id",))[1][0]
+    if t == "users":
+        return db.update_table(t,{"pic":pid},{"id":iid},("id",))[1][0]
     
 #==============================================================================
 # sigup and login
