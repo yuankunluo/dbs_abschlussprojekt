@@ -178,13 +178,14 @@ def get_admin():
     """Make a admin page
     
     """
+    fh.check_login()
     u_id = request.get_cookie("uid")
-    u_name = db.select_something("users",("name",),{"id":u_id})[1][0]
+    user = db.fetch_one(sqls.select_one_user,(u_id,))
     a_op = db.fetch_tuple(sqls.a_options)
     a_op = vm.makeSelector(a_op,True)
     n_op = db.fetch_tuple(sqls.n_options)
     n_op = vm.makeSelector(n_op,True)
-    return template("admin", u_name = u_name, isreporter=fh.check_reporter(),
+    return template("admin", user = user, isreporter=fh.check_reporter(),
                     n_options= n_op, a_options = a_op)
     
 #==============================================================================
@@ -230,13 +231,13 @@ def get_news(nr):
         islogin = False
     else:
         islogin = True
-    comments = db.fetch_tuple(sqls.select_news_comment,(nr,),None)
+    comments = db.fetch_all(sqls.select_news_comment,(nr,))
     if len(comments) == 0:
         hascomments = False
         comments = None
     else:
         hascomments = True
-        comments = vm.makeTabele(comments)
+        comments = template("comments", comments = comments)
     return template("news_page", news = news,
                     haspics = haspics, pics = pics,hasevents = hasevents,
                     events = events,islogin=islogin, hascomments = hascomments,
@@ -299,4 +300,26 @@ def get_singup():
                     country_options = co,
                     year_options = yo)
 
-    
+#==============================================================================
+# user page
+#==============================================================================
+def get_user(uid):
+    """
+    """
+    c_uid = request.get_cookie("uid")
+    if str(uid) != c_uid:
+        isrightuser = False
+    else:
+        isrightuser = True
+    user = db.fetch_one(sqls.select_one_user,(uid,))
+    # select options
+    yo = vm.rangeSelector("year",True)
+    mto = vm.rangeSelector("month",True)
+    do = vm.rangeSelector("day", True)
+    countries = db.fetch_tuple(sqls.select_countries)
+    co = vm.makeSelector(countries, True)
+    return template("users", user=user,isrightuser= isrightuser,
+                    month_options = mto,
+                    day_options = do,
+                    country_options = co,
+                    year_options = yo)

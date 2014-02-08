@@ -29,7 +29,7 @@ from news n, pictures p, events e, sports s, users u,
 	(select news as npnid , pic as pid
 	from newspics
 	group by news) np
-where np.npnid = n.id and n.id = np.npnid and np.pid = p.id and c.cid= n.id and n.event = e.id and e.sport = s.id
+where np.npnid = n.id and np.pid = p.id and c.cid= n.id and n.event = e.id and e.sport = s.id
 order by comment desc
 """
 
@@ -131,9 +131,10 @@ from events e, vanues  v, sports s , news n
 where e.vanue = v.id and e.sport = s.id and e.id = n.event and n.id = ?
 """
 select_news_comment = """
-select u.name as user, c.content as comments, c.datetime as datetime
-from users u, comments c, news n
-where c.user = u.id and c.news = n.id and n.id = ?
+select u.name as name, p.link as pic, c.datetime as datetime, c.content as comment, p.des as picdes
+from comments c, users u, pictures p, news n
+where c.user = u.id and u.pic = p.id and c.news = n.id and n.id = ?
+order by datetime desc
 """
 #==============================================================================
 # add news page
@@ -176,4 +177,12 @@ n_options = """
 select (n.name || " -- " || date(n.datetime) )as title, n.id as news_link
 from news  n
 order by n.datetime
+"""
+
+select_one_user = """
+      select u.id as id, u.name as name, email as email, firstname as firstname, 
+   lastname as lastname, gender as gender, birthday as birthday, 
+   c.name as country, p.link as pic, p.des as picdes
+   from users u, pictures p, countries c
+   where u.pic = p.id and  c.a2_code = u.country and u.id = ?
 """

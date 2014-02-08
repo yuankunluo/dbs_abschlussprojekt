@@ -22,22 +22,22 @@ def do_add_solo_event(req):
     :returns: none
     """
     check_login(True)
-    reporter = check_reporter()
+    if not check_reporter():
+        return template("error",error= "You have no right to do this")
+    uid = req.get_cookie("uid")
     form = req.forms
     form = request_to_dict(form)
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
     # collect event infomation
     event = form.pop("event")
+    event["user"] = uid
     e_type = event.pop("type")
     event["type"] =  "Solo "+ ts[e_type]
-    event["user"] = reporter
     test = db.select_something("events",("id","name"),{"name":event["name"]})
     if len(test) > 1:
         oe_id = test[1][0]
         oe_name = test[1][1]
         return error_duplicate(oe_name, "events", oe_id)
-#        return test
-    # collect ath infos
     ath_keys = [ath for ath in form.keys() if ath.startswith("ath")]
     p_infos = {}
     ath_rowids = []
@@ -75,11 +75,13 @@ def do_add_team_event(req):
     :returns: none
     """
     check_login(True)
-    user = check_reporter()
+    if not check_reporter():
+        return template("error",error= "You have no right to do this")
+    uid = req.get_cookie("uid")
     # clean form request
     form = request_to_dict(req.forms)
     event = form.pop("event")
-    event["user"] = user
+    event["user"] = uid
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
     # test if this event in db
     e_type = event.pop("type")
@@ -144,9 +146,9 @@ def do_add_news(req):
     form = request_to_dict(req.forms)
     news = form.pop("news")
     # test if duplikated
-    test = db.select_something("news",("title",),{"title":news["title"]})
+    test = db.select_something("news",("name",),{"name":news["name"]})
     if len(test) != 0 :
-        n = db.select_something("news",("title","id",),news)
+        n = db.select_something("news",("name","id",),news)
         nid = n[1][1]
         nname = n[1][0]
         return error_duplicate(nname, "news", nid)
@@ -165,7 +167,7 @@ def do_upload_pic(req):
     :type req: string
     :returns: pic id in dbs
     """
-    check_login()
+    check_login(True)
     uid = req.get_cookie("uid")
     upload = req.files.get('upload')
     name, ext = os.path.splitext(upload.filename)
@@ -190,6 +192,7 @@ def do_add_pic(t,iid, req):
     :type req: bottle.baserequest
     """
     # first insert thi pic into dbs
+    check_login(True)
     pid = do_upload_pic(req)
     uid = req.get_cookie("uid")
     if t == "newspics":
@@ -228,7 +231,7 @@ def do_singup(req):
         return template("error",error="Passowrd must be the same!")
     user["password"]  = ps1
     # test if this user existed
-    u_test = db.select_something("users",("rowid",),
+    u_test = db.select_something("users",("id",),
                                  {"name":user["name"]})
     if len(u_test) > 1:
         return template("error",error=user["name"] + " was existed. Please use a new one!")
@@ -404,8 +407,8 @@ def check_login(auto=False):
     
     """
     if auto:
-        login = check_login()
-        if not login:
+        uid = request.get_cookie("uid")
+        if uid=="" or not uid:
             redirect("/login")
     uid = request.get_cookie("uid")
     if uid:
@@ -420,6 +423,8 @@ def check_reporter():
     :returns: True or False
     """
     uid = request.get_cookie("uid")
+    if uid == None:
+        redirect("/login")
     u_reporter = db.select_something("users",("reporter",),{"id":uid})[1][0]
     if str(u_reporter) != "1":
         return False

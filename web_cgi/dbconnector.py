@@ -42,6 +42,18 @@ def fetch_one(query, condition):
     result = cousor.execute(query,condition).fetchone()
     conn.close()
     return result
+
+def fetch_all(query, condition):
+    """Helper for fetch all
+    
+    """
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row
+    conn.text_factory = lambda x: unicode(x, "utf-8", "ignore")
+    cousor = conn.cursor()
+    result = cousor.execute(query,condition).fetchall()
+    conn.close()
+    return result
 #==============================================================================
 # get conn or get cousor
 #==============================================================================

@@ -15,6 +15,7 @@ import os
 import web_cgi.contenthandler as ct
 import web_cgi.formhandler as fh
 from bottle import redirect
+import datetime
 
 app = Bottle(autojson=True)
 #==============================================================================
@@ -165,6 +166,7 @@ def add_news_post():
     """Process the add new form
     
     """
+    fh.check_login(True)
     result = fh.do_add_news(req)
     return template("base",login = fh.check_login(),pagetitle="Add News", pagecontent=result)
 
@@ -185,7 +187,7 @@ def upload_pic():
 def upload_pic_post():
     """
     """
-    fh.check_login()
+    fh.check_login(True)
     t = req.forms.get("table")
     iid = req.forms.get("iid")
     result = fh.do_add_pic(t, iid, req)
@@ -251,7 +253,7 @@ def login_out():
 #==============================================================================
 @app.route("/admin")
 def admin():
-    fh.check_login()
+    fh.check_login(True)
     fh.check_reporter()
     uid = req.get_cookie("uid")
     if uid:
@@ -263,14 +265,14 @@ def admin():
         
 @app.route("/add_event/solo",method="post")
 def admin_add_solo_event():
-    fh.check_login()
+    fh.check_login(True)
     fh.check_reporter()
     etype = req.forms.get("etype")
     number = req.forms.get("number")
     redirect("/add_event/solo/{t}/{n}".format(t=etype,n=number))
 @app.route("/add_event/team", method="post")
 def admin_add_team_event():
-    fh.check_login()
+    fh.check_login(True)
     fh.check_reporter()
     etype = req.forms.get("etype")
     n1 = req.forms.get("number1")
@@ -286,7 +288,7 @@ def admin_add_pic(t):
     :type t: string
     :returns: a html form
     """
-    fh.check_login()
+    fh.check_login(True)
     iid = req.forms.get("id")
     result = ct.get_upload_pic(t,iid)
     return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
@@ -296,9 +298,23 @@ def admin_add_pic_from_news():
     """Process the add pic request from news page
     
     """
+    fh.check_login(True)
     nid = req.forms.get("nid")
     result = ct.get_upload_pic("newspics", nid)
     return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
+
+
+@app.route("/users/<uid:int>")
+def users(uid):
+    """Return users page with uid.
+    
+    :param uid: the user id
+    :type uid: integer
+    :returns: html
+    """
+    result = ct.get_user(uid)
+    return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
+
     
     
 #==============================================================================

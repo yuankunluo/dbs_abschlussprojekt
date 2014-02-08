@@ -1,0 +1,89 @@
+
+<h1>{{!user["name"]}}'s profile</h1>
+<img class="photo" alt="{{!user["picdes"]}}" src="/static/images/{{!user["pic"]}}">
+<p>Hello, {{!user["firstname"]}} {{!user["lastname"]}}</p>
+<p>Here is your information.</p>
+<em class="comment">Personal Information</em>
+<p>Fistname: <span>{{!user["firstname"]}}</span></p>
+<p>Lastname: <span>{{!user["lastname"]}}</span></p>
+<p>Email: <span>{{!user["email"]}}</span></p>
+<em class="comment">Personal Information</em>
+<p>Country: <span>{{!user["country"]}}</span></p>
+% if user["gender"] == "m": 
+<p>Gender: <span>Male</span></p>
+% else:
+<p>Gender: <span>Female</span></p>
+% end
+<p>Birthday: <span>{{!user["birthday"]}}</span></p>
+
+% if isrightuser:
+<h2>Here is your information, you can change anything but you username.</h2>
+<em class="comment">Your Photo</em>
+<p>If you see youself as MICHAEL PHELPS, you should update a new one.<br/>:)</p>
+<form action="/add_pic/users" method="post">
+    <input name="id" value="{{!user["id"]}}" hidden="hidden">
+    <input type="submit" value="Upload new one">
+</form>
+<h2>Change your information?</h2>
+<form name="change_info" action="/update_user/{{!user["id"]}}" method="post">
+    <fieldset>
+        <label>Select User Type</label>
+        <select name="user_reporter" required>
+            <option></option>
+            <option value="0">Normal User</option>
+            <option value="1">Reporter User</option>
+        </select>
+        <br/>
+        <legend>Base Information</legend>
+        <label>Email</label>
+        <input name="user_email" type="email" placeholder="Email" required>
+        <br/>
+        <label>Password</label>
+        <input name="user_password1" type="password" placeholder="Password" required>
+        <input name="user_password2" type="password" placeholder="Password one more time" required>
+    </fieldset>
+    <fieldset>
+        <legend>Personal Information</legend>
+        <label>Name</label>
+        <input name="user_firstname" placeholder="First name" required>
+        <input name="user_lastname" placeholder="Last name" required>
+        <br/>
+        <label>Gender</label>
+        <select name="user_gender" required>
+            <option value=""> </option>
+            <option value="m">Male</option>
+            <option value="f">Female</option>
+        </select>
+        <label>Country</label>
+        <select name="user_country">
+            {{!country_options}}
+        </select>
+        <br/>
+        <label>Birthday:</label>
+        <label>Year</label>
+        <select name="user_year" required>
+            {{!year_options}}
+        </select>
+        <label>Month</label>
+        <select name="user_month" required>
+            {{!month_options}}
+        </select>
+        <label>Day</label>
+        <select name="user_day" required>
+            {{!day_options}}
+        </select>
+    </fieldset>
+    <button type="submit" value="Update">Submit</button>
+</form>
+<form name="delete_user" action="/delete_user/{{!user["id"]}}" method="post">
+<p class="tipp">Your can also Delete your account!!</p>
+<p>Pleas not do this! T_T</p>
+<label>Enter your password Two (i just want to you input this 1,000 times) times!</label>
+<br/>
+<input type="password" name="password1" placeholder="Password" required>
+<br/>
+<input type="password" name="password1" placeholder="Password" required>
+<br/>
+<input type="submit" value="I AM A CARZY MAN,I WANT TO DELETE MY ACCOUNT">
+</form>
+% end

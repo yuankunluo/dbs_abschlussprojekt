@@ -792,14 +792,16 @@ where n.id = np.news and np.pic = p.id
 
 insert into comments (news, user, content, datetime)
 values 
-(10,5, "comment i love you", datetime("now"))
+(11,5, "Look my example: jsfiddle. Everything is working. If the image is larger than 600 px, then it resized.
+
+You made ​​a mistake in the name of the class ImageContainer in html.", datetime("now"))
 
 select * from news
 where id = 10
 
-select  p.link, p.des
-from news n, newspics np, pictures p
-where n.id = np.news and np.pic = p.id and n.id = 10
+select  p.link, p.des, u.name
+from news n, newspics np, pictures p, users u
+where n.id = np.news and np.pic = p.id and np.user = u.id and n.id = 10
 
 
 select n.id as id, u.name as reporter, n.datetime as datetime, n.content as content, n.name as name
@@ -811,4 +813,98 @@ s.name as sport, s.id as sports_link
 from events e, vanues  v, sports s , news n
 where e.vanue = v.id and e.sport = s.id and e.id = n.event
 
-select u.name as user, c.content as comments
+select u.name as user, c.content as comments, c.datetime as datetime
+from users u, comments c, news n
+where c.user = u.id and c.news = n.id and n.id = 10
+
+update news set name = "i love mike mick" where id = 11
+
+
+
+select n.name as title,n.id as news_link, n.datetime as date, 
+(u.firstname ||" "||u.lastname )as reporter, n.content as content,p.link as pic, s.name as sport, 
+s.id as sports_link, c.count as comment
+from news n, pictures p, events e, sports  s, users u,
+	(select news as cid,count(oid) as count
+	from comments
+	group by cid
+	order by  count) c, 
+	
+	(select news as nid , pic as pid
+	from newspics
+	group by news) np
+where np.nid = n.id and n.id = np.nid and np.pid = p.id and c.cid= n.id and n.event = e.id and e.sport = s.id
+group by title
+order by comment desc
+
+
+
+select n.name as title,n.id as news_link, n.datetime as date, 
+(u.firstname ||" "||u.lastname )as reporter, n.content as content,p.link as pic, s.name as sport, 
+s.id as sports_link, c.count as comment
+from news n, pictures p, events e, sports s, users u,
+	(select news as cid,count(oid) as count
+	from comments
+	group by cid
+	order by  count) c, 
+	
+	(select news as npnid , pic as pid
+	from newspics
+	group by news) np
+where np.npnid = n.id and np.pid = p.id and c.cid= n.id and n.event = e.id and e.sport = s.id
+order by comment desc
+
+insert into pictures (link, des)
+values 
+("default.jpg","Default Pics")
+
+select u.name as name, p.link as pic, c.datetime as datetime, c.content as comment, p.des as picdes
+from comments c, users u, pictures p, news n
+where c.user = u.id and u.pic = p.id and c.news = n.id and n.id = 11
+order by datetime desc
+
+-- Describe EVENTS
+CREATE TABLE events (
+    "id" INTEGER NOT NULL primary key autoincrement,
+    "name" VARCHAR(255) NOT NULL,
+    "date" VARCHAR(255) NOT NULL,
+    "time" VARCHAR(255) NOT NULL,
+    "vanue" INTEGER NOT NULL,
+    "sport" V NOT NULL,
+    "type" VARCHAR(255) NOT NULL,
+    "user" INTEGER NOT NULL
+)
+
+-- Describe NEWS
+CREATE TABLE news (
+    "id" INTEGER Primary Key AUTOINCREMENT,
+    "datetime" VARCHAR(255) NOT NULL,
+    "user" INTEGER NOT NULL,
+    "content" TEXT NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "event" INTEGER DEFAULT (0)
+)
+
+   select u.id as id, u.name as name, email as email, firstname as firstname, 
+   lastname as lastname, gender as gender, birthday as birthday, 
+   country as country, p.link as pic, p.des as picdes
+   from users u, pictures p
+   where u.pic = p.id and  u.id = 1
+   
+   -- Describe USERS
+CREATE TABLE users (
+    "id" INTEGER Primary key autoincrement,
+    "name" VARCHAR(255) NOT NULL,
+    "email" VARCHAR(255) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
+    "firstname" VARCHAR(255) NOT NULL,
+    "lastname" VARCHAR(255) NOT NULL,
+    "gender" CHAR(1) NOT NULL,
+    "birthday" VARCHAR(255) NOT NULL,
+    "country" VARCHAR(255) NOT NULL,
+    "registertime" VARCHAR(255) NOT NULL,
+    "pic" VARCHAR(255) DEFAULT (21),
+    "reporter" BOOLEAN DEFAULT (0)
+)
+
+delete from pictures where id != 21
