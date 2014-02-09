@@ -1,10 +1,10 @@
 <h1>{{!ath["name"]}}</h1>
 % if isreporter:
 <div class="tipp">
-<form action="/add_ath_pics" method="post">
+<form action="/change_ath_face" method="post">
     <input name="table" value="athletes" hidden="hidden">
     <input name="aid" value="{{!ath["id"]}}" hidden="hidden">
-    <input value="Add Pictures for {{!ath["name"]}}" type="submit">
+    <input value="Change Facepic for {{!ath["name"]}}" type="submit">
 </form>
 </div>
 % end

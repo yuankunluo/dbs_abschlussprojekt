@@ -334,7 +334,8 @@ img.comment {
     clear: left;
     position: relative;
     float: left;
-    max-width: 10%;
+    width: 60px;
+    height: 60px;
     border: thin black solid;
     padding: 0.2em;
     background: white;
@@ -356,7 +357,7 @@ p.comment {
 }
 p.comment_user {
     display: block;
-    padding-left: 11%;
+    padding-left: 60px;
 }
 div.comment {
     padding: 0.2em;

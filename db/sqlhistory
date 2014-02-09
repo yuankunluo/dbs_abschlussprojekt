@@ -957,4 +957,47 @@ values
 
 select  p.link, p.des, a.firstname
 from athletes a, athletespics ap, pictures p, users u
-where a.id =ap.athlete and np.pic = p.id and ap.user = u.id
+where a.id =ap.athlete and ap.pic = p.id and ap.user = u.id
+
+
+select u.id as id, u.name as name, u.email as email, u.firstname as firstname, 
+   u.lastname as lastname, u.gender as gender, u.birthday as birthday, 
+   c.name as country, p.link as pic, p.des as picdes
+   from users u, pictures p, countries c
+   where u.pic = p.id and  c.a2_code = u.country and u.id =1
+   
+ -- Describe ATHLETES
+CREATE TABLE athletes (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "firstname" VARCHAR(255) NOT NULL,
+    "lastname" VARCHAR(255) NOT NULL,
+    "gender" CHAR(1) NOT NULL,
+    "birthday" VARCHAR(255) NOT NULL,
+    "country" CHAR(2) NOT NULL,
+    "pic" INTEGER DEFAULT (1)
+)
+
+delete from athletes wher
+
+select n.name as title,n.id as news_link, n.datetime as date, 
+(u.firstname ||" "||u.lastname )as reporter, n.content as content,p.link as pic, s.name as sport, 
+s.id as sports_link, c.count as comment
+from news n, pictures p, events e, sports s, users u,
+	(select news as nid,count(oid) as count
+	from comments
+	group by nid
+	order by  count) c, 
+	(select ns.news as npnid , ns.pic as pid
+	from newspics ns
+	group by news) np
+where np.npnid = n.id and np.pid = p.id and c.nid= n.id and n.event = e.id and e.sport = s.id 
+group by news_link
+order by comment desc
+
+
+select *
+from comments
+
+select e.name as event, p.medal as medal
+from events e, participants p, countries c
+group by  p.team

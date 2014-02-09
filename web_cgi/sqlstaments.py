@@ -21,16 +21,17 @@ select n.name as title,n.id as news_link, n.datetime as date,
 (u.firstname ||" "||u.lastname )as reporter, n.content as content,p.link as pic, s.name as sport, 
 s.id as sports_link, c.count as comment
 from news n, pictures p, events e, sports s, users u,
-	(select news as cid,count(oid) as count
+	(select news as nid,count(oid) as count
 	from comments
-	group by cid
+	group by nid
 	order by  count) c, 
-	
-	(select news as npnid , pic as pid
-	from newspics
+	(select ns.news as npnid , ns.pic as pid
+	from newspics ns
 	group by news) np
-where np.npnid = n.id and np.pid = p.id and c.cid= n.id and n.event = e.id and e.sport = s.id
+where np.npnid = n.id and np.pid = p.id and c.nid= n.id and n.event = e.id and e.sport = s.id 
+group by news_link
 order by comment desc
+
 """
 
 select_vanues = """
@@ -75,6 +76,7 @@ event_news_table = """
 select n.name as title, n.id as news_link, u.name as reporter 
 from news n,  events e, users u
 where n.event = e.id and e.id = ?
+group by news_link
 """
 
 select_all_events = """
