@@ -178,9 +178,10 @@ def get_admin():
     """Make a admin page
     
     """
-    fh.check_login()
-    u_id = request.get_cookie("uid")
+    fh.check_login(True)
+    u_id = int(request.get_cookie("uid"))
     user = db.fetch_one(sqls.select_one_user,(u_id,))
+    print(user)
     a_op = db.fetch_tuple(sqls.a_options)
     a_op = vm.makeSelector(a_op,True)
     n_op = db.fetch_tuple(sqls.n_options)
@@ -227,11 +228,11 @@ def get_news(nr):
         hasevents = True
         events = vm.makeTableWithLink(events)
     uid = request.get_cookie("uid")
-    if uid == None or uid=="":
+    if uid == "":
         islogin = False
     else:
         islogin = True
-    comments = db.fetch_all(sqls.select_news_comment,(nr,))
+        comments = db.fetch_all(sqls.select_news_comment,(nr,))
     if len(comments) == 0:
         hascomments = False
         comments = None
@@ -324,8 +325,8 @@ def get_singup():
 def get_user(uid):
     """
     """
-    c_uid = request.get_cookie("uid")
-    if str(uid) != c_uid:
+    c_uid = int(request.get_cookie("uid"))
+    if uid != c_uid:
         isrightuser = False
     else:
         isrightuser = True

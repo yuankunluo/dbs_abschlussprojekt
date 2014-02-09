@@ -149,7 +149,9 @@ def insert_into_tables(table, condition, re_item=None):
     if re_item:
         result = select_something(table, re_item, condition, False , onlyone=True)
         return result
-    
+#==============================================================================
+# update table   
+#==============================================================================
 def update_table(table, newvalue , condition, re_item):
     """Update table, then return the re_item
     
@@ -180,8 +182,34 @@ def update_table(table, newvalue , condition, re_item):
     conn.commit()
     conn.close()
     return select_something(table, re_item, condition)
-
-
+#==============================================================================
+# delete table
+#==============================================================================
+def delete_table(table, condition):
+    """Update table, then return the re_item
+    
+    :param sqlquery: A table name
+    :type sqlquery: string
+    :param condition: a dict
+    :type conditon: a dist
+    :returns: True if successed, False if not
+    """
+    conn = get_conn()
+    cousor = get_cousor(conn)
+    deletesql = """delete from {t} where {c}"""
+    cons = []
+    for k, v in condition.items():
+        cons.append(str(k)+"=:" + str(k))
+    cons = " and ".join(cons)
+    deletesql = deletesql.format(t = table, c = cons)
+    try:
+        cousor.execute(deletesql,condition)
+        conn.commit()
+        return True
+    except:
+        return False
+    finally:
+        conn.close()
 #==============================================================================
 # helper function
 #==============================================================================

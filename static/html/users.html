@@ -77,13 +77,16 @@
     <button type="submit" value="Update">Submit</button>
 </form>
 <form name="delete_user" action="/delete_user/{{!user["id"]}}" method="post">
-<p class="tipp">Your can also Delete your account!!</p>
+<p class="tipp">Your can also Delete your account!!
+    <br/>
+    All your comment, news, profile will be lost forever!  
+</p>
 <p>Pleas not do this! T_T</p>
 <label>Enter your password Two (i just want to you input this 1,000 times) times!</label>
 <br/>
-<input type="password" name="password1" placeholder="Password" required>
+<input type="password" name="p2" placeholder="Password" required>
 <br/>
-<input type="password" name="password1" placeholder="Password" required>
+<input type="password" name="p1" placeholder="Password" required>
 <br/>
 <input type="submit" value="I AM A CARZY MAN,I WANT TO DELETE MY ACCOUNT">
 </form>

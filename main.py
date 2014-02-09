@@ -117,7 +117,7 @@ def add_event_solo(t,nr):
     if not fh.check_reporter():
         result = template("error",error="You have no priviliges to do this! Reporter User ONLY!")
     else:
-        uid = req.get_cookie("uid")
+        uid = int(req.get_cookie("uid"))
         result = ct.get_add_solo_form(t,nr,uid=uid)
     return template("base",login = fh.check_login(), pagetitle="Add Solo Event", pagecontent = result)
 
@@ -142,7 +142,7 @@ def add_event_team(et,tnr, pnr):
     if not fh.check_reporter():
         result = template("error",error="You have no priviliges to do this! Reporter User ONLY!")
     else:
-        uid = req.get_cookie("uid")
+        uid = int(req.get_cookie("uid"))
         result = ct.get_add_team_form(et, tnr, pnr,uid = uid)
     return template("base",login = fh.check_login(),pagetitle="Add Team Event", pagecontent = result)
 
@@ -163,7 +163,7 @@ def add_news():
     Fist check login selebt.    
     """
     fh.check_login(True)
-    uid = req.get_cookie("uid")
+    uid = int(req.get_cookie("uid"))
     result = ct.get_add_news_form(uid)
     return template("base",login = fh.check_login(),pagetitle="Add News",pagecontent=result)
 
@@ -269,8 +269,8 @@ def admin():
     fh.check_login(True)
     fh.check_reporter()
     uid = req.get_cookie("uid")
-    if uid:
-        uid = uid
+    if uid != "":
+        uid = int(uid)
         result = ct.get_admin()
         return template("base",login = fh.check_login(), pagetitle= "Admin", pagecontent = result)
     else:
@@ -355,7 +355,11 @@ def users(uid):
 def update_user(uid):
     result =  fh.do_user_update(req,uid)
     return template("base",login = fh.check_login(),pagetitle="Update User", pagecontent=result)
-    
+
+@app.route("/delete_user/<uid:int>",method="post")
+def delete_user(uid):
+    result = fh.do_delete_user(req,uid)
+    return template("base",login = fh.check_login(),pagetitle="Delete User", pagecontent=result)
 #==============================================================================
 # load all template into views folder
 #==============================================================================

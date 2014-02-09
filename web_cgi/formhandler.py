@@ -24,7 +24,7 @@ def do_add_solo_event(req):
     check_login(True)
     if not check_reporter():
         return template("error",error= "You have no right to do this")
-    uid = req.get_cookie("uid")
+    uid = int(req.get_cookie("uid"))
     form = req.forms
     form = request_to_dict(form)
     ts = {"p":"Preliminaries","s":"Semifinal","f":"Finals"}
@@ -60,7 +60,7 @@ def do_add_solo_event(req):
     if len(ath_rowids) != len(ath_rowids_rm):
         e = "You have inputed duplicated althetes in one event!"
         return template("error",error = e)
-    e_id =  db.insert_into_tables("events",event,("id",))[0]
+    e_id =  db.insert_into_tables("events",event,("id",),onlyone=True)[0]
     for k,v in p_infos.items():
         v["event"] = e_id
         db.insert_into_tables("participants",v,("rowid",))
@@ -78,7 +78,7 @@ def do_add_team_event(req):
     check_login(True)
     if not check_reporter():
         return template("error",error= "You have no right to do this")
-    uid = req.get_cookie("uid")
+    uid = int(req.get_cookie("uid"))
     # clean form request
     form = request_to_dict(req.forms)
     event = form.pop("event")
@@ -160,7 +160,7 @@ def do_add_news(req):
 
 def do_add_comment(nid):
     check_login(True)
-    uid = request.get_cookie("uid")
+    uid = int(request.get_cookie("uid"))
     co = request.forms["comment"]
     comment =  {"news":nid, "content":co, 
                  "user":uid, "datetime":get_now()}
@@ -180,7 +180,7 @@ def do_upload_pic(req):
     :returns: pic id in dbs
     """
     check_login(True)
-    uid = req.get_cookie("uid")
+    uid = int(req.get_cookie("uid"))
     upload = req.files.get('upload')
     name, ext = os.path.splitext(upload.filename)
     if ext not in ('.png','.jpg','.jpeg'):
@@ -206,7 +206,7 @@ def do_add_pic(t,iid, req):
     # first insert thi pic into dbs
     check_login(True)
     pid = do_upload_pic(req)
-    uid = req.get_cookie("uid")
+    uid = int(req.get_cookie("uid"))
     if t == "newspics":
         db.insert_into_tables(t,{"news":iid,"pic":pid,"user":uid},("id",))
         redirect("/news/"+str(iid))
@@ -247,11 +247,12 @@ def do_singup(req):
     user["password"]  = ps1
     # test if this user existed
     u_test = db.select_something("users",("id",),
-                                 {"name":user["name"]})
-    if len(u_test) > 1:
+                                 {"name":user["name"]},onlyone=True)
+    if u_test != None:
         return template("error",error=user["name"] + " was existed. Please use a new one!")
-    u_id = db.insert_into_tables("users",user,("id",))
-    return u_id
+    else:
+        u_id = db.insert_into_tables("users",user,("id",))[0]
+        return u_id
 
 def do_login(req):
     """Process login 
@@ -263,10 +264,11 @@ def do_login(req):
     form = request_to_dict(req.forms)
     user = form.pop("user")
     user = db.select_something("users",("id",),user,False,True)
-    if len(user)== 0 :
+    if user == None :
         return template("error",error="Username or Password doesnot match! Try again.")
-    response.set_cookie("uid", str(user[0]))
-    redirect("/admin")
+    else:
+        response.set_cookie("uid", str(user[0]))
+        redirect("/admin")
 
 #==============================================================================
 # user update and delete
@@ -275,12 +277,14 @@ def do_user_update(req, uid):
     """Update user 
     
     """
-    c_uid = req.get_cookie("uid")
+    c_uid = int(req.get_cookie("uid"))
     form = request_to_dict(req.forms)
     user = form.pop("user")
-    uid = user.pop("id")
+    uid = int(user.pop("id"))
     if c_uid != uid:
         redirect("/login")
+    if uid in [1,2]:
+        return template("error", error = "test and admin account can not be updated! FUU")
     p1 = user.pop('password1')
     p2 = user.pop("password2")
     date = user.pop("date")
@@ -293,7 +297,37 @@ def do_user_update(req, uid):
     db.update_table("users",user,{"id":uid},("id",))
     redirect("/users/"+str(uid))
     
-    
+def do_delete_user(req,uid):
+    check_login(True)
+    p2 = req.forms.get("p2")
+    p1 = req.forms.get("p1")
+    if p2 != p1:
+        return template("error", error = "Two passwords must be the same.")
+    c_uid = int(req.get_cookie("uid"))
+    if c_uid != uid:
+        return template("error", error = "your can not delete other's account")
+    if uid == 1 or uid ==2:
+        return template("error", error = "test and admin account can not be deleted! FUU")
+    p = db.select_something("users",("password",),{"id":uid},onlyone=True)[0]
+    if p != p2 or p1 != p1:
+        return template("error", error = "Password and Username not match!")
+    # delete from tables
+    du = db.delete_table("users",{"id":uid})
+    dn = db.delete_table("news",{"user":uid})
+    dm = db.delete_table("comments",{"user":uid})
+    de = db.delete_table("events",{"user":uid})
+    dp = db.delete_table("newspics",{"user":uid})
+    for r in [du,dn,dm,de,dp]:
+        if r != True:
+            error = """
+            <img alt="{{!user["picdes"]}}" src="/static/images/wawawa.gif">
+            <br/>
+            <p class="tipp">Boah! DBS Fuck! Error! Try later!! Later! ter! er! r!</p>
+            """
+            return template("error", error = error)
+    else:
+        redirect("/logout")
+        
 #==============================================================================
 #==============================================================================
 #==============================================================================
@@ -448,11 +482,12 @@ def check_login(auto=False):
         uid = request.get_cookie("uid")
         if uid=="" or not uid:
             redirect("/login")
-    uid = request.get_cookie("uid")
-    if uid:
-        return True
-    else:
-        return False
+    else:       
+        uid = request.get_cookie("uid")
+        if uid:
+            return True
+        else:
+            return False
 
 def check_reporter():
     """Check if user is reporter.
@@ -463,8 +498,8 @@ def check_reporter():
     uid = request.get_cookie("uid")
     if uid == None:
         redirect("/login")
-    u_reporter = db.select_something("users",("reporter",),{"id":uid},onlyone=True)[0]
-    if str(u_reporter) != "1":
+    reporter = db.select_something("users",("reporter",),{"id":uid},onlyone=True)[0]
+    if reporter != 1:
         return False
     else:
         return True
@@ -501,7 +536,7 @@ def save_pic(pic, ext, uid, dest = "static/images/"):
     :type ext: 
     """
     stamp = get_now(forfile=True)
-    fn = uid+"_"+stamp + ext
+    fn = str(uid)+"_"+stamp + ext
     with open(dest+fn, 'wb') as fp:
         fp.write(pic.file.read())
     return fn

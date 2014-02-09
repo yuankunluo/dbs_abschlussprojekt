@@ -18,7 +18,7 @@ limit 3
 
 hotnews = """
 select n.name as title,n.id as news_link, n.datetime as date, 
-(u.firstname ||" "||u.lastname )as reporter, n.content as content,p.link as pic, s.name as sport, 
+u.name as reporter, n.content as content,p.link as pic, s.name as sport, 
 s.id as sports_link, c.count as comment
 from news n, pictures p, events e, sports s, users u,
 	(select news as nid,count(oid) as count
@@ -176,7 +176,7 @@ where a.country = c.a2_code and a.pic = p.id and a.id = ?
 ath_medals = """
 select e.name as event, e.id as events_link, e.type as type, p.medal as medal, p.result as result
 from events e, participants p, athletes a
-where p.event = e.id and p.athlete = a.id and a.id = ?
+where p.event = e.id and p.athlete = a.id and a.id = ? and p.medal IN ("g","s","b") 
 order by p.rank
 """
 
@@ -211,8 +211,8 @@ order by n.datetime
 """
 
 select_one_user = """
-      select u.id as id, u.name as name, email as email, firstname as firstname, 
-   lastname as lastname, gender as gender, birthday as birthday, 
+   select u.id as id, u.name as name, u.email as email, u.firstname as firstname, 
+   u.lastname as lastname, u.gender as gender, u.birthday as birthday, 
    c.name as country, p.link as pic, p.des as picdes
    from users u, pictures p, countries c
    where u.pic = p.id and  c.a2_code = u.country and u.id = ?
