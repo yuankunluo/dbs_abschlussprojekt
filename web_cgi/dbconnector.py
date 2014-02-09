@@ -57,7 +57,7 @@ def fetch_all(query, condition):
 #==============================================================================
 # get conn or get cousor
 #==============================================================================
-def get_conn(dbs="db/london2012.db"):
+def get_conn(dbs="db/sochi2014.db"):
     """Return the connection object
     """
     conn = sqlite3.connect(dbs)

@@ -1020,3 +1020,26 @@ order by p.rank
    c.name as country, p.link as pic, p.des as picdes
    from users u, pictures p, countries c
    where u.pic = p.id and  c.a2_code = u.country and u.id = 11
+   
+   
+   
+-- Describe USERS
+CREATE TABLE users (
+    "id" INTEGER primary key autoincrement not null,
+    "name" VARCHAR(255) NOT NULL,
+    "email" VARCHAR(255) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
+    "firstname" VARCHAR(255) NOT NULL,
+    "lastname" VARCHAR(255) NOT NULL,
+    "gender" CHAR(1) NOT NULL,
+    "birthday" VARCHAR(255) NOT NULL,
+    "country" VARCHAR(255) NOT NULL,
+    "registertime" VARCHAR(255) NOT NULL,
+    "pic" VARCHAR(255) DEFAULT (1),
+    "reporter" BOOLEAN DEFAULT (0)
+)
+
+
+insert into users (name, email, password, firstname, lastname, gender, birthday, country, registertime,pic,reporter)
+values 
+("test", "admin@g.com", "123","yuankun", "luo","m","1988-11-06","cn",datetime("now" ), 1,0)
