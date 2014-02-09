@@ -60,7 +60,7 @@ def do_add_solo_event(req):
     if len(ath_rowids) != len(ath_rowids_rm):
         e = "You have inputed duplicated althetes in one event!"
         return template("error",error = e)
-    e_id =  db.insert_into_tables("events",event,("id",),onlyone=True)[0]
+    e_id =  db.insert_into_tables("events",event,("id",))[0]
     for k,v in p_infos.items():
         v["event"] = e_id
         db.insert_into_tables("participants",v,("rowid",))

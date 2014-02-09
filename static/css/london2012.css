@@ -127,7 +127,7 @@ span.sport {
 p.news{
     display: block;
     text-align: justify;
-    font-size: medium;
+    font-size: large;
     line-height: 150%
 }
 img.news {
@@ -354,6 +354,8 @@ p.comment {
     display: block;
     background: white;
     padding: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
 }
 p.comment_user {
     display: block;
@@ -380,5 +382,6 @@ p.pic_name {
 }
 p.pic_uploader {
     font-size: small;
-    font-weight: bold;
+    font-style: italic;
+    text-align: center;
 }
