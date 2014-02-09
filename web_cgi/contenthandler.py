@@ -269,17 +269,10 @@ def get_all_athletes():
 
 def get_ath(nr):
     ath = db.fetch_one(sqls.select_one_ath,(nr,))
-    print(ath)
     u_id = request.get_cookie("uid")
     user = db.select_something("users",("reporter","id"),{"id":u_id}, onlyone=True)
-    uid = user[1]
-    reporter = user[0]
-    if uid != None:
-        islogin = True
-    else:
-        islogin = False
-    if reporter != None and reporter == 1:
-        isreporter = True
+    if user == None:
+        isreporter = False
     else:
         isreporter = False
     m = db.fetch_tuple(sqls.ath_medals,(nr,),withLink=True)
@@ -288,7 +281,7 @@ def get_ath(nr):
     ath_n = vm.makeTableWithLink(n)
     o = db.fetch_tuple(sqls.ath_others, (nr,),withLink = True)
     ath_o = vm.makeTableWithLink(o)
-    return template("athletes", ath = ath, isreporter = isreporter, islogin = islogin,
+    return template("athletes", ath = ath, isreporter = isreporter, islogin = False,
                     ath_m = ath_m, ath_n = ath_n, ath_o = ath_o )
     
 #==============================================================================
