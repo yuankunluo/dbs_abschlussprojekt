@@ -15,7 +15,6 @@ import os
 import web_cgi.contenthandler as ct
 import web_cgi.formhandler as fh
 from bottle import redirect
-import datetime
 
 app = Bottle(autojson=True)
 #==============================================================================
@@ -94,6 +93,13 @@ def view_news(nr):
     """
     result, newsname = ct.get_news(nr)
     return template("base",login = fh.check_login(), pagetitle = newsname,pagecontent = result)
+    
+@app.route("/athletes/<nr:int>")
+def view_ath(nr):
+    result = ct.get_ath(nr)
+    return template("base",login = fh.check_login(), pagetitle ="Athlete" ,pagecontent = result)
+    
+    
 #==============================================================================
 # add events
 #==============================================================================
@@ -170,6 +176,13 @@ def add_news_post():
     result = fh.do_add_news(req)
     return template("base",login = fh.check_login(),pagetitle="Add News", pagecontent=result)
 
+@app.route("/add_comment/<nid:int>" , method="post")
+def add_comments(nid):
+    """Process adding comment
+    
+    """
+    result = fh.do_add_comment(nid)
+    return template("base",login = fh.check_login(),pagetitle="Add News", pagecontent=result) 
 #==============================================================================
 # picture uploader
 #==============================================================================
@@ -270,6 +283,7 @@ def admin_add_solo_event():
     etype = req.forms.get("etype")
     number = req.forms.get("number")
     redirect("/add_event/solo/{t}/{n}".format(t=etype,n=number))
+    
 @app.route("/add_event/team", method="post")
 def admin_add_team_event():
     fh.check_login(True)
@@ -280,7 +294,7 @@ def admin_add_team_event():
     redirect("/add_event/team/{t}/{n1}/{n2}".format(t=etype,n1=n1, n2=n2))
 
 
-@app.route("/add_pic/<t:re:athletes|newspics|users>",method="post")
+@app.route("/add_pic/<t:re:athletes|newspics|users|ahtletespics>",method="post")
 def admin_add_pic(t):
     """Use the speicify table name to make a html form.
     
@@ -303,7 +317,29 @@ def admin_add_pic_from_news():
     result = ct.get_upload_pic("newspics", nid)
     return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
 
+@app.route("/change_ath_face", method="post")
+def admin_add_ath_facepic():
+    """Change face pic of aths
+    
+    """
+    fh.check_login(True)
+    aid = req.forms.get("aid")
+    result = ct.get_upload_pic("athletes", aid)
+    return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
 
+@app.route("/add_ath_pics", method="post")
+def admin_add_ath_pics_from_ath():
+    """Process the add pic request from news page
+    
+    """
+    fh.check_login(True)
+    aid = req.forms.get("aid")
+    result = ct.get_upload_pic("athletespics", aid)
+    return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
+
+#==============================================================================
+# user page
+#==============================================================================
 @app.route("/users/<uid:int>")
 def users(uid):
     """Return users page with uid.
@@ -315,7 +351,10 @@ def users(uid):
     result = ct.get_user(uid)
     return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
 
-    
+@app.route("/update_user/<uid:int>", method="post")
+def update_user(uid):
+    result =  fh.do_user_update(req,uid)
+    return template("base",login = fh.check_login(),pagetitle="Update User", pagecontent=result)
     
 #==============================================================================
 # load all template into views folder
@@ -337,7 +376,6 @@ def load_template(htmldir):
     except:
         pass
     shutil.copytree(htmldir,"views")
-#     change extention from html into tpl
     f_path = os.path.abspath(__file__)
     f_path = f_path.replace("/main.py","")
     views =  f_path+ "/views"

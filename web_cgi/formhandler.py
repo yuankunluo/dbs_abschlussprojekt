@@ -33,10 +33,10 @@ def do_add_solo_event(req):
     event["user"] = uid
     e_type = event.pop("type")
     event["type"] =  "Solo "+ ts[e_type]
-    test = db.select_something("events",("id","name"),{"name":event["name"]})
-    if len(test) > 1:
-        oe_id = test[1][0]
-        oe_name = test[1][1]
+    test = db.select_something("events",("id","name"),{"name":event["name"], "type":event["type"]},onlyone=True)
+    if test != None:
+        oe_id = test[0]
+        oe_name = test[1]
         return error_duplicate(oe_name, "events", oe_id)
     ath_keys = [ath for ath in form.keys() if ath.startswith("ath")]
     p_infos = {}
@@ -48,7 +48,8 @@ def do_add_solo_event(req):
         "gender":a_info["gender"],
         "country":a_info["country"],
         "birthday":a_info["date"],}
-        ath_rowid = db.insert_into_tables("athletes",a_condition, ("id",))[1][0]
+        ath_rowid = db.insert_into_tables("athletes",a_condition, ("id",))
+        ath_rowid = ath_rowid[0]
         ath_rowids.append(ath_rowid)
         t_name = a_info["country"] + "-"+ event["name"] + "-" + event["type"]
         p_condition = {"athlete":ath_rowid,"rank":a_info["rank"],"team":t_name,
@@ -59,7 +60,7 @@ def do_add_solo_event(req):
     if len(ath_rowids) != len(ath_rowids_rm):
         e = "You have inputed duplicated althetes in one event!"
         return template("error",error = e)
-    e_id =  db.insert_into_tables("events",event,("id",))[1][0]
+    e_id =  db.insert_into_tables("events",event,("id",))[0]
     for k,v in p_infos.items():
         v["event"] = e_id
         db.insert_into_tables("participants",v,("rowid",))
@@ -86,10 +87,11 @@ def do_add_team_event(req):
     # test if this event in db
     e_type = event.pop("type")
     event["type"] = "Team "+ ts[e_type]
-    e_test = db.select_something("events",("rowid","name",),event)
-    if len(e_test) >1 :
-        e_name = e_test[1][1]
-        e_id = e_test[1][0]
+    e_test = db.select_something("events",("id","name",),
+                                 {"name":event["name"]}, onlyone=True)
+    if e_test != None :
+        e_name = e_test[1]
+        e_id = e_test[0]
         return error_duplicate(e_name, "events",e_id)
     # add athletes
     teams = extract_from_interdict(form)
@@ -111,7 +113,7 @@ def do_add_team_event(req):
             ath["birthday"] = birthday
             ath["country"] = country
             # insert into athletes
-            a_id = db.insert_into_tables("athletes",ath,("id",))[1][0]
+            a_id = db.insert_into_tables("athletes",ath,("id",))[0]
             a_ids.append(a_id)
             p_con = {"athlete":a_id,"team":t_name,"result":result,
                      "rank":rank,"medal":medal}
@@ -122,11 +124,10 @@ def do_add_team_event(req):
         e = "You have inputed duplicated althetes in one event!"
         return template("error",error = e)
     # add event
-    e_id = db.insert_into_tables("events", event,("id",))[1][0]
+    e_id = db.insert_into_tables("events", event,("id",))[0]
     for p in p_cons:
         p["event"] = e_id
-        print(p)
-        db.insert_into_tables("participants",p,("rowid",))
+        db.insert_into_tables("participants",p,())
     redirect("/events/"+str(e_id))
 
 #==============================================================================
@@ -146,15 +147,26 @@ def do_add_news(req):
     form = request_to_dict(req.forms)
     news = form.pop("news")
     # test if duplikated
-    test = db.select_something("news",("name",),{"name":news["name"]})
-    if len(test) != 0 :
-        n = db.select_something("news",("name","id",),news)
-        nid = n[1][1]
-        nname = n[1][0]
+    test = db.select_something("news",("name","id",),{"name":news["name"],
+                               "event":news["event"]
+                               }, onlyone=True)
+    if test != None :
+        nid = test[1]
+        nname = test[0]
         return error_duplicate(nname, "news", nid)
     news["datetime"] = get_now()
-    n_id = db.insert_into_tables("news",news, ("id",))[1][0]
+    n_id = db.insert_into_tables("news",news, ("id",))[0]
     redirect("/news/"+str(n_id))
+
+def do_add_comment(nid):
+    check_login(True)
+    uid = request.get_cookie("uid")
+    co = request.forms["comment"]
+    comment =  {"news":nid, "content":co, 
+                 "user":uid, "datetime":get_now()}
+    db.insert_into_tables("comments",comment)
+    redirect("/news/"+str(nid))
+
 #==============================================================================
 # do upload pic
 #==============================================================================
@@ -178,7 +190,7 @@ def do_upload_pic(req):
     # save pic in static/images/
     pn = save_pic(upload,ext,uid)
     # insert this pic into dbs
-    pid = db.insert_into_tables("pictures",{"link":pn,"des":des},("id",))[1][0]
+    pid = db.insert_into_tables("pictures",{"link":pn,"des":des},("id",))[0]
     return pid
     
 def do_add_pic(t,iid, req):
@@ -196,13 +208,16 @@ def do_add_pic(t,iid, req):
     pid = do_upload_pic(req)
     uid = req.get_cookie("uid")
     if t == "newspics":
-        db.insert_into_tables(t,{"news":iid,"pic":pid,"user":uid},("id",))[1][0]
+        db.insert_into_tables(t,{"news":iid,"pic":pid,"user":uid},("id",))
         redirect("/news/"+str(iid))
     if t == "athletes":
-        db.update_table(t,{"pic":pid},{"id":iid},("id",))[1][0]
+        db.update_table(t,{"pic":pid},{"id":iid},("id",))
+        redirect("/athletes/" + str(iid))
+    if t == "athletespics":
+        db.update_table(t,{"pic":pid},{"id":iid},("id",))
         redirect("/athletes/" + str(iid))
     if t == "users":
-        db.update_table(t,{"pic":pid},{"id":iid},("id",))[1][0]
+        db.update_table(t,{"pic":pid},{"id":iid},("id",))
         redirect("/users/" +  str(iid))
     
 #==============================================================================
@@ -235,7 +250,7 @@ def do_singup(req):
                                  {"name":user["name"]})
     if len(u_test) > 1:
         return template("error",error=user["name"] + " was existed. Please use a new one!")
-    u_id = db.insert_into_tables("users",user,("id",))[1][0]
+    u_id = db.insert_into_tables("users",user,("id",))
     return u_id
 
 def do_login(req):
@@ -247,11 +262,36 @@ def do_login(req):
     """
     form = request_to_dict(req.forms)
     user = form.pop("user")
-    test = db.select_something("users", ("id",),user)
-    if len(test) < 1 :
+    user = db.select_something("users",("id",),user,False,True)
+    if len(user)== 0 :
         return template("error",error="Username or Password doesnot match! Try again.")
-    response.set_cookie("uid", str(test[1][0]))
+    response.set_cookie("uid", str(user[0]))
     redirect("/admin")
+
+#==============================================================================
+# user update and delete
+#==============================================================================
+def do_user_update(req, uid):
+    """Update user 
+    
+    """
+    c_uid = req.get_cookie("uid")
+    form = request_to_dict(req.forms)
+    user = form.pop("user")
+    uid = user.pop("id")
+    if c_uid != uid:
+        redirect("/login")
+    p1 = user.pop('password1')
+    p2 = user.pop("password2")
+    date = user.pop("date")
+    user["birthday"] = date
+    if p1 != p2:
+        return template("error",error="Password must be the same!")
+    if len(p1) < 3 or len(p2) < 3:
+        return template("error",error="Password must have at least 3 characters!")
+    user["password"] = p1
+    db.update_table("users",user,{"id":uid},("id",))
+    redirect("/users/"+str(uid))
     
     
 #==============================================================================
@@ -368,10 +408,8 @@ def extract_from_interdict(interdict, delimeter="/"):
         for ik, iv in v.items():
             # split ik,iv into one list [k, k2, v]
             ks = ik.split(delimeter)
-#            print(type(ks))
             ks.append(iv)
             temp = ks
-#            print(temp)
             if len(temp) == 2:
                 result[k][temp[0]] = temp[1]
                 continue
@@ -425,7 +463,7 @@ def check_reporter():
     uid = request.get_cookie("uid")
     if uid == None:
         redirect("/login")
-    u_reporter = db.select_something("users",("reporter",),{"id":uid})[1][0]
+    u_reporter = db.select_something("users",("reporter",),{"id":uid},onlyone=True)[0]
     if str(u_reporter) != "1":
         return False
     else:

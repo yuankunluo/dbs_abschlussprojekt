@@ -887,9 +887,9 @@ CREATE TABLE news (
 
    select u.id as id, u.name as name, email as email, firstname as firstname, 
    lastname as lastname, gender as gender, birthday as birthday, 
-   country as country, p.link as pic, p.des as picdes
-   from users u, pictures p
-   where u.pic = p.id and  u.id = 1
+   c.name as country, p.link as pic, p.des as picdes
+   from users u, pictures p, countries c
+   where u.pic = p.id and  c.a2_code = u.country and u.id = 1
    
    -- Describe USERS
 CREATE TABLE users (
@@ -908,3 +908,53 @@ CREATE TABLE users (
 )
 
 delete from pictures where id != 21
+
+select a.firstname as firstname,  a.lastname as lastname,
+ a.gender as gender,  a.birthday as birthday, c.name as country, a.pic as pic
+from athletes a, countries c
+where a.country = c.a2_code and a.id = 68  
+
+select n.name as title, n.id as news_link, n.datetime as datetime
+from events e, participants p, athletes a, news  n
+where e.id = p.event and p.athlete = a.id and n.event = e.id and 
+order by datetime
+
+select a.id as id, (a.firstname ||" "|| a.lastname) as name, a.firstname as firstname,  a.lastname as lastname,
+ a.gender as gender,  a.birthday as birthday, c.name as country, a.pic as pic
+from athletes a, countries c
+where a.country = c.a2_code and a.id = 68
+
+-- Describe NEWSPICS
+CREATE TABLE "athletespics" (
+	id integer  primary key autoincrement,
+	athlete integer not null,
+	pic integer not null,
+	user varchar(255) not null,
+	foreign key (athlete) references athletes(id) on delete no action on update no action,
+	foreign key (pic) references pictures(id) on delete cascade on update cascade,
+	foreign key (user) references users(id) on delete no action on update no action
+)
+
+select a.id as id, (a.firstname ||" "|| a.lastname) as name, a.firstname as firstname,  a.lastname as lastname,
+ a.gender as gender,  a.birthday as birthday, c.name as country, p.link as pic
+from athletes a, countries c, pictures p
+where a.country = c.a2_code and a.pic = p.id and a.id = 69
+
+update athletes set pic = 1 where id >0
+
+insert into 
+
+-- Describe PICTURES
+CREATE TABLE pictures (
+	id integer primary key autoincrement not null,
+	link varchar(500) not null,
+	des varchar(500) not null
+)
+
+insert into pictures (link, des) 
+values
+("default.jpg","Default jpg")
+
+select  p.link, p.des, a.firstname
+from athletes a, athletespics ap, pictures p, users u
+where a.id =ap.athlete and np.pic = p.id and ap.user = u.id

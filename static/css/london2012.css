@@ -285,6 +285,9 @@ input.top_search {
 /*
     div helper
 */
+div.pics {
+    text-align: center;
+}
 div.error {
     padding: 1em;
     background: lightcoral;
@@ -313,9 +316,11 @@ div#validator {
     text-align: center;
 }
 img.news_image {
-    margin: 2em;
+    padding: 0.5em;
     display: block;
     max-width:80%;
+    margin-left: auto;
+    margin-right: auto;
 }
 /*
     comment
@@ -367,4 +372,12 @@ span {
     font-style: italic;
     font-weight: bold;
     text-transform: capitalize;
+}
+p.pic_name {
+    font-size: small;
+    text-align: center;
+}
+p.pic_uploader {
+    font-size: small;
+    font-weight: bold;
 }

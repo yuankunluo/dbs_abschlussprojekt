@@ -266,6 +266,31 @@ def get_all_athletes():
     athletes = vm.makeTableWithLink(athletes)
     result = template("content_with_h1",h1="All Athletes", content = athletes)
     return result
+
+def get_ath(nr):
+    ath = db.fetch_one(sqls.select_one_ath,(nr,))
+    print(ath)
+    u_id = request.get_cookie("uid")
+    user = db.select_something("users",("reporter","id"),{"id":u_id}, onlyone=True)
+    uid = user[1]
+    reporter = user[0]
+    if uid != None:
+        islogin = True
+    else:
+        islogin = False
+    if reporter != None and reporter == 1:
+        isreporter = True
+    else:
+        isreporter = False
+    m = db.fetch_tuple(sqls.ath_medals,(nr,),withLink=True)
+    ath_m = vm.makeTableWithLink(m)
+    n = db.fetch_tuple(sqls.ath_news, (nr,),withLink= True)
+    ath_n = vm.makeTableWithLink(n)
+    o = db.fetch_tuple(sqls.ath_others, (nr,),withLink = True)
+    ath_o = vm.makeTableWithLink(o)
+    return template("athletes", ath = ath, isreporter = isreporter, islogin = islogin,
+                    ath_m = ath_m, ath_n = ath_n, ath_o = ath_o )
+    
 #==============================================================================
 # uploader
 #==============================================================================
@@ -278,7 +303,7 @@ def get_upload_pic(table, iid):
     :type iid: integer
     :returns: a html form
     """
-    fh.check_login()
+    fh.check_login(True)
     uid = request.get_cookie("uid")
     return template("upload_pic",table=table, iid = iid, uid = uid)
 #==============================================================================

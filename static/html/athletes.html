@@ -1,0 +1,27 @@
+<h1>{{!ath["name"]}}</h1>
+% if isreporter:
+<div class="tipp">
+<form action="/add_ath_pics" method="post">
+    <input name="table" value="athletes" hidden="hidden">
+    <input name="aid" value="{{!ath["id"]}}" hidden="hidden">
+    <input value="Add Pictures for {{!ath["name"]}}" type="submit">
+</form>
+</div>
+% end
+<h2>{{!ath["name"]}}'sInformation</h2>
+<img class="photo" alt="{{!ath["name"]}}" src="/static/images/{{!ath["pic"]}}">
+<p>Fistname: <span>{{!ath["firstname"]}}</span></p>
+<p>Lastname: <span>{{!ath["lastname"]}}</span></p>
+<p>Country: <span>{{!ath["country"]}}</span></p>
+% if ath["gender"] == "m": 
+<p>Gender: <span>Male</span></p>
+% else:
+<p>Gender: <span>Female</span></p>
+% end
+<p>Birthday: <span>{{!ath["birthday"]}}</span></p>
+<h2>{{!ath["name"]}}'s Medals</h2>
+{{!ath_m}}
+<h2>{{!ath["name"]}}'s Other Results</h2>
+{{!ath_o}}
+<h2>News about {{!ath["name"]}}</h2>
+{{!ath_n}}

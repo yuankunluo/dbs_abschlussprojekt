@@ -62,17 +62,20 @@ def get_conn(dbs="db/london2012.db"):
     """
     conn = sqlite3.connect(dbs)
     conn.row_factory = sqlite3.Row
+    conn.text_factory = lambda x: unicode(x, "utf-8", "ignore")
     return conn
+    
 def get_cousor(conn):
     """Return the cousor object
     """
     # use row factory   
     cousor = conn.cursor()
     return cousor
+    
 #==============================================================================
 # select primary key of a table
 #==============================================================================
-def select_something(table, something, condition):
+def select_something(table, something, condition, rlist=False, onlyone=False):
     """Test if a given tuple already in a given table
     
     :param sqlquery: A table name
@@ -81,6 +84,10 @@ def select_something(table, something, condition):
     :type something: a tuple
     :param condition: a dict
     :type conditon: a dist
+    :param rlist: if return as proceed list
+    :type rlist: Boolean
+    :param onlyone: only return the first tupe
+    :type onlyone: Boolean
     :returns: A primary key
     """
     conn = get_conn()
@@ -98,19 +105,20 @@ def select_something(table, something, condition):
             sqlq += " "+k + "=:" + k + " "
         if i in range(1, len(keys)):
             sqlq += " and "+k + "=:" + k + " "
-#    print(condition)
-#    print(sqlq)
     r = cousor.execute(sqlq, condition)
-    r = r.fetchall()
+    if onlyone: 
+        r = cousor.fetchone()
+    else:
+        r = r.fetchall()
     conn.close()
-    # return item
-    result = tupleToList(r)
-    #print(result)
-    return result
+    if rlist:
+        result = tupleToList(r)
+        return result
+    return r
 #==============================================================================
 # insert
 #==============================================================================
-def insert_into_tables(table, condition, re_item):
+def insert_into_tables(table, condition, re_item=None):
     """Insert into table, if it was in table, then return the re_item
     
     :param sqlquery: A table name
@@ -121,9 +129,6 @@ def insert_into_tables(table, condition, re_item):
     :param re_item: A tuple
     :returns: A primary key
     """
-    test = select_something(table, re_item, condition)
-    if len(test) > 1:
-        return test
     conn = get_conn()
     cousor = get_cousor(conn)
     insertsql = """insert into {t}({c}) values ({q})"""
@@ -141,8 +146,9 @@ def insert_into_tables(table, condition, re_item):
     cousor.execute(insertsql,values)
     conn.commit()
     conn.close()
-    result = select_something(table, re_item, condition)
-    return result
+    if re_item:
+        result = select_something(table, re_item, condition, False , onlyone=True)
+        return result
     
 def update_table(table, newvalue , condition, re_item):
     """Update table, then return the re_item
@@ -160,16 +166,17 @@ def update_table(table, newvalue , condition, re_item):
     conn = get_conn()
     cousor = get_cousor(conn)
     updatesql = """update {t} set {n} where {c}"""
-    new_v = []
-    conds = []
+    column = []
     for k, v in newvalue.items():
-        new_v.append(str(k) + "=" + str(v))
-    for k,v in condition.items():
-        conds.append(str(k) + "=" + str(v))
-    new_v = " and ".join(new_v)
-    conds = " and ".join(conds)
-    sql = updatesql.format(t = table, n = new_v, c = conds)
-    cousor.execute(sql)
+        column.append(str(k)+"=:" + str(k))        
+    column = ",".join(column)
+    cons = []
+    for k, v in condition.items():
+        cons.append(str(k)+"=:" + str(k))
+    cons = ",".join(cons)
+    sql = updatesql.format(t = table, n = column, c = cons)
+    merge = dict(condition.items() + newvalue.items())
+    cousor.execute(sql,merge)
     conn.commit()
     conn.close()
     return select_something(table, re_item, condition)

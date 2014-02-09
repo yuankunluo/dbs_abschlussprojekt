@@ -163,6 +163,35 @@ from athletes a, countries c
 where a.country = c.a2_code
 group by country, name
 """
+
+select_one_ath = """
+select a.id as id, (a.firstname ||" "|| a.lastname) as name, a.firstname as firstname,  a.lastname as lastname,
+ a.gender as gender,  a.birthday as birthday, c.name as country, p.link as pic
+from athletes a, countries c, pictures p
+where a.country = c.a2_code and a.pic = p.id and a.id = ?
+"""
+
+ath_medals = """
+select e.name as event, e.id as events_link, e.type as type, p.medal as medal, p.result as result
+from events e, participants p, athletes a
+where p.event = e.id and p.athlete = a.id and a.id = ?
+order by p.rank
+"""
+
+ath_others = """
+select e.name as event, e.id as events_link,  e.type as type, e.date as date, 
+p.rank as rank, p.result as result,s.name as sport , s.id as sports_link
+from events e, participants p, athletes a, sports s
+where p.event = e.id and p.athlete = a.id and p.medal NOT IN ("g","s","b") and e.sport = s.id and a.id = ?
+order by p.rank
+"""
+
+ath_news = """
+select n.name as title, n.id as news_link, n.datetime as datetime
+from events e, participants p, athletes a, news  n
+where e.id = p.event and p.athlete = a.id and n.event = e.id and a.id = ?
+order by datetime
+"""
 #==============================================================================
 # admin page
 #==============================================================================

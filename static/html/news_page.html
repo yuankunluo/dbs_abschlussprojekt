@@ -1,5 +1,5 @@
 <h1>{{!news["name"]}}</h1>
-<p>Repoted by: {{!news["reporter"]}} at {{!news[2]}}</p>
+<p>Repoted by: <span>{{!news["reporter"]}}</span> at {{!news[2]}}</p>
 % if islogin:
 <div class="tipp">
 <form action="/add_newspic_from_news" method="post">
@@ -24,10 +24,10 @@
 %if islogin:
 <h3>Make COmments:</h3>
 <div class="tipp">
-<form action="/add_comment" class="comment" method="post">
+<form action="/add_comment/{{!news["id"]}}" class="comment" method="post">
     <textarea class="comment" name="comment" placeholder="Enter comment hier" required=""></textarea>
     <input type="submit" value="Send">
-    <input name="nid" value="{{!news[0]}}" hidden="hidden">
+    <input name="nid" value="{{!news["id"]}}" hidden="hidden">
 </form>
 </div>
 % else:

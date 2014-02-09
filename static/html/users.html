@@ -26,6 +26,7 @@
 </form>
 <h2>Change your information?</h2>
 <form name="change_info" action="/update_user/{{!user["id"]}}" method="post">
+    <input type="text" name="user_id" value="{{!user["id"]}}" hidden="hidden">
     <fieldset>
         <label>Select User Type</label>
         <select name="user_reporter" required>

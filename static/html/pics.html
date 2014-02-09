@@ -1,7 +1,7 @@
-<div id="pics">
+<div class="pics">
     % for p in pics[1:]:
-    <h4>{{!p[1]}}</h4>
-    <p>Added by {{!p[2]}}</p>
     <img class="news_image" alt="{{!p[1]}}" src="/static/images/{{!p[0]}}">
+    <p class="pic_name">{{!p[1]}}</p>
+    <p class="pic_uploader">Added by {{!p[2]}}</p>
     % end
 </div>
