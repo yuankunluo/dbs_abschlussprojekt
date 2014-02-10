@@ -251,7 +251,9 @@ def login_post():
     
     :
     """
-    fh.do_login(req)
+    result = fh.do_login(req)
+    return template("base",login = fh.check_login(),pagetitle="Login", pagecontent=result)
+
 
         
 @app.route("/logout")

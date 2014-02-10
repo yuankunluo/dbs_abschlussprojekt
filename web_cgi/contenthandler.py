@@ -228,11 +228,11 @@ def get_news(nr):
         hasevents = True
         events = vm.makeTableWithLink(events)
     uid = request.get_cookie("uid")
-    if uid == "":
+    if uid == "" or uid == None:
         islogin = False
     else:
         islogin = True
-        comments = db.fetch_all(sqls.select_news_comment,(nr,))
+    comments = db.fetch_all(sqls.select_news_comment,(nr,))
     if len(comments) == 0:
         hascomments = False
         comments = None

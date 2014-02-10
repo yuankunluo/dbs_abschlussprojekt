@@ -263,8 +263,8 @@ def do_login(req):
     """
     form = request_to_dict(req.forms)
     user = form.pop("user")
-    user = db.select_something("users",("id",),user,False,True)
-    if user == None :
+    user = db.select_something("users",("id",),user,False,onlyone=True)
+    if user == None or len(user)!=1:
         return template("error",error="Username or Password doesnot match! Try again.")
     else:
         response.set_cookie("uid", str(user[0]))
@@ -320,8 +320,6 @@ def do_delete_user(req,uid):
     for r in [du,dn,dm,de,dp]:
         if r != True:
             error = """
-            <img alt="{{!user["picdes"]}}" src="/static/images/wawawa.gif">
-            <br/>
             <p class="tipp">Boah! DBS Fuck! Error! Try later!! Later! ter! er! r!</p>
             """
             return template("error", error = error)
