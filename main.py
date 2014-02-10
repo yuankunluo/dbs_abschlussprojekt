@@ -232,9 +232,9 @@ def sinup_post():
     
     :returns: none
     """
-    uid = fh.do_singup(req)
-    response.set_cookie("uid",str(uid))
-    redirect("/admin")
+    result = fh.do_singup(req)
+    return template("base",login = fh.check_login(),pagetitle="Sing Up", pagecontent=result)
+
     
 @app.route("/login")
 def login():

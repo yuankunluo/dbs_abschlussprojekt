@@ -245,14 +245,15 @@ def do_singup(req):
     if ps1 != ps2:
         return template("error",error="Passowrd must be the same!")
     user["password"]  = ps1
-    # test if this user existed
+    # test if this user existed in db
     u_test = db.select_something("users",("id",),
                                  {"name":user["name"]},onlyone=True)
     if u_test != None:
         return template("error",error=user["name"] + " was existed. Please use a new one!")
     else:
         u_id = db.insert_into_tables("users",user,("id",))[0]
-        return u_id
+        response.set_cookie("uid",str(u_id))
+        redirect("/admin")
 
 def do_login(req):
     """Process login 
@@ -263,8 +264,12 @@ def do_login(req):
     """
     form = request_to_dict(req.forms)
     user = form.pop("user")
+    # test username
+    o_user = db.select_something("users",("id",),{"name":user["name"]},onlyone=True)
+    if o_user == None:
+        return template("error",error="User name does not exist in db.")
     user = db.select_something("users",("id",),user,False,onlyone=True)
-    if user == None or len(user)!=1:
+    if user == None:
         return template("error",error="Username or Password doesnot match! Try again.")
     else:
         response.set_cookie("uid", str(user[0]))
@@ -478,11 +483,11 @@ def check_login(auto=False):
     """
     if auto:
         uid = request.get_cookie("uid")
-        if uid=="" or not uid:
+        if uid in ["",None]:
             redirect("/login")
     else:       
         uid = request.get_cookie("uid")
-        if uid:
+        if uid not in ["",None]:
             return True
         else:
             return False
