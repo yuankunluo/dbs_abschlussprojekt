@@ -10,7 +10,7 @@
         <div id="header">
             <a class="logo" href="/homepage">Olympic 2014 Sochi</a>
             <br/>
-            <form class="top_search" action="../search">
+            <form class="top_search" action="/search", method="post">
                 <input class="top_search" type="text" name="search" placeholder="Input to search" required>
                 <input class="top_search" type="submit" value="search">
             </form>
@@ -21,7 +21,6 @@
                 <li class="navi"><a class="navi" href="/events">Events</a></li>
                 <li class="navi"><a class="navi" href="/athletes">Athletes</a></li>
                 <li class="navi"><a class="navi" href="/medalists">Medalists</a></li>
-                <li class="navi"><a class="navi" href="/countries">Countries</a></li>
                 % if login:
                 <li class="navi"><a class="navi" href="/admin">Admin</a></li>
                 <li class="navi"><a class="navi" href="/logout">Logout</a></li>

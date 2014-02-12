@@ -67,9 +67,6 @@ def medalists():
     result = ct.get_result()
     return template("base",login = fh.check_login(), pagetitle= "Admin", pagecontent = result)
     
-@app.route("/search")
-def search():
-    return template("base",login = fh.check_login(),pagetitle="Search", pagecontent="search")
 #==============================================================================
 # sigle item page
 #==============================================================================
@@ -102,9 +99,12 @@ def view_ath(nr):
 @app.route("/sports/<nr:int>")
 def view_sport(nr):
     result = ct.get_one_sport(nr)
-    return template("base",login = fh.check_login(), pagetitle ="Sport" ,pagecontent = result)
+    return template("base",login = fh.check_login(), pagetitle ="Results" ,pagecontent = result)
 
-
+@app.route("/countries/<a2_code:re:[a-z][a-z]>")
+def view_country(a2_code):
+    result = ct.get_country(a2_code)
+    return template("base",login = fh.check_login(), pagetitle ="Country" ,pagecontent = result)
 #==============================================================================
 # add events
 #==============================================================================
@@ -371,6 +371,16 @@ def update_user(uid):
 def delete_user(uid):
     result = fh.do_delete_user(req,uid)
     return template("base",login = fh.check_login(),pagetitle="Delete User", pagecontent=result)
+
+#==============================================================================
+# search
+#==============================================================================
+@app.route("/search", method="post")
+def search():
+    term = req.forms.get("search")
+    result = ct.search(term)
+    return template("base",login = fh.check_login(),pagetitle="Search", pagecontent=result)
+
 #==============================================================================
 # load all template into views folder
 #==============================================================================

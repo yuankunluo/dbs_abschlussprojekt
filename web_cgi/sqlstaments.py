@@ -294,3 +294,43 @@ left join (select c.a2_code as a2_code , count(cs.medal) as gold
 where cc.a2_code = cb.a2_code and cb.a2_code = cs.a2_code and cs.a2_code = cg.a2_code and summe >0
 order by score desc
 """
+
+result_country = """
+select e.name as event, e.id as events_link, p.medal as medal, s.name as sport, s.id as sports_link, e.type as type
+from countries c, athletes a, events e, participants p, sports s 
+where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id and c.a2_code = ?
+and medal = ? and e.sport = s.id
+group by p.team
+order by c.a2_code
+"""
+
+resul_country_aths = """
+select (a.firstname || " " ||a.lastname) as name, a.id as athletes_link, a.gender as g, 
+a.birthday as birthday
+from athletes a, countries c
+where a.country = c.a2_code and c.a2_code = ?
+"""
+
+#==============================================================================
+# search page
+#==============================================================================
+search_events = """
+select e.name as event, e.id as events_link, e.date as date, 
+s.name as sport,  s.id as sports_link, e.type as type
+from events e, sports s
+where e.sport = s.id and e.name like ?
+"""
+search_events_with_pic = """
+select  n.name as news, n.id as news_link,e.name as event, e.id as events_link
+from events e, news n, newspics np
+where e.id = n.event and np.news = n.id and e.name like ?
+group by news
+"""
+
+search_event_with_ath = """
+select e.name as event, e.id as events_link, e.type as eventtype,
+(a.firstname || " " || a.lastname) as athlete, a.id as athletes_link, p.medal as medal
+from events e, participants p, athletes a
+where e.id = p.event and p.athlete = a.id and p.medal in ("g","s","b")
+and (a.firstname like ? or a.lastname like ?)
+"""

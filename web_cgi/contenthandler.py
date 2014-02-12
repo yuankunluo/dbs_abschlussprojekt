@@ -379,3 +379,47 @@ def get_result():
     
     result += vm.makeTableWithLink(r)
     return result
+
+def get_country(a2_code):
+    """use the a2_code to get the result page for a given country
+    
+    """
+    country = db.select_something("countries",("name",),{"a2_code":a2_code},onlyone=True)
+    if country == None or len(country) == 0:
+        return template("error",error="No this country")
+    else:
+        country = country[0]
+    result = "<h1>" + country + "</h1>"
+    gold = db.fetch_tuple(sqls.result_country,(a2_code,"g",),True)
+    gold = vm.makeTableWithLink(gold)
+    silv = db.fetch_tuple(sqls.result_country,(a2_code,"s",),True)
+    silv = vm.makeTableWithLink(silv) 
+    broz = db.fetch_tuple(sqls.result_country,(a2_code,"b",),True)
+    broz = vm.makeTableWithLink(broz)
+    result += "<h2>" + country + "'s GOLD</h2>" + gold
+    result += "<h2>" + country + "'s SILVER</h2>" + silv
+    result += "<h2>" + country + "'s bronze</h2>" + broz
+    aths = db.fetch_tuple(sqls.resul_country_aths,(a2_code,),True)
+    aths = vm.makeTableWithLink(aths)
+    result += "<h2>" + country + "'s athletes</h2>" + aths
+    return result
+    
+#==============================================================================
+# search page
+#==============================================================================
+def search(term):
+    """Return search result using the given term
+    
+    """
+    result = "<h1>search result for " + term + "</h1>"
+    t = "%"+term+"%"
+    events = db.fetch_tuple(sqls.search_events,(t,),True)
+    events = vm.makeTableWithLink(events)
+    result += "<h2>Events name contains " + term + "</h2>" + events
+    pevent = db.fetch_tuple(sqls.search_events_with_pic,(t,),True)
+    pevent = vm.makeTableWithLink(pevent)
+    result += "<h2>Events name contains also has newspictures" + term + "</h2>" + pevent
+    aths = db.fetch_tuple(sqls.search_event_with_ath,(t,t,),True)
+    aths = vm.makeTableWithLink(aths)
+    result += "<h2>Medals Winner whoes name contains also" + term + "</h2>" + aths
+    return result

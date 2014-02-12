@@ -1412,6 +1412,9 @@ left join (select c.a2_code as a2_code , count(cs.medal) as gold
 where cc.a2_code = cb.a2_code and cb.a2_code = cs.a2_code and cs.a2_code = cg.a2_code
 
 
+select * from athletes
+order by id asc
+
 
 -----------------------------------------------------------------------------------------------
 
@@ -1526,4 +1529,29 @@ left join (select c.a2_code as a2_code , count(cs.medal) as gold
 		on c.a2_code= mg.a2_code) cb,
 		countries cc
 where cc.a2_code = cb.a2_code and cb.a2_code = cs.a2_code and cs.a2_code = cg.a2_code
-order by score, g, s, b
+order by score
+
+
+----------------------------------------------
+
+select e.name as event, e.id as events_link, p.medal as medal, s.name as sport
+from countries c, athletes a, events e, participants p, sports s 
+where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id and c.a2_code = "it"
+and medal = "s" and e.sport = s.id
+group by p.team
+order by c.a2_code
+
+select (a.firstname || " " ||a.lastname) as name, a.id as athletes_link, a.gender as g, 
+a.birthday as birthday
+from athletes a, countries c
+where a.country = c.a2_code and c.a2_code = "ru"
+
+
+select *
+from participants p
+group by p.team
+
+
+----------------------
+
+
