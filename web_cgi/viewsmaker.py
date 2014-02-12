@@ -80,7 +80,7 @@ def rangeSelector(t="year", options_only=False, name="year", label="year"):
         temp = "select_range"
     if t == "year":
         cur_year = date.today().year
-        min_year = cur_year - 100
+        min_year = cur_year - 60
         cur_year = cur_year - 18
         options = range(min_year, cur_year)
     if t == "month":

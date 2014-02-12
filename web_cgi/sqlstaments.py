@@ -156,6 +156,22 @@ from sports s,
 	group by sport) c
 where s.id = c.sport
 """
+
+select_one_sport_solo = """
+select e.name as name, e.id as events_link, e.date as date,
+e.time as time, v.name as vanue, e.type as type
+from events e, sports s, vanues v
+where e.sport = s.id and e.type like "Solo%" and e.vanue = v.id and s.id = ?
+order by date
+"""
+
+select_one_sport_team = """
+select e.name as name, e.id as events_link, e.date as date,
+e.time as time, v.name as vanue, e.type as type
+from events e, sports s, vanues v
+where e.sport = s.id and e.type like "Team%" and e.vanue = v.id and s.id = ?
+order by date
+"""
 #==============================================================================
 # athletes page
 #==============================================================================

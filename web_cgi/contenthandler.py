@@ -256,6 +256,24 @@ def get_all_sports():
     sports = vm.makeTableWithLink(sports)
     result = template("content_with_h1",h1="All Sports", content = sports)
     return result
+
+def get_one_sport(nr):
+    """Make a sport page html
+    
+    :param nr: the id of this sport
+    :type nr: int
+    :returns: html
+    """
+    sport = db.select_something("sports",("id","name",),{"id":nr},False, True)
+    solo = db.fetch_tuple(sqls.select_one_sport_solo,(nr,),True)
+    solo = vm.makeTableWithLink(solo)
+    team = db.fetch_tuple(sqls.select_one_sport_team,(nr,),True)
+    team = vm.makeTableWithLink(team)
+    result = "<h2>solo events</h2>" + solo
+    result += "<h2>team events</h2>" + team
+    result = template("content_with_h1",h1="All Events under " + sport["name"] ,content = result)
+    return result
+
 #==============================================================================
 # athletes pages
 #==============================================================================
@@ -272,17 +290,17 @@ def get_ath(nr):
     ath = db.fetch_one(sqls.select_one_ath,(nr,))
     u_id = request.get_cookie("uid")
     user = db.select_something("users",("reporter","id"),{"id":u_id}, onlyone=True)
-    if user == None:
-        isreporter = False
-    else:
-        isreporter = False
+    if user == None or user[0] != 1:
+        reporter = None
+    if user[0] == 1:
+        reporter = user
     m = db.fetch_tuple(sqls.ath_medals,(nr,),withLink=True)
     ath_m = vm.makeTableWithLink(m)
     n = db.fetch_tuple(sqls.ath_news, (nr,),withLink= True)
     ath_n = vm.makeTableWithLink(n)
     o = db.fetch_tuple(sqls.ath_others, (nr,),withLink = True)
     ath_o = vm.makeTableWithLink(o)
-    return template("athletes", ath = ath, isreporter = isreporter, islogin = False,
+    return template("athletes", ath = ath, reporter = reporter,
                     ath_m = ath_m, ath_n = ath_n, ath_o = ath_o )
     
 #==============================================================================

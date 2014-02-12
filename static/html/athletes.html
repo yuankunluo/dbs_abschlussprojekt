@@ -1,12 +1,18 @@
 <h1>{{!ath["name"]}}</h1>
-% if isreporter:
-<div class="tipp">
-<form action="/change_ath_face" method="post">
-    <input name="table" value="athletes" hidden="hidden">
-    <input name="aid" value="{{!ath["id"]}}" hidden="hidden">
-    <input value="Change Facepic for {{!ath["name"]}}" type="submit">
+% if reporter != None:
+<p class="tipp">Uplpad Facepic for {{!ath["name"]}}</p>
+<form name="pic_uplpad" action="/upload_pic" method="post" enctype="multipart/form-data">
+        <input name="uid" value="{{!reporter["id"]}}" hidden="hidden">
+        <legend>Choose a pic</legend>
+        <input type="file" name="upload" required>
+        <br/>
+        <legend>Enter a description for this pic</legend>
+        <input type="text" name="picture_des" placeholder="Picture Description will be displayed under pics" required></textarea>
+        <input name="table" value="athletes" hidden="hidden">
+        <input name="iid" value="{{!ath["id"]}}" hidden="hidden">
+        <br/>
+        <input type="submit" value="Start upload"/>
 </form>
-</div>
 % end
 <h2>{{!ath["name"]}}'sInformation</h2>
 <img class="photo" alt="{{!ath["name"]}}" src="/static/images/{{!ath["pic"]}}">

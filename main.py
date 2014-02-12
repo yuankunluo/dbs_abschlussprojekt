@@ -98,7 +98,11 @@ def view_news(nr):
 def view_ath(nr):
     result = ct.get_ath(nr)
     return template("base",login = fh.check_login(), pagetitle ="Athlete" ,pagecontent = result)
-    
+
+@app.route("/sports/<nr:int>")
+def view_sport(nr):
+    result = ct.get_one_sport(nr)
+    return template("base",login = fh.check_login(), pagetitle ="Sport" ,pagecontent = result)
     
 #==============================================================================
 # add events

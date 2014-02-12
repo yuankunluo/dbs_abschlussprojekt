@@ -1043,3 +1043,38 @@ CREATE TABLE users (
 insert into users (name, email, password, firstname, lastname, gender, birthday, country, registertime,pic,reporter)
 values 
 ("test", "admin@g.com", "123","yuankun", "luo","m","1988-11-06","cn",datetime("now" ), 1,0)
+
+
+CREATE TABLE "vanues" (
+	id integer primary key autoincrement,
+	name varchar(255 ) not null
+)
+
+
+-- Describe SPORTS
+CREATE TABLE sports (
+	id integer primary key autoincrement,
+	name varchar(255) not null
+	)
+	
+insert into sports (name)values 
+("Alpine Skiing"),
+("Cross-Country"),
+("Freestyle Skiing"),
+("Nordic Combined"),
+("Ski Jumping"),
+("Biathlon"),
+("Curling"),
+("Ice Hockey"),
+("Short Track"),
+("Snowboard"),
+("Bobsleigh"),
+("Figure Skating"),
+("Luge"),
+("Skeleton"),
+("Speed Skating")
+
+delete from pictures where id != 1
+
+insert into vanues(name) values 
+("Fisht Olympic Stadium"),("Bolshoy Ice Dome"),("Shayba Arena"),("Adler Arena Skating Center"),("Iceberg Skating Palace"),("Ice Cube Curling Center"),("Main Olympic village"),("International broadcasting centre and main press room"),("Laura Biathlon & Ski Complex"),("Rosa Khutor Extreme Park"),("Rosa Khutor Alpine Resort"),("Sliding Center Sanki"),("RusSki Gorki Jumping Center"),("Rosa Khutor Plateau Olympic Village")

@@ -38,6 +38,10 @@
         <input type="submit" value="go to add">
     </form>
     <h3>Add Facepic to an athlete</h3>
+    <p class="tipp">You can here choose one athlete name, then add a pic to it.
+        <br/>
+        Or you can go to <a href="/athletes">Ahtletes</a> page, then click one news title you want to add pic for.
+    </p>
     <form name="add_facepic_to_athlete" action="/add_pic/athletes" method="post">
         <label>Select one athlete</label>
         <select name="id" required>
@@ -47,7 +51,11 @@
     </form>
     % end
     <h3>Add picture to a news</h3>
-    <form name="add_facepic_to_athlete" action="/add_pic/newspics" method="post">
+    <p class="tipp">You can here choose one news title, then add a pic to it.
+        <br/>
+        Or you can go to <a href="/news">News</a> page, then click one news title you want to add pic for.
+    </p>
+    <form name="add_facepic_to_news" action="/add_pic/newspics" method="post">
         <label>Select one news</label>
         <select name="id" required>
             {{!n_options}}
