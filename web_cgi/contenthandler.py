@@ -181,7 +181,6 @@ def get_admin():
     fh.check_login(True)
     u_id = int(request.get_cookie("uid"))
     user = db.fetch_one(sqls.select_one_user,(u_id,))
-    print(user)
     a_op = db.fetch_tuple(sqls.a_options)
     a_op = vm.makeSelector(a_op,True)
     n_op = db.fetch_tuple(sqls.n_options)
@@ -292,7 +291,7 @@ def get_ath(nr):
     user = db.select_something("users",("reporter","id"),{"id":u_id}, onlyone=True)
     if user == None or user[0] != 1:
         reporter = None
-    if user[0] == 1:
+    elif user[0] == 1:
         reporter = user
     m = db.fetch_tuple(sqls.ath_medals,(nr,),withLink=True)
     ath_m = vm.makeTableWithLink(m)
@@ -343,7 +342,9 @@ def get_singup():
 def get_user(uid):
     """
     """
-    c_uid = int(request.get_cookie("uid"))
+    c_uid = request.get_cookie("uid")
+    if c_uid not in [None, ""]:
+        c_uid = int(uid)
     if uid != c_uid:
         isrightuser = False
     else:

@@ -7,6 +7,10 @@
     <a class="button" href="/add_news">Add New News</a>
     % if isreporter:
     <h3>Add Solo Event</h3>
+    <p class="tipp">Every solo event has athletes and a type.
+        <br/>
+        please choose one type and give this number.
+    </p>
     <form name="add_solo_event" action="/add_event/solo" method="post">
         <label>Select the event type</label>
         <select name="etype">
@@ -17,10 +21,15 @@
         </select>
         <br/>
         <label>Give the number of athletes</label>
-        <input type="number" name="number" required>
+        <input type="number" name="number" placeholder="Nmber of athletes" required>
         <input type="submit" value="go to add">
     </form>
     <h3>Add Team Event</h3>
+    <p class="tipp">Every team event has athletes and a type.
+        <br/>One team has at lease 2 athletes.
+        <br/>
+        please choose one type and give this number.
+    </p>
     <form name="add_team_event" action="/add_event/team" method="post">
         <label>Select the event type</label>
         <select name="etype">

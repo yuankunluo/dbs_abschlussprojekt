@@ -211,6 +211,10 @@ def upload_pic_post():
     return template("base",login = fh.check_login(),pagetitle="Upload Picture", pagecontent=result)
 
 
+@app.route("/upload_error")
+def uploar_error():
+    result = template("error",error="Pic file error:<br/>Please upload .jpg or png file.")
+    return template("base",login = fh.check_login(),pagetitle="Upload Picture Error", pagecontent=result)
 
 
 #==============================================================================

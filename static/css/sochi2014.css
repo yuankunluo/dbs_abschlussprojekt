@@ -81,6 +81,7 @@ a.navi:hover, a.navi:active {
     content
 */
 #content {
+    min-height: 40em;
     padding: 1em;
     margin-left: 10%;
     margin-right: 10%;
@@ -345,6 +346,7 @@ img.photo {
     position: relative;
     float: right;
     max-width: 50%;
+    max-width: 45em;
     border: thin black solid;
     padding: 0.2em;
     background: white;

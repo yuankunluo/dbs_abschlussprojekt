@@ -1,7 +1,7 @@
 % for c in comments:
 <div class="comment">
-    <img class="comment" src="/static/images/{{!c["pic"]}}" alt="{{!c["picdes"]}}">
-    <p class="comment_user"><em class="comment">{{!c["name"]}}</em> commented at {{!c["datetime"]}}</p>
+    <a href="/users/{{!c["uid"]}}"><img class="comment" src="/static/images/{{!c["pic"]}}" alt="{{!c["picdes"]}}"></a>
+    <p class="comment_user"><em class="comment"><a href="/users/{{!c["uid"]}}">{{!c["name"]}}</a></em> commented at {{!c["datetime"]}}</p>
     <p class="comment">{{!c["comment"]}}</p>
     
 </div>

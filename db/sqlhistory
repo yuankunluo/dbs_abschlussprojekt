@@ -1078,3 +1078,162 @@ delete from pictures where id != 1
 
 insert into vanues(name) values 
 ("Fisht Olympic Stadium"),("Bolshoy Ice Dome"),("Shayba Arena"),("Adler Arena Skating Center"),("Iceberg Skating Palace"),("Ice Cube Curling Center"),("Main Olympic village"),("International broadcasting centre and main press room"),("Laura Biathlon & Ski Complex"),("Rosa Khutor Extreme Park"),("Rosa Khutor Alpine Resort"),("Sliding Center Sanki"),("RusSki Gorki Jumping Center"),("Rosa Khutor Plateau Olympic Village")
+
+select e.name as name, e.id as events_link, e.date as date,
+e.time as time, v.name as vanue, e.type as type
+from events e, sports s, vanues v, news n
+where e.sport = s.id and e.type like "Solo%" and e.vanue = v.id
+
+select *
+from events e, news n, sport s
+where e.sport = s.id and e.news =n.id and s.id = 1
+
+select u.name as name, u.id as uid, p.link as pic, c.datetime as datetime, c.content as comment, p.des as picdes
+from comments c, users u, pictures p, news n
+where c.user = u.id and u.pic = p.id and c.news = n.id and n.id = ?
+order by datetime desc
+
+
+--      country result
+select *
+from 
+	(select c.name as country, p.team as team,
+	p.medal as medal
+	from countries c, athletes a, events e, participants p
+	where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+	and medal = "g"
+	group by p.team
+	order by c.a2_code) mg,
+	(select c.name as country, p.team as team,
+	p.medal as medal
+	from countries c, athletes a, events e, participants p
+	where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+	and medal = "b"
+	group by p.team
+	order by c.a2_code) mb,
+	(select c.name as country, p.team as team,
+	p.medal as medal
+	from countries c, athletes a, events e, participants p
+	where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+	and medal = "s"
+	group by p.team
+	order by c.a2_code) ms,
+	countries c
+where c. = ms.country and c
+
+select *
+from 
+	-- select result g
+	(select c.name as country, c.a2_code as countries_link , count(cs.medal) as silber
+	from 
+	(select c.a2_code as country, p.team as team,
+		p.medal as medal
+		from countries c, athletes a, events e, participants p
+		where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+		and medal = "g"
+		group by p.team
+		order by c.a2_code)  cs,
+		countries c
+	where c.a2_code = cs.country
+	group by country)  mg,
+	-- select result b
+	(select c.name as country, c.a2_code as countries_link , count(cs.medal) as silber
+	from 
+	(select c.a2_code as country, p.team as team,
+		p.medal as medal
+		from countries c, athletes a, events e, participants p
+		where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+		and medal = "s"
+		group by p.team
+		order by c.a2_code)  cs,
+		countries c
+	where c.a2_code = cs.country
+	group by country)  ms,
+	-- Select result gold
+	(select c.name as country, c.a2_code as countries_link , count(cs.medal) as silber
+	from 
+	(select c.a2_code as country, p.team as team,
+		p.medal as medal
+		from countries c, athletes a, events e, participants p
+		where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+		and medal = "b"
+		group by p.team
+		order by c.a2_code)  cs,
+		countries c
+	where c.a2_code = cs.country
+	group by country)  mb
+
+	
+	
+select c.name as country, c.a2_code as countries_link , count(cs.medal) as silber
+	from 
+	(select c.a2_code as country, p.team as team,
+		p.medal as medal
+		from countries c, athletes a, events e, participants p
+		where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+		and medal = "g"
+		group by p.team
+		order by c.a2_code)
+		
+
+select *
+from 
+	(select c.a2_code as a2_code , count(cs.medal) as silber
+		from 
+		(select c.a2_code as country, p.team as team,
+			p.medal as medal
+			from countries c, athletes a, events e, participants p
+			where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+			and medal = "g"
+			group by p.team
+			order by c.a2_code)  cs,
+			countries c
+		where c.a2_code = cs.country
+		group by country) mg 
+		,
+	(select c.a2_code as a2_code , count(cs.medal) as silber
+		from 
+		(select c.a2_code as country, p.team as team,
+			p.medal as medal
+			from countries c, athletes a, events e, participants p
+			where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+			and medal = "s"
+			group by p.team
+			order by c.a2_code)  cs,
+			countries c
+		where c.a2_code = cs.country
+		group by country)  ms
+		,
+(select c.a2_code as a2_code , count(cs.medal) as silber
+		from 
+		(select c.a2_code as country, p.team as team,
+			p.medal as medal
+			from countries c, athletes a, events e, participants p
+			where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+			and medal = "b"
+			group by p.team
+			order by c.a2_code)  cs,
+			countries c
+		where c.a2_code = cs.country
+		group by country) as mb
+where mg.a2_code = ms.a2_code and ms.a2_code = mb.a2_code
+
+
+
+
+------------------------
+(select c.a2_code as a2_code, mg.gold as gold
+from countries c
+left join (select c.a2_code as a2_code , count(cs.medal) as gold
+		from 
+		(select c.a2_code as country, p.team as team,
+			p.medal as medal
+			from countries c, athletes a, events e, participants p
+			where c.a2_code = a.country and  p.event = e.id and p.athlete = a.id 
+			and medal = "g"
+			group by p.team
+			order by c.a2_code)  cs,
+			countries c
+		where c.a2_code = cs.country
+		group by country) mg 
+		on c.a2_code= mg.a2_code) cg

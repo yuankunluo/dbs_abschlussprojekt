@@ -183,8 +183,8 @@ def do_upload_pic(req):
     uid = int(req.get_cookie("uid"))
     upload = req.files.get('upload')
     name, ext = os.path.splitext(upload.filename)
-    if ext not in ('.png','.jpg','.jpeg'):
-        return 'File extension not allowed. Pleas use .jpg, .png or .jepg'
+    if ext.lower() not in ('.png','.jpg','.jpeg'):
+        redirect("/upload_error")
     form = req.forms
     des = form.get("picture_des")
     # save pic in static/images/
@@ -414,6 +414,7 @@ def cleanRequest(sqltupe):
     for i in sqltupe:
         i = i.lower()
         i  = re.sub(r"select.*from|insert into|update .* wherer|delete .* from","",i)
+        i = i.replace("\n","<br/>")
         i = i.strip(" ")
         result.append(i)
     return result
@@ -476,7 +477,9 @@ def error_duplicate(itemname, link, itemid, edit=False):
     e = e.format(itemid = itemid, itemname = itemname, link = link)
     return template("error", error = e)
 
-
+#==============================================================================
+# login
+#==============================================================================
 def check_login(auto=False):
     """use cookie to check if login
     

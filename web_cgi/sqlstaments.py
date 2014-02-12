@@ -66,7 +66,7 @@ where e.vanue = v.id and e.sport = s.id and e.id =?
 
 event_results_table = """
 select (a.firstname || " "||a.lastname) as athlete, a.id as athletes_link,
-p.rank as rank, p.medal as medal, c.name as country
+p.rank as rank, p.medal as medal, c.name as country, c.a2_code as countries_link
 from events e, participants p, athletes a, countries c
 where e.id = p.event and p.athlete = a.rowid and a.country = c.a2_code and e.id=?
 order by rank
@@ -133,7 +133,7 @@ from events e, vanues  v, sports s , news n
 where e.vanue = v.id and e.sport = s.id and e.id = n.event and n.id = ?
 """
 select_news_comment = """
-select u.name as name, p.link as pic, c.datetime as datetime, c.content as comment, p.des as picdes
+select u.name as name, u.id as uid, p.link as pic, c.datetime as datetime, c.content as comment, p.des as picdes
 from comments c, users u, pictures p, news n
 where c.user = u.id and u.pic = p.id and c.news = n.id and n.id = ?
 order by datetime desc
