@@ -361,3 +361,21 @@ def get_user(uid):
                     day_options = do,
                     country_options = co,
                     year_options = yo)
+
+#==============================================================================
+# medalian page
+#==============================================================================
+def get_result():
+    """Return the result table for all countries
+    
+    """
+    r = db.fetch_tuple(sqls.result_table,None,withLink = True)
+    result = """
+    <h1>Result list</h1>    
+    <p class="tipp">Score: Gold:3, Silver:2, Broze: 3.<br/>
+    Just list all countries that has already medals.
+    </p>
+    """
+    
+    result += vm.makeTableWithLink(r)
+    return result

@@ -1,0 +1,23 @@
+<h1>Results for all countries</h1>
+% if len(content) == 0:
+<p>No such item</p>
+% else:
+<table class="result">
+    % header = content[0]
+    <tr class="result">
+        % for e in header:
+        <th class="result">{{!e}}</th>
+        %end
+    </tr>
+    % for r in content[1:]:
+    <tr>
+        %for e in r:
+        <td class="result"><a href="/countries/{{!e[1]}}">{{!e[0]}}</a></td>
+        <td class="result">{{!e[2]}}</td>
+        <td class="result">{{!e[3]}}</td>
+        <td class="result">{{!e[4]}}</td>
+        <td class="result">{{!e[5]}}</td>
+    </tr>
+    % end
+</table>
+% end

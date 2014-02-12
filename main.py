@@ -64,7 +64,7 @@ def athletes():
 
 @app.route("/medalists")
 def medalists():
-    result = "medalists"
+    result = ct.get_result()
     return template("base",login = fh.check_login(), pagetitle= "Admin", pagecontent = result)
     
 @app.route("/search")
@@ -103,7 +103,8 @@ def view_ath(nr):
 def view_sport(nr):
     result = ct.get_one_sport(nr)
     return template("base",login = fh.check_login(), pagetitle ="Sport" ,pagecontent = result)
-    
+
+
 #==============================================================================
 # add events
 #==============================================================================
