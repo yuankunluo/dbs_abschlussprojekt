@@ -1554,4 +1554,19 @@ group by p.team
 
 ----------------------
 
+select e.name as event, e.id as events_link, e.date as date, 
+s.name as sport,  s.id as sports_link, e.type as type
+from events e, sports s
+where e.sport = s.id and e.name like "%men%"
+
+select  n.name as news, n.id as news_link,e.name as event, e.id as events_link
+from events e, news n, newspics np
+where e.id = n.event and np.news = n.id and n.content like "%men%"
+group by news
+
+select e.name as event, e.id as events_link, e.type as eventtype,
+(a.firstname || " " || a.lastname) as athlete, a.id as athletes_link, p.medal as medal
+from events e, participants p, athletes a
+where e.id = p.event and p.athlete = a.id and p.medal in ("g","s","b")
+and (a.firstname like "%gut%" or a.lastname like "%gut%")
 
